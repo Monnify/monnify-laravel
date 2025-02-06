@@ -29,6 +29,7 @@ class TransactionService extends BaseService
 
     public function chargeCard(array $data)
     {
+        $this->validator->validateChargeCard($data);
         return $this->makeRequest(HttpMethod::POST, "/transactions", $data);
     }
 

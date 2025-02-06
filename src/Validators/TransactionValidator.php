@@ -45,6 +45,24 @@ readonly class TransactionValidator
         }
     }
 
+    public function validateChargeCard(array $data): void
+    {
+        $validator = Validator::make($data, [
+            'transactionReference' => 'required|string',
+            'collectionChannel' => 'required|string',
+            'card.number' => 'required|string',
+            'card.pin' => 'required|string',
+            'card.expiryMonth' => 'required|string',
+            'card.expiryYear' => 'required|string',
+            'card.cvv' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            throw new InvalidArgumentException($validator->errors()->first());
+        }
+    }
+
+
     public function validateRefund(array $data): void
     {
         $validator = Validator::make($data, [

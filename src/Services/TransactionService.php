@@ -30,7 +30,7 @@ class TransactionService extends BaseService
     public function chargeCard(array $data)
     {
         $this->validator->validateChargeCard($data);
-        return $this->makeRequest(HttpMethod::POST, "/api/v1/merchant/cards/charge", $data);
+        return $this->makeRequest(HttpMethod::POST, '/api/v1/merchant/cards/charge', $data);
     }
 
     public function authorizeOTP(array $data)
@@ -39,8 +39,9 @@ class TransactionService extends BaseService
         return $this->makeRequest(HttpMethod::GET, '/api/v1/merchant/cards/otp/authorize', $data);
     }
 
-    public function refund(string $id, array $data)
+    public function authorizeThreeDSCard(array $data)
     {
-        return $this->makeRequest(HttpMethod::POST, "/transactions/{$id}/refund", $data);
+        $this->validator->validateAuthorizeThreeDSCard($data);
+        return $this->makeRequest(HttpMethod::POST, '/api/v1/sdk/cards/secure-3d/authorize', $data);
     }
 }

@@ -76,11 +76,17 @@ readonly class TransactionValidator
         }
     }
 
-    public function validateRefund(array $data): void
+    public function validateAuthorizeThreeDSCard(array $data): void
     {
         $validator = Validator::make($data, [
-            'amount' => 'required|numeric|gt:0',
-            'reason' => 'required|string|max:255'
+            'transactionReference' => 'required|string',
+            'collectionChannel' => 'required|string',
+            'card.number' => 'required|string',
+            'card.pin' => 'required|string',
+            'card.expiryMonth' => 'required|string',
+            'card.expiryYear' => 'required|string',
+            'card.cvv' => 'required|string',
+            'apiKey' => 'required|string',
         ]);
 
         if ($validator->fails()) {

@@ -4,16 +4,48 @@ namespace Monnify\MonnifyLaravel\Services;
 
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Config;
+use Monnify\MonnifyLaravel\Enums\HttpMethod;
 // use Monnify\MonnifyLaravel\Exceptions\PaymentException;
 
 abstract class BaseService
 {
-    protected $client;
     private int $expiresIn;
 
-    public function __construct(protected Client $httpClient)
+    public function __construct(protected Client $client)
     {
-        $this->client = $httpClient;
+        $this->client = $client;
+    }
+
+    protected function makeRequest(
+        HttpMethod $method,
+        string $endpoint,
+        array $data = []
+    ): array {
+        try {
+            $accessToken = $this->getAccessToken()['accessToken'];
+            $options = ['headers' => [
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json'
+            ]];
+            
+            if (!empty($data)) {
+                $options['json'] = $data;
+            }
+
+            $response = $this->client->request($method->value, $endpoint, $options);
+
+            return [
+                $response->getStatusCode(),
+                $response->getBody()->getContents(),
+            ];
+        } catch (\Throwable $e) {
+            // throw new  MonnifyException(
+            //     message: $e->getMessage(),
+            //     code: (int) $e->getCode(),
+            //     previous: $e
+            // );
+        }
     }
 
     public function getAccessToken(): array
@@ -46,16 +78,5 @@ abstract class BaseService
     {
         Config::set('accessToken', $accessToken);
         $this->expiresIn = $expiresIn;
-    }
-
-    protected function makeRequest($method, $endpoint, array $data = [])
-    {
-        try {
-            $options = !empty($data) ? ['json' => $data] : [];
-            $response = $this->client->request($method, $endpoint, $options);
-            return json_decode($response->getBody()->getContents(), true);
-        } catch (\Exception $e) {
-            // throw new PaymentException($e->getMessage(), $e->getCode());
-        }
     }
 }

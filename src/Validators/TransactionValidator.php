@@ -62,6 +62,19 @@ readonly class TransactionValidator
         }
     }
 
+    public function validateAuthorizeOTP(array $data): void
+    {
+        $validator = Validator::make($data, [
+            'transactionReference' => 'required|string',
+            'collectionChannel' => 'required|string',
+            'tokenId' => 'required|string',
+            'token' => 'required|string'
+        ]);
+
+        if ($validator->fails()) {
+            throw new InvalidArgumentException($validator->errors()->first());
+        }
+    }
 
     public function validateRefund(array $data): void
     {

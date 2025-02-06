@@ -74,8 +74,10 @@ abstract class BaseService
         }
     }
 
-    public function setAccessToken($accessToken, $expiresIn)
-    {
+    public function setAccessToken(
+        string $accessToken,
+        int $expiresIn
+    ): void {
         Config::set('accessToken', $accessToken);
         $this->expiresIn = $expiresIn;
     }

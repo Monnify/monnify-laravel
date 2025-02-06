@@ -3,12 +3,22 @@
 namespace Monnify\MonnifyLaravel\Services;
 
 use Monnify\MonnifyLaravel\Enums\HttpMethod;
+use Monnify\MonnifyLaravel\Validators\TransactionValidator;
 
 class TransactionService extends BaseService
 {
-    public function initializeTransaction()
+    private TransactionValidator $validator;
+    
+    public function __construct()
     {
+        parent::__construct();
+        $this->validator = new TransactionValidator();
+    }
 
+    public function initializeTransaction(array $data)
+    {
+        $this->validator->validateInitializeTransaction($data);
+        return $this->makeRequest(HttpMethod::POST, '/api/v1/merchant/transactions/init-transaction', $data);
     }
     public function create(array $data)
     {

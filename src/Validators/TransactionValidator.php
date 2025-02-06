@@ -33,12 +33,11 @@ readonly class TransactionValidator
         }
     }
 
-    public function validateCreate(array $data): void
+    public function validatePayWithBankTransfer(array $data): void
     {
         $validator = Validator::make($data, [
-            'amount' => 'required|numeric|gt:0',
-            'currency' => 'required|string|size:3',
-            'reference' => 'required|string'
+            'transactionReference' => 'required|string',
+            'bankCode' => 'string|nullable'
         ]);
 
         if ($validator->fails()) {

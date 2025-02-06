@@ -59,7 +59,13 @@ abstract class BaseService
         }
 
         try {
-            $response = $this->client->post('/api/v1/auth/login');
+            $headers = [
+                'Authorization' => config('basic_key'),
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json'
+            ];
+
+            $response = $this->client->post('/api/v1/auth/login',[ 'headers' => $headers] );
             $accessToken = $response->getBody()->getContents()->responseBody->accessToken;
             // store token
             $this->setAccessToken($accessToken, $response->getBody()->getContents()->responseBody->expiresIn + floor(microtime(true)));

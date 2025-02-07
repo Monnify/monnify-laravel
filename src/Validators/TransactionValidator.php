@@ -3,29 +3,30 @@
 namespace Monnify\MonnifyLaravel\Validators;
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use InvalidArgumentException;
 
-readonly class TransactionValidator
+class TransactionValidator
 {
-    public function validateInitializeTransaction(array $data): void
+    public function validateInitialize(array $data): void
     {
         $validator = Validator::make($data, [
-            'amount' => 'required|numeric|min:20',
-            'customerName' => 'string|nullable',
+            'amount' => 'required|numeric|min:20|regex:/^\d*\.?\d*$/',
+            'customerName' => 'string',
             'customerEmail' => 'required|email',
             'paymentReference' => 'required|string',
-            'paymentDescription' => 'string|nullable',
-            'currencyCode' => 'required|string|size:3',
+            'paymentDescription' => 'string',
+            'currencyCode' => 'required|string',
             'contractCode' => 'required|string',
-            'redirectUrl' =>'string|nullable',
-            'paymentMethods' => 'string|nullable',
-            'metaData' => 'array|nullable',
-            'incomeSplitConfig' => 'array|nullable',
+            'redirectUrl' =>'string',
+            'paymentMethods' => 'string',
+            'metaData' => 'array',
+            'incomeSplitConfig' => 'array',
             'incomeSplitConfig.subAccountCode' => 'required|string',
-            'incomeSplitConfig.feeBearer' => 'boolean|nullable',
-            'incomeSplitConfig.feePercentage' => 'numeric|nullable',
-            'incomeSplitConfig.splitPercentage' => 'numeric|nullable',
-            'incomeSplitConfig.splitAmount' => 'numeric|nullable'
+            'incomeSplitConfig.feeBearer' => 'boolean',
+            'incomeSplitConfig.feePercentage' => 'numeric',
+            'incomeSplitConfig.splitPercentage' => 'numeric',
+            'incomeSplitConfig.splitAmount' => 'numeric'
         ]);
 
         if ($validator->fails()) {
@@ -37,7 +38,7 @@ readonly class TransactionValidator
     {
         $validator = Validator::make($data, [
             'transactionReference' => 'required|string',
-            'bankCode' => 'string|nullable'
+            'bankCode' => 'string'
         ]);
 
         if ($validator->fails()) {
@@ -80,7 +81,7 @@ readonly class TransactionValidator
     {
         $validator = Validator::make($data, [
             'transactionReference' => 'required|string',
-            'collectionChannel' => 'required|string',
+            'collectionChannel' => 'string',
             'card.number' => 'required|string',
             'card.pin' => 'required|string',
             'card.expiryMonth' => 'required|string',
@@ -97,18 +98,18 @@ readonly class TransactionValidator
     public function validateGetAllTransactions(array $data): void
     {
         $validator = Validator::make($data, [
-            'page' => 'integer|nullable',
-            'size' => 'integer|nullable',
-            'paymentReference' => 'string|nullable',
-            'transactionReference' => 'string|nullable',
-            'fromAmount' => 'numeric|nullable',
-            'toAmount' => 'numeric|nullable',
-            'amount' => 'numeric|nullable',
-            'customerName' => 'string|nullable',
-            'customerEmail' => 'email|nullable',
-            'paymentStatus' => 'string|nullable',
-            'from' => 'string|nullable',
-            'to' => 'string|nullable'
+            'page' => 'integer',
+            'size' => 'integer',
+            'paymentReference' => 'string',
+            'transactionReference' => 'string',
+            'fromAmount' => 'numeric|regex:/^\d*\.?\d*$/',
+            'toAmount' => 'numeric|regex:/^\d*\.?\d*$/',
+            'amount' => 'numeric|min:20|regex:/^\d*\.?\d*$/',
+            'customerName' => 'string',
+            'customerEmail' => 'email',
+            'paymentStatus' => 'string',
+            'from' => 'numeric|digits:13',
+            'to' => 'numeric|digits:13',
         ]);
 
         if ($validator->fails()) {

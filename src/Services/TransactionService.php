@@ -4,6 +4,7 @@ namespace Monnify\MonnifyLaravel\Services;
 
 use Monnify\MonnifyLaravel\Enums\HttpMethod;
 use Monnify\MonnifyLaravel\Validators\TransactionValidator;
+use InvalidArgumentException;
 
 class TransactionService extends BaseService
 {
@@ -15,9 +16,9 @@ class TransactionService extends BaseService
         $this->validator = new TransactionValidator();
     }
 
-    public function initializeTransaction(array $data): array
+    public function initialize(array $data): array
     {
-        $this->validator->validateInitializeTransaction($data);
+        $this->validator->validateInitialize($data);
         return $this->makeRequest(
             HttpMethod::POST,
             '/api/v1/merchant/transactions/init-transaction',
@@ -49,7 +50,7 @@ class TransactionService extends BaseService
     {
         $this->validator->validateAuthorizeOTP($data);
         return $this->makeRequest(
-            HttpMethod::GET,
+            HttpMethod::POST,
             '/api/v1/merchant/cards/otp/authorize',
             $data
         );

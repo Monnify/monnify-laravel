@@ -93,4 +93,65 @@ readonly class TransactionValidator
             throw new InvalidArgumentException($validator->errors()->first());
         }
     }
+
+    public function validateGetAllTransactions(array $data): void
+    {
+        $validator = Validator::make($data, [
+            'page' => 'integer|nullable',
+            'size' => 'integer|nullable',
+            'paymentReference' => 'string|nullable',
+            'transactionReference' => 'string|nullable',
+            'fromAmount' => 'numeric|nullable',
+            'toAmount' => 'numeric|nullable',
+            'amount' => 'numeric|nullable',
+            'customerName' => 'string|nullable',
+            'customerEmail' => 'email|nullable',
+            'paymentStatus' => 'string|nullable',
+            'from' => 'string|nullable',
+            'to' => 'string|nullable'
+        ]);
+
+        if ($validator->fails()) {
+            throw new InvalidArgumentException($validator->errors()->first());
+        }
+    }
+
+    public function validateReference(array $data): void
+    {
+        $rules = [];
+        
+        // Set validation rules based on which reference is provided
+        if (isset($data['transactionReference'])) {
+            $rules['transactionReference'] = 'required|string';
+        } elseif (isset($data['paymentReference'])) {
+            $rules['paymentReference'] = 'required|string';
+        }
+
+        $validator = Validator::make($data, $rules);
+
+        if ($validator->fails()) {
+            throw new InvalidArgumentException($validator->errors()->first());
+        }
+    }
+
+    public function validateGetStatusByReference(array $data): void
+    {
+        if (empty($data)) {
+            throw new InvalidArgumentException('Data array cannot be empty');
+        }
+
+        $hasTransaction = isset($data['transactionReference']);
+        $hasPayment = isset($data['paymentReference']);
+
+        if (!$hasTransaction && !$hasPayment) {
+            throw new InvalidArgumentException('Either transactionReference or paymentReference must be provided');
+        }
+
+        if ($hasTransaction && $hasPayment) {
+            throw new InvalidArgumentException('Only one reference type should be provided');
+        }
+
+        // Validate the provided reference
+        $this->validateReference($data);
+    }
 }

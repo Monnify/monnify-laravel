@@ -19,7 +19,8 @@ abstract class BaseService
     protected function makeRequest(
         HttpMethod $method,
         string $endpoint,
-        array $data = []
+        array $data = [],
+        array $parameters = []
     ): array {
         try {
             $accessToken = $this->getAccessToken()['accessToken'];
@@ -31,6 +32,10 @@ abstract class BaseService
             
             if (!empty($data)) {
                 $options['json'] = $data;
+            }
+
+            if (!empty($parameters)) {
+                $options['query'] = $parameters;
             }
 
             $response = $this->client->request($method->value, $endpoint, $options);

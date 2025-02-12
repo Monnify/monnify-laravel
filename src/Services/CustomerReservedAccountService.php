@@ -35,7 +35,7 @@ class CustomerReservedAccountService extends BaseService
         );
     }
 
-    public function getReservedAccountDetails(string $accountReference): array
+    public function get(string $accountReference): array
     {
         return $this->makeRequest(
             HttpMethod::GET,
@@ -91,7 +91,7 @@ class CustomerReservedAccountService extends BaseService
         );
     }
 
-    public function getReservedAccountTransactions(string $accountReference, array $parameters = []): array
+    public function getTransactions(string $accountReference, array $parameters = []): array
     {
         $this->validator->validateGetReservedAccountTransactions($parameters);
         return $this->makeRequest(

@@ -19,7 +19,7 @@ class CustomerReservedAccountValidator
             'customerName' => 'string',
             'getAllAvailableBanks' => 'required|boolean',
             'restrictPaymentSource' => 'boolean',
-            'incomeSplitConfig' => 'nullable',
+            'incomeSplitConfig' => 'array',
             'allowedPaymentSource' => 'nullable',
             'bvn' => Rule::requiredIf(fn() => empty($data['nin'])),
             'nin' => Rule::requiredIf(fn() => empty($data['bvn']))

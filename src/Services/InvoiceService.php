@@ -17,7 +17,7 @@ class InvoiceService extends BaseService
 
     public function create(array $data): array
     {
-        $this->validator->validateCreateInvoice($data);
+        $this->validator->validateAccount($data);
         return $this->makeRequest(
             HttpMethod::POST,
             '/api/v1/invoice/create',
@@ -51,7 +51,7 @@ class InvoiceService extends BaseService
 
     public function attachReservedAccount(array $data): array
     {
-        $this->validator->validateReservedAccount($data);
+        $this->validator->validateAccount($data);
         return $this->makeRequest(
             HttpMethod::POST,
             '/api/v1/invoice/create',

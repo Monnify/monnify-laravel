@@ -2,7 +2,6 @@
 
 namespace Monnify\MonnifyLaravel\Services;
 
-use Monnify\MonnifyLaravel\Enums\DisbursementType;
 use Monnify\MonnifyLaravel\Enums\HttpMethod;
 use Monnify\MonnifyLaravel\Validators\DisbursementValidator;
 

@@ -13,7 +13,8 @@ use Monnify\MonnifyLaravel\Services\{
     RecurringPaymentService,
     DirectDebitService, 
     SubAccountService,
-    DisbursementService
+    DisbursementService,
+    WalletService
 };
 
 class Monnify
@@ -25,6 +26,7 @@ class Monnify
     public DirectDebitService $directDebitMandate;
     public SubAccountService $subAccount;
     public DisbursementService $transfer;
+    private WalletService $wallet;
 
     public function __construct(
         private string $apiKey,
@@ -53,5 +55,6 @@ class Monnify
         $this->directDebitMandate = new DirectDebitService($client);
         $this->subAccount = new SubAccountService($client);
         $this->transfer = new DisbursementService($client);
+        $this->wallet = new WalletService($client);
     }
 }

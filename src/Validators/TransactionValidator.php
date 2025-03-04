@@ -3,7 +3,6 @@
 namespace Monnify\MonnifyLaravel\Validators;
 
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use InvalidArgumentException;
 
 class TransactionValidator
@@ -20,7 +19,6 @@ class TransactionValidator
             'contractCode' => 'required|string',
             'redirectUrl' =>'string',
             'paymentMethods' => 'string',
-            // 'metaData' => 'array',
             'incomeSplitConfig' => 'array',
             'incomeSplitConfig.subAccountCode' => 'required|string',
             'incomeSplitConfig.feeBearer' => 'boolean',

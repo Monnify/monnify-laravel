@@ -6,7 +6,15 @@ use Error;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Config;
 
-use Monnify\MonnifyLaravel\Services\{TransactionService, CustomerReservedAccountService, InvoiceService, RecurringPaymentService, DirectDebitService, SubAccountService};
+use Monnify\MonnifyLaravel\Services\{
+    TransactionService,
+    CustomerReservedAccountService,
+    InvoiceService,
+    RecurringPaymentService,
+    DirectDebitService, 
+    SubAccountService,
+    DisbursementService
+};
 
 class Monnify
 {
@@ -16,6 +24,7 @@ class Monnify
     public RecurringPaymentService $recurringPayment;
     public DirectDebitService $directDebitMandate;
     public SubAccountService $subAccount;
+    public DisbursementService $transfer;
 
     public function __construct(
         private string $apiKey,
@@ -43,5 +52,6 @@ class Monnify
         $this->recurringPayment = new RecurringPaymentService($client);
         $this->directDebitMandate = new DirectDebitService($client);
         $this->subAccount = new SubAccountService($client);
+        $this->transfer = new DisbursementService($client);
     }
 }

@@ -18,7 +18,8 @@ use Monnify\MonnifyLaravel\Services\{
     LimitProfileService,
     RefundService,
     SettlementService,
-    VerificationService
+    VerificationService,
+    PayCodeService
 };
 
 class Monnify
@@ -35,6 +36,7 @@ class Monnify
     public RefundService $refund;
     public SettlementService $settlements;
     public VerificationService $verificationAPI;
+    public PayCodeService $payCodeAPI;
 
 
     public function __construct(
@@ -69,5 +71,6 @@ class Monnify
         $this->refund = new RefundService($client);
         $this->settlements = new SettlementService($client);
         $this->verificationAPI = new VerificationService($client);
+        $this->payCodeAPI = new PayCodeService($client);
     }
 }

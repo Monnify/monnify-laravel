@@ -15,7 +15,7 @@ class VerificationService extends BaseService
         $this->validator = new VerificationValidator();
     }
 
-    public function validateBankAccount(string $accountNumber, string $bankCode): array
+    public function bankAccount(string $accountNumber, string $bankCode): array
     {
         $parameters = [
             'accountNumber' => $accountNumber,

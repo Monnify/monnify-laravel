@@ -84,17 +84,17 @@ class TransactionService extends BaseService
             '/api/v2/transactions/'. $transactionReference
         );
     }
-
-    public function statusByReference(array $parameters): array
+    /**
+     * @param string $referenceType referenceType have only two types which is 'payment' or 'transaction'
+     */
+    public function statusByReference(string $referenceType = 'transaction', string $reference, $parameters): array
     {
-        $this->validator->validateGetStatusByReference($parameters);
-
-        if (isset($parameters['transactionReference'])) {
-            $queryParam = 'transactionReference=' . urlencode($parameters['transactionReference']);
-        } elseif (isset($parameters['paymentReference'])) {
-            $queryParam = 'paymentReference=' . urlencode($parameters['paymentReference']);
+        if ($referenceType != 'transaction' || $referenceType != 'payment') {
+            throw new InvalidArgumentException('Either transaction or payment must be provided as referenceType');
+        } elseif ($referenceType == 'transaction') {
+            $queryParam = 'transactionReference=' . $reference;
         } else {
-            throw new InvalidArgumentException('Either transactionReference or paymentReference must be provided');
+            $queryParam = 'paymentReference=' . $reference;
         }
         
         return $this->makeRequest(

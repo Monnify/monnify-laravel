@@ -92,7 +92,7 @@ class DisbursementService extends BaseService
         );
     }
     /**
-     * @params enum $type = 'single' | 'bulk'
+     * @param string $type Type only have two correct value which is 'single' or 'bulk'
      */
     public function getAll(string $type = 'single', int $pageSize = 10, int $pageNumber = 0): array
     {

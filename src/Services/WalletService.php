@@ -25,7 +25,7 @@ class WalletService extends BaseService
         );
     }
 
-    public function get(string $customerEmail, int $pageSize = 10, int $pageNumber = 1): array
+    public function get(string $customerEmail, int $pageSize = 10, int $pageNumber = 0): array
     {
         $parameters = [
             'customerEmail' => $customerEmail,
@@ -49,7 +49,7 @@ class WalletService extends BaseService
         );
     }
 
-    public function transactions(string $accountNumber, int $pageSize = 10, int $pageNumber = 1): array
+    public function transactions(string $accountNumber, int $pageSize = 10, int $pageNumber = 0): array
     {
         $parameters = [
             'accountNumber' => $accountNumber,

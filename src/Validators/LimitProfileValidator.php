@@ -30,7 +30,7 @@ class LimitProfileValidator
             'currencyCode' => 'sometimes|string',
             'contractCode' => 'required|string',
             'customerEmail' => 'sometimes|string',
-            'incomeSplitConfig' => 'sometimes',
+            'incomeSplitConfig' => 'sometimes'
         ]);
 
         if ($validator->fails()) {

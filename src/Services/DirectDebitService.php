@@ -45,7 +45,7 @@ class DirectDebitService extends BaseService
         );
     }
 
-    public function getStatus(string $paymentReference): array
+    public function status(string $paymentReference): array
     {
         return $this->makeRequest(
             HttpMethod::GET,

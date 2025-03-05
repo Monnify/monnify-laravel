@@ -16,7 +16,7 @@ class TransactionService extends BaseService
         $this->validator = new TransactionValidator();
     }
 
-    public function initialize(array $data): array
+    public function initialise(array $data): array
     {
         $this->validator->validateInitialize($data);
         return $this->makeRequest(
@@ -66,7 +66,7 @@ class TransactionService extends BaseService
         );
     }
 
-    public function getAllTransactions(array $parameters): array
+    public function transactions(array $parameters): array
     {
         $this->validator->validateGetAllTransactions($parameters);
         return $this->makeRequest(
@@ -77,7 +77,7 @@ class TransactionService extends BaseService
         );
     }
 
-    public function getTransactionStatus(string $transactionReference): array
+    public function status(string $transactionReference): array
     {
         return $this->makeRequest(
             HttpMethod::GET,
@@ -85,7 +85,7 @@ class TransactionService extends BaseService
         );
     }
 
-    public function getStatusByReference(array $parameters): array
+    public function statusByReference(array $parameters): array
     {
         $this->validator->validateGetStatusByReference($parameters);
 

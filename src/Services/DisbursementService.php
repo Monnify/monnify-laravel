@@ -77,7 +77,7 @@ class DisbursementService extends BaseService
         );
     }
 
-    public function bulkStatus(string $batchReference, int $pageSize = 10, int $pageNumber = 1): array
+    public function bulkStatus(string $batchReference, int $pageSize = 10, int $pageNumber = 0): array
     {
         $parameters = [
             'pageSize' => $pageSize,
@@ -94,7 +94,7 @@ class DisbursementService extends BaseService
     /**
      * @params enum $type = 'single' | 'bulk'
      */
-    public function getAll(string $type = 'single', int $pageSize = 10, int $pageNumber = 1): array
+    public function getAll(string $type = 'single', int $pageSize = 10, int $pageNumber = 0): array
     {
         $url = $type == 'single' ? '/api/v2/disbursements/single/transactions' : '/api/v2/disbursements/bulk/transactions';
         $parameters = [
@@ -110,12 +110,12 @@ class DisbursementService extends BaseService
         );
     }
 
-    public function bulkTransaction(string $batchReference, int $pageSize = 10, int $pageNumber = 1): array
+    public function bulkTransaction(string $batchReference, int $pageSize = 10, int $pageNumber = 0): array
     {
         return $this->bulkStatus($batchReference, $pageSize, $pageNumber);
     }
 
-    public function search(string $sourceAccountNumber,  int $pageSize = 10, int $pageNumber = 1): array
+    public function search(string $sourceAccountNumber,  int $pageSize = 10, int $pageNumber = 0): array
     {
         $parameters = [
             'sourceAccountNumber' => $sourceAccountNumber,

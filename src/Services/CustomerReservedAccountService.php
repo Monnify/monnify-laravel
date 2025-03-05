@@ -91,7 +91,7 @@ class CustomerReservedAccountService extends BaseService
         );
     }
 
-    public function getTransactions(string $accountReference, array $parameters = []): array
+    public function transactions(string $accountReference, array $parameters = []): array
     {
         $this->validator->validateGetReservedAccountTransactions($parameters);
         return $this->makeRequest(

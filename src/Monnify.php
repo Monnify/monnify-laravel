@@ -16,7 +16,8 @@ use Monnify\MonnifyLaravel\Services\{
     DisbursementService,
     WalletService,
     LimitProfileService,
-    RefundService
+    RefundService,
+    SettlementService
 };
 
 class Monnify
@@ -31,6 +32,7 @@ class Monnify
     public WalletService $wallet;
     public LimitProfileService $limitProfile;
     public RefundService $refund;
+    public SettlementService $settlements;
 
 
     public function __construct(
@@ -63,5 +65,6 @@ class Monnify
         $this->wallet = new WalletService($client);
         $this->limitProfile = new LimitProfileService($client);
         $this->refund = new RefundService($client);
+        $this->settlements = new SettlementService($client);
     }
 }

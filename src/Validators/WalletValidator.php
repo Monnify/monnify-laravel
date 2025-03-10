@@ -3,9 +3,7 @@
 namespace Monnify\MonnifyLaravel\Validators;
 
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use InvalidArgumentException;
-use Monnify\MonnifyLaravel\Enums\DisbursementValidationFailure;
 
 class WalletValidator
 {

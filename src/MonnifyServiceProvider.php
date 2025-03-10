@@ -10,7 +10,7 @@ class MonnifyServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/monnify.php', 'monnify');
+        $this->mergeConfigFrom(__DIR__.'/../Config/monnify.php', 'monnify');
 
         $this->app->singleton('monnify', function($app) {
             return new Monnify(
@@ -24,7 +24,7 @@ class MonnifyServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../config/monnify.php' => config_path('monnify.php'),
+            __DIR__.'/../Config/monnify.php' => config_path('monnify.php'),
         ], 'config');
     }
 }

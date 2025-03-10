@@ -37,5 +37,8 @@
                 "Payment": "Monnify\\MonnifyLaravel\\Facades\\Monnify"
             }
         }
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.34"
     }
 }

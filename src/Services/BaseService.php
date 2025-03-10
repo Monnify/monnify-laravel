@@ -2,15 +2,13 @@
 
 namespace Monnify\MonnifyLaravel\Services;
 
+use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Config;
 use Monnify\MonnifyLaravel\Enums\HttpMethod;
-// use Monnify\MonnifyLaravel\Exceptions\PaymentException;
 
 abstract class BaseService
 {
-    private int $expiresIn;
-
     public function __construct(protected Client $client)
     {
         $this->client = $client;
@@ -23,12 +21,14 @@ abstract class BaseService
         array $parameters = []
     ): array {
         try {
-            $accessToken = $this->getAccessToken()['accessToken'];
-            $options = ['headers' => [
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json'
-            ]];
+            $accessToken = $this->getAccessToken();
+            $options = [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $accessToken,
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json'
+                ]
+            ];
             
             if (!empty($data)) {
                 $options['json'] = $data;
@@ -41,26 +41,23 @@ abstract class BaseService
             $response = $this->client->request($method->value, $endpoint, $options);
 
             return [
-                $response->getStatusCode(),
-                $response->getBody()->getContents(),
+                'status' => $response->getStatusCode(),
+                'body' => json_decode($response->getBody()->getContents(), true),
             ];
-        } catch (\Throwable $e) {
-            // throw new  MonnifyException(
-            //     message: $e->getMessage(),
-            //     code: (int) $e->getCode(),
-            //     previous: $e
-            // );
+        } catch (Exception $e) {
+            throw new  Exception(
+                message: $e->getMessage(),
+                code: (int) $e->getCode(),
+                previous: $e
+            );
         }
     }
 
-    public function getAccessToken(): array
+    public function getAccessToken(): string
     {
-        if (config('accessToken') != 'null' && $this->expiresIn != null && ($this->expiresIn > floor(microtime(true)))) {
+        if (config('accessToken') != 'null' && config('expiresIn') != null && (config('expiresIn') > floor(microtime(true)))) {
             $accessToken = config('accessToken');
-            return [
-                'status' => 200,
-                'accessToken' => $accessToken
-            ];
+            return $accessToken;
         }
 
         try {
@@ -70,18 +67,23 @@ abstract class BaseService
                 'Content-Type' => 'application/json'
             ];
 
-            $response = $this->client->post('/api/v1/auth/login',[ 'headers' => $headers] );
-            $accessToken = $response->getBody()->getContents()->responseBody->accessToken;
-            // store token
-            $this->setAccessToken($accessToken, $response->getBody()->getContents()->responseBody->expiresIn + floor(microtime(true)));
+            $response = $this->client->post('/api/v1/auth/login', [
+                'headers' => $headers
+            ]);
 
-            return [
-                'status' => $response->getStatusCode(),
-                'accessToken' => $accessToken
-            ];
-        } catch (GuzzleException $e) {
-            // Handle the error appropriately
-            // throw new MonnifyException($e->getMessage(), $e->getCode());
+            $response = json_decode($response->getBody()->getContents(), true);
+            $content = $response->responseBody;
+            $accessToken = $content->accessToken;
+            // store token
+            $this->setAccessToken($accessToken, $content->expiresIn + floor(microtime(true)));
+
+            return $accessToken;
+        } catch (Exception $e) {
+            throw new  Exception(
+                message: $e->getMessage(),
+                code: (int) $e->getCode(),
+                previous: $e
+            );
         }
     }
 
@@ -90,6 +92,6 @@ abstract class BaseService
         int $expiresIn
     ): void {
         Config::set('accessToken', $accessToken);
-        $this->expiresIn = $expiresIn;
+        Config::set('expiresIn', $expiresIn);
     }
 }

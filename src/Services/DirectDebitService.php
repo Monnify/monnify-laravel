@@ -9,9 +9,9 @@ class DirectDebitService extends BaseService
 {
     private DirectDebitValidator $validator;
 
-    public function __construct()
+    public function __construct($client)
     {
-        parent::__construct();
+        parent::__construct($client);
         $this->validator = new DirectDebitValidator();
     }
 

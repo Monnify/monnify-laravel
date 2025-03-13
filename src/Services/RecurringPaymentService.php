@@ -9,9 +9,9 @@ class RecurringPaymentService extends BaseService
 {
     private RecurringPaymentValidator $validator;
 
-    public function __construct()
+    public function __construct($client)
     {
-        parent::__construct();
+        parent::__construct($client);
         $this->validator = new RecurringPaymentValidator();
     }
     

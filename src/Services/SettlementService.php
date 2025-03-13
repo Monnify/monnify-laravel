@@ -6,6 +6,11 @@ use Monnify\MonnifyLaravel\Enums\HttpMethod;
 
 class SettlementService extends BaseService
 {
+    public function __construct($client)
+    {
+        parent::__construct($client);
+    }
+    
     public function transactions(string $settlementReference, int $pageSize = 10, int $pageNumber = 0): array
     {
         $parameters = [

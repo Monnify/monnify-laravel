@@ -28,13 +28,18 @@
             "Monnify\\MonnifyLaravel\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Monnify\\MonnifyLaravel\\Tests\\": "tests/"
+        }
+    },
     "extra": {
         "laravel": {
             "providers": [
                 "Monnify\\MonnifyLaravel\\MonnifyServiceProvider"
             ],
             "aliases": {
-                "Payment": "Monnify\\MonnifyLaravel\\Facades\\Monnify"
+                "Monnify": "Monnify\\MonnifyLaravel\\Facades\\Monnify"
             }
         }
     },

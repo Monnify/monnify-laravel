@@ -6,6 +6,11 @@ use Monnify\MonnifyLaravel\Enums\HttpMethod;
 
 class OtherService extends BaseService
 {
+    public function __construct($client)
+    {
+        parent::__construct($client);
+    }
+    
     public function banks(): array
     {
         return $this->makeRequest(

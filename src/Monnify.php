@@ -46,8 +46,8 @@ class Monnify
         private string $secretKey,
         private string $environment
     ) {
-        if ($environment !== 'SANDBOX' || $environment !== 'LIVE') {
-            throw new Error("Unknown environment passed: $environment, Please specify between SANDBOX and LIVE");
+        if ($environment !== 'SANDBOX' && $environment !== 'LIVE') {
+            throw new Error("Unknown environment passed: $environment, Please specify between SANDBOX or LIVE");
         }
         
         $key = base64_encode("$apiKey:$secretKey");

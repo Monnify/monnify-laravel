@@ -4,7 +4,6 @@ namespace Monnify\MonnifyLaravel;
 
 use Error;
 use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Config;
 
 use Monnify\MonnifyLaravel\Services\{
     TransactionService,
@@ -25,6 +24,7 @@ use Monnify\MonnifyLaravel\Services\{
 
 class Monnify
 {
+    protected Client $client;
     public TransactionService $transactions;
     public CustomerReservedAccountService $customerReservedAccount;
     public InvoiceService $invoice;
@@ -40,7 +40,6 @@ class Monnify
     public PayCodeService $payCodeAPI;
     public OtherService $helper;
 
-
     public function __construct(
         private string $apiKey,
         private string $secretKey,
@@ -49,11 +48,9 @@ class Monnify
         if ($environment !== 'SANDBOX' && $environment !== 'LIVE') {
             throw new Error("Unknown environment passed: $environment, Please specify between SANDBOX or LIVE");
         }
-        
-        $key = base64_encode("$apiKey:$secretKey");
-        Config::set('basic_key', 'Basic '.$key);
 
-        $client = new Client([
+        // Create single client instance
+        $this->client = new Client([
             'base_uri' => $environment === 'SANDBOX' ? 'https://sandbox.monnify.com' : 'https://api.monnify.com',
             'headers' => [
                 'Accept' => 'application/json',
@@ -61,19 +58,101 @@ class Monnify
             ]
         ]);
 
-        $this->transactions = new TransactionService($client);
-        $this->customerReservedAccount = new CustomerReservedAccountService($client);
-        $this->invoice = new InvoiceService($client);
-        $this->recurringPayment = new RecurringPaymentService($client);
-        $this->directDebitMandate = new DirectDebitService($client);
-        $this->subAccount = new SubAccountService($client);
-        $this->transfer = new DisbursementService($client);
-        $this->wallet = new WalletService($client);
-        $this->limitProfile = new LimitProfileService($client);
-        $this->refund = new RefundService($client);
-        $this->settlements = new SettlementService($client);
-        $this->verificationAPI = new VerificationService($client);
-        $this->payCodeAPI = new PayCodeService($client);
-        $this->helper = new OtherService($client);
+        // Initialize services with the same client instance
+        $this->initializeServices();
+    }
+
+    protected function initializeServices(): void
+    {
+        $this->transactions = new TransactionService($this->client);
+        $this->customerReservedAccount = new CustomerReservedAccountService($this->client);
+        $this->invoice = new InvoiceService($this->client);
+        $this->recurringPayment = new RecurringPaymentService($this->client);
+        $this->directDebitMandate = new DirectDebitService($this->client);
+        $this->subAccount = new SubAccountService($this->client);
+        $this->transfer = new DisbursementService($this->client);
+        $this->wallet = new WalletService($this->client);
+        $this->limitProfile = new LimitProfileService($this->client);
+        $this->refund = new RefundService($this->client);
+        $this->settlements = new SettlementService($this->client);
+        $this->verificationAPI = new VerificationService($this->client);
+        $this->payCodeAPI = new PayCodeService($this->client);
+        $this->helper = new OtherService($this->client);
+    }
+
+    // Add getter for testing purposes
+    public function getClient(): Client
+    {
+        return $this->client;
+    }
+
+    public function transactions(): TransactionService
+    {
+        return $this->transactions;
+    }
+
+    public function customerReservedAccount(): CustomerReservedAccountService
+    {
+        return $this->customerReservedAccount;
+    }
+
+    public function invoice(): InvoiceService
+    {
+        return $this->invoice;
+    }
+
+    public function recurringPayment(): RecurringPaymentService
+    {
+        return $this->recurringPayment;
+    }
+
+    public function directDebitMandate(): DirectDebitService
+    {
+        return $this->directDebitMandate;
+    }
+
+    public function subAccount(): SubAccountService
+    {
+        return $this->subAccount;
+    }
+
+    public function transfer(): DisbursementService
+    {
+        return $this->transfer;
+    }
+
+    public function wallet(): WalletService
+    {
+        return $this->wallet;
+    }
+
+    public function limitProfile(): LimitProfileService
+    {
+        return $this->limitProfile;
+    }
+
+    public function refund(): RefundService
+    {
+        return $this->refund;
+    }
+
+    public function settlements(): SettlementService
+    {
+        return $this->settlements;
+    }
+
+    public function verificationAPI(): VerificationService
+    {
+        return $this->verificationAPI;
+    }
+
+    public function payCodeAPI(): PayCodeService
+    {
+        return $this->payCodeAPI;
+    }
+
+    public function helper(): OtherService
+    {
+        return $this->helper;
     }
 }

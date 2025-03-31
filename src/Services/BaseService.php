@@ -45,7 +45,7 @@ abstract class BaseService
                 'body' => json_decode($response->getBody()->getContents(), true),
             ];
         } catch (Exception $e) {
-            throw new  Exception(
+            throw new Exception(
                 message: $e->getMessage(),
                 code: (int) $e->getCode(),
                 previous: $e
@@ -61,25 +61,22 @@ abstract class BaseService
         }
 
         try {
-            $headers = [
-                'Authorization' => config('basic_key'),
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json'
-            ];
-
             $response = $this->client->post('/api/v1/auth/login', [
-                'headers' => $headers
+                'auth' => [
+                    config('monnify.api_key'),
+                    config('monnify.secret_key'),
+                ]
             ]);
 
-            $response = json_decode($response->getBody()->getContents(), true);
-            $content = $response->responseBody;
+            $response = (object) json_decode($response->getBody()->getContents(), true);
+            $content = (object) $response->responseBody;
             $accessToken = $content->accessToken;
             // store token
             $this->setAccessToken($accessToken, $content->expiresIn + floor(microtime(true)));
 
             return $accessToken;
         } catch (Exception $e) {
-            throw new  Exception(
+            throw new Exception(
                 message: $e->getMessage(),
                 code: (int) $e->getCode(),
                 previous: $e

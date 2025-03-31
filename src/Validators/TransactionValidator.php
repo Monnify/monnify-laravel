@@ -20,7 +20,7 @@ class TransactionValidator
             'redirectUrl' =>'string',
             'paymentMethods' => 'string',
             'incomeSplitConfig' => 'array',
-            'incomeSplitConfig.subAccountCode' => 'required|string',
+            'incomeSplitConfig.subAccountCode' => 'sometimes|string',
             'incomeSplitConfig.feeBearer' => 'boolean',
             'incomeSplitConfig.feePercentage' => 'numeric',
             'incomeSplitConfig.splitPercentage' => 'numeric',

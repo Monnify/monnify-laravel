@@ -5,12 +5,13 @@ namespace Monnify\MonnifyLaravel\Services;
 use Monnify\MonnifyLaravel\Enums\HttpMethod;
 use Monnify\MonnifyLaravel\Validators\TransactionValidator;
 use InvalidArgumentException;
+use GuzzleHttp\Client;
 
 class TransactionService extends BaseService
 {
     private TransactionValidator $validator;
 
-    public function __construct($client)
+    public function __construct(Client $client)
     {
         parent::__construct($client);
         $this->validator = new TransactionValidator();
@@ -66,7 +67,7 @@ class TransactionService extends BaseService
         );
     }
 
-    public function transactions(array $parameters): array
+    public function all(array $parameters): array
     {
         $this->validator->validateGetAllTransactions($parameters);
         return $this->makeRequest(
@@ -87,7 +88,7 @@ class TransactionService extends BaseService
     /**
      * @param string $referenceType referenceType have only two types which is 'payment' or 'transaction'
      */
-    public function statusByReference(string $referenceType = 'transaction', string $reference, $parameters): array
+    public function statusByReference(string $reference, string $referenceType = 'transaction'): array
     {
         if ($referenceType != 'transaction' || $referenceType != 'payment') {
             throw new InvalidArgumentException('Either transaction or payment must be provided as referenceType');

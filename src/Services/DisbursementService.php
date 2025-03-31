@@ -94,7 +94,7 @@ class DisbursementService extends BaseService
     /**
      * @param string $type Type only have two correct value which is 'single' or 'bulk'
      */
-    public function getAll(string $type = 'single', int $pageSize = 10, int $pageNumber = 0): array
+    public function all(string $type = 'single', int $pageSize = 10, int $pageNumber = 0): array
     {
         $url = $type == 'single' ? '/api/v2/disbursements/single/transactions' : '/api/v2/disbursements/bulk/transactions';
         $parameters = [

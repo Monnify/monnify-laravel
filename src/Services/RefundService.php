@@ -25,7 +25,7 @@ class RefundService extends BaseService
         );
     }
 
-    public function getAll(int $pageSize = 10, int $pageNumber = 0): array
+    public function all(int $pageSize = 10, int $pageNumber = 0): array
     {
         $parameters = [
             'size' => $pageSize,

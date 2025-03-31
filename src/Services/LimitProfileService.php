@@ -15,7 +15,7 @@ class LimitProfileService extends BaseService
         $this->validator = new LimitProfileValidator();
     }
 
-    public function getAll(): array
+    public function all(): array
     {
         return $this->makeRequest(
             HttpMethod::GET,

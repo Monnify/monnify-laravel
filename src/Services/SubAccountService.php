@@ -25,7 +25,7 @@ class SubAccountService extends BaseService
         );
     }
 
-    public function getAll(): array
+    public function all(): array
     {
         return $this->makeRequest(
             HttpMethod::GET,

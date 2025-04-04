@@ -2,6 +2,8 @@
 
 namespace Monnify\MonnifyLaravel\Services;
 
+use GuzzleHttp\Client;
+use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Enums\HttpMethod;
 use Monnify\MonnifyLaravel\Validators\WalletValidator;
 
@@ -9,7 +11,7 @@ class WalletService extends BaseService
 {
     private WalletValidator $validator;
 
-    public function __construct($client)
+    public function __construct(Client $client)
     {
         parent::__construct($client);
         $this->validator = new WalletValidator();
@@ -41,16 +43,24 @@ class WalletService extends BaseService
         );
     }
 
-    public function balance(string $walletReference): array
+    public function balance(string $accountNumber): array
     {
+        if (empty($accountNumber)) {
+            throw new InvalidArgumentException('Account Number must provided.');
+        }
+        
         return $this->makeRequest(
             HttpMethod::GET,
-            '/api/v1/disbursements/wallet/balance?walletReference='. $walletReference
+            '/api/v1/disbursements/wallet/balance?accountNumber='. $accountNumber
         );
     }
 
     public function transactions(string $accountNumber, int $pageSize = 10, int $pageNumber = 0): array
     {
+        if (empty($accountNumber)) {
+            throw new InvalidArgumentException('Account Number must provided.');
+        }
+
         $parameters = [
             'accountNumber' => $accountNumber,
             'pageSize' => $pageSize,

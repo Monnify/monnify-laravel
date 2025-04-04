@@ -2,6 +2,8 @@
 
 namespace Monnify\MonnifyLaravel\Services;
 
+use GuzzleHttp\Client;
+use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Enums\HttpMethod;
 use Monnify\MonnifyLaravel\Validators\DisbursementValidator;
 
@@ -9,7 +11,7 @@ class DisbursementService extends BaseService
 {
     private DisbursementValidator $validator;
 
-    public function __construct($client)
+    public function __construct(Client $client)
     {
         parent::__construct($client);
         $this->validator = new DisbursementValidator();
@@ -61,6 +63,10 @@ class DisbursementService extends BaseService
 
     public function resendOTP(string $reference): array
     {
+        if (empty($reference)) {
+            throw new InvalidArgumentException("Reference must be provided");
+        }
+        
         $data['reference'] = $reference;
         return $this->makeRequest(
             HttpMethod::POST,

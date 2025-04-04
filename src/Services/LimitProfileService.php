@@ -2,6 +2,8 @@
 
 namespace Monnify\MonnifyLaravel\Services;
 
+use GuzzleHttp\Client;
+use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Enums\HttpMethod;
 use Monnify\MonnifyLaravel\Validators\LimitProfileValidator;
 
@@ -9,7 +11,7 @@ class LimitProfileService extends BaseService
 {
     private LimitProfileValidator $validator;
 
-    public function __construct($client)
+    public function __construct(Client $client)
     {
         parent::__construct($client);
         $this->validator = new LimitProfileValidator();
@@ -35,10 +37,14 @@ class LimitProfileService extends BaseService
 
     public function update(string $limitProfileCode, array $data): array
     {
+        if (empty($limitProfileCode)) {
+            throw new InvalidArgumentException('Limit Profile Code must be provided.');
+        }
+
         $this->validator->validateLimitProfile($data);
         return $this->makeRequest(
             HttpMethod::PUT,
-            '/api/v1/limit-profile/'.$limitProfileCode,
+            '/api/v1/limit-profile/'. $limitProfileCode,
             $data
         );
     }

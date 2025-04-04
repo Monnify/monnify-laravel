@@ -2,6 +2,8 @@
 
 namespace Monnify\MonnifyLaravel\Services;
 
+use GuzzleHttp\Client;
+use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Enums\HttpMethod;
 use Monnify\MonnifyLaravel\Validators\CustomerReservedAccountValidator;
 
@@ -9,7 +11,7 @@ class CustomerReservedAccountService extends BaseService
 {
     private CustomerReservedAccountValidator $validator;
 
-    public function __construct($client)
+    public function __construct(Client $client)
     {
         parent::__construct($client);
         $this->validator = new CustomerReservedAccountValidator();
@@ -37,6 +39,10 @@ class CustomerReservedAccountService extends BaseService
 
     public function get(string $accountReference): array
     {
+        if (empty($accountReference)) {
+            throw new InvalidArgumentException('Account Reference must be provided');
+        }
+
         return $this->makeRequest(
             HttpMethod::GET,
             '/api/v2/bank-transfer/reserved-accounts/'. $accountReference
@@ -45,15 +51,24 @@ class CustomerReservedAccountService extends BaseService
 
     public function addLinkedAccounts(string $accountReference, array $data = []): array
     {
+        if (empty($accountReference)) {
+            throw new InvalidArgumentException('Account Reference must be provided');
+        }
+
         $this->validator->validateAddLinkedAccounts($data);
         return $this->makeRequest(
             HttpMethod::PUT,
-            '/api/v1/bank-transfer/reserved-accounts/add-linked-accounts/'. $accountReference
+            '/api/v1/bank-transfer/reserved-accounts/add-linked-accounts/'. $accountReference,
+            $data
         );
     }
 
     public function updateBVN(string $accountReference, string $bvn): array
     {
+        if (empty($accountReference)) {
+            throw new InvalidArgumentException('Account Reference must be provided');
+        }
+
         return $this->makeRequest(
             HttpMethod::PUT,
             '/api/v1/bank-transfer/reserved-accounts/update-customer-bvn/'. $accountReference,
@@ -65,6 +80,10 @@ class CustomerReservedAccountService extends BaseService
 
     public function allowedPaymentSource(string $accountReference, array $data): array
     {
+        if (empty($accountReference)) {
+            throw new InvalidArgumentException('Account Reference must be provided');
+        }
+
         $this->validator->validateAllowedPaymentSource($data);
         return $this->makeRequest(
             HttpMethod::PUT,
@@ -75,6 +94,10 @@ class CustomerReservedAccountService extends BaseService
 
     public function updateSplitConfig(string $accountReference, array $data): array
     {
+        if (empty($accountReference)) {
+            throw new InvalidArgumentException('Account Reference must be provided');
+        }
+
         $this->validator->validateUpdateSplitConfig($data);
         return $this->makeRequest(
             HttpMethod::PUT,
@@ -85,6 +108,10 @@ class CustomerReservedAccountService extends BaseService
 
     public function deallocateAccount(string $accountReference): array
     {
+        if (empty($accountReference)) {
+            throw new InvalidArgumentException('Account Reference must be provided');
+        }
+
         return $this->makeRequest(
             HttpMethod::DELETE,
             '/api/v1/bank-transfer/reserved-accounts/reference/'. $accountReference
@@ -93,6 +120,10 @@ class CustomerReservedAccountService extends BaseService
 
     public function transactions(string $accountReference, array $parameters = []): array
     {
+        if (empty($accountReference)) {
+            throw new InvalidArgumentException('Account Reference must be provided');
+        }
+
         $this->validator->validateGetReservedAccountTransactions($parameters);
         return $this->makeRequest(
             HttpMethod::GET,
@@ -104,6 +135,10 @@ class CustomerReservedAccountService extends BaseService
 
     public function updateKYCInfo(string $accountReference, array $data): array
     {
+        if (empty($accountReference)) {
+            throw new InvalidArgumentException('Account Reference must be provided');
+        }
+        
         $this->validator->validateUpdateKYCInfo($data);
         return $this->makeRequest(
             HttpMethod::PUT,

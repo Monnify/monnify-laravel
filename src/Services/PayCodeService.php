@@ -2,6 +2,8 @@
 
 namespace Monnify\MonnifyLaravel\Services;
 
+use GuzzleHttp\Client;
+use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Enums\HttpMethod;
 use Monnify\MonnifyLaravel\Validators\PayCodeValidator;
 
@@ -9,7 +11,7 @@ class PayCodeService extends BaseService
 {
     private PayCodeValidator $validator;
 
-    public function __construct($client)
+    public function __construct(Client $client)
     {
         parent::__construct($client);
         $this->validator = new PayCodeValidator();
@@ -27,6 +29,10 @@ class PayCodeService extends BaseService
 
     public function get(string $payCodeReference): array
     {
+        if (empty($payCodeReference)) {
+            throw new InvalidArgumentException('PayCode Reference must be provided.');
+        }
+
         return $this->makeRequest(
             HttpMethod::GET,
             '/api/v1/paycode/'. $payCodeReference
@@ -35,6 +41,10 @@ class PayCodeService extends BaseService
 
     public function getUnMasked(string $payCodeReference): array
     {
+        if (empty($payCodeReference)) {
+            throw new InvalidArgumentException('PayCode Reference must be provided.');
+        }
+
         return $this->makeRequest(
             HttpMethod::GET,
             '/api/v1/paycode/'. $payCodeReference . '/authorize'
@@ -54,6 +64,10 @@ class PayCodeService extends BaseService
 
     public function delete(string $payCodeReference): array
     {
+        if (empty($payCodeReference)) {
+            throw new InvalidArgumentException('PayCode Reference must be provided.');
+        }
+
         return $this->makeRequest(
             HttpMethod::DELETE,
             '/api/v1/paycode/'. $payCodeReference

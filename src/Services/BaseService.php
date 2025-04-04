@@ -4,6 +4,7 @@ namespace Monnify\MonnifyLaravel\Services;
 
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Config;
 use Monnify\MonnifyLaravel\Enums\HttpMethod;
 
@@ -44,12 +45,11 @@ abstract class BaseService
                 'status' => $response->getStatusCode(),
                 'body' => json_decode($response->getBody()->getContents(), true),
             ];
-        } catch (Exception $e) {
-            throw new Exception(
-                message: $e->getMessage(),
-                code: (int) $e->getCode(),
-                previous: $e
-            );
+        } catch (RequestException $e) {
+            return [
+                'status' => (int) $e->getCode(),
+                'error' => json_decode($e->getResponse()->getBody()->getContents()),
+            ];
         }
     }
 
@@ -78,8 +78,7 @@ abstract class BaseService
         } catch (Exception $e) {
             throw new Exception(
                 message: $e->getMessage(),
-                code: (int) $e->getCode(),
-                previous: $e
+                code: (int) $e->getCode()
             );
         }
     }

@@ -2,6 +2,8 @@
 
 namespace Monnify\MonnifyLaravel\Services;
 
+use GuzzleHttp\Client;
+use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Enums\HttpMethod;
 use Monnify\MonnifyLaravel\Validators\RefundValidator;
 
@@ -9,7 +11,7 @@ class RefundService extends BaseService
 {
     private RefundValidator $validator;
 
-    public function __construct($client)
+    public function __construct(Client $client)
     {
         parent::__construct($client);
         $this->validator = new RefundValidator();
@@ -42,9 +44,13 @@ class RefundService extends BaseService
 
     public function status(string $refundReference): array
     {
+        if (empty($refundReference)) {
+            throw new InvalidArgumentException('Refund Reference must be provided.');
+        }
+
         return $this->makeRequest(
             HttpMethod::GET,
-            '/api/v1/refunds/'.$refundReference
+            '/api/v1/refunds/'. $refundReference
         );
     }
 }

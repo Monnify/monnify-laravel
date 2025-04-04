@@ -11,7 +11,7 @@ class RefundValidator
     {
         $validator = Validator::make($data, [
             'transactionReference' => 'required|string',
-            'refundAmount' => 'required|string',
+            'refundAmount' => 'required|int',
             'refundReference' => 'required|string',
             'refundReason' => 'required|string',
             'customerNote' => 'required|string',

@@ -9,13 +9,13 @@ class SubAccountValidator
 {
     public function validateAccount(array $data): void
     {
-        $validator = Validator::make($data, [
-            'subAccountCode' => 'sometimes|required|string',
-            'currencyCode' => 'required|string',
-            'accountNumber' => 'required|string',
-            'bankCode' => 'required|string',
-            'email' => 'required|string',
-            'defaultSplitPercentage' => 'required|numeric|min:20|regex:/^\d*\.?\d*$/'
+        $validator = Validator::make(['sub' => $data], [
+            'sub.*.subAccountCode' => 'sometimes|string',
+            'sub.*.currencyCode' => 'required|string',
+            'sub.*.accountNumber' => 'required|string',
+            'sub.*.bankCode' => 'required|string',
+            'sub.*.email' => 'required|string',
+            'sub.*.defaultSplitPercentage' => 'required|numeric|min:20|regex:/^\d*\.?\d*$/'
         ]);
 
         if ($validator->fails()) {

@@ -33,7 +33,17 @@ return [
     /**
      * Api contract code From Monnify
      */
-    // 'contract_code' => env('MONNIFY_CONTRACT'),
+    'contract_code' => env('MONNIFY_CONTRACT_CODE'),
+
+    /**
+     * Api Wallet number From Monnify
+     */
+    'wallet_number' => env('MONNIFY_WALLET_ACCOUNT_NUMBER'),
+
+    /**
+     * Api Account number From Monnify
+     */
+    'account_number' => env('MONNIFY_ACCOUNT_NUMBER'),
 
     /**
      * Monnify environment: SANDBOX or LIVE

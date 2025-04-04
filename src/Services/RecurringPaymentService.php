@@ -2,6 +2,7 @@
 
 namespace Monnify\MonnifyLaravel\Services;
 
+use GuzzleHttp\Client;
 use Monnify\MonnifyLaravel\Enums\HttpMethod;
 use Monnify\MonnifyLaravel\Validators\RecurringPaymentValidator;
 
@@ -9,7 +10,7 @@ class RecurringPaymentService extends BaseService
 {
     private RecurringPaymentValidator $validator;
 
-    public function __construct($client)
+    public function __construct(Client $client)
     {
         parent::__construct($client);
         $this->validator = new RecurringPaymentValidator();

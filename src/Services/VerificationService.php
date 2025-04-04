@@ -2,6 +2,8 @@
 
 namespace Monnify\MonnifyLaravel\Services;
 
+use GuzzleHttp\Client;
+use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Enums\HttpMethod;
 use Monnify\MonnifyLaravel\Validators\VerificationValidator;
 
@@ -9,7 +11,7 @@ class VerificationService extends BaseService
 {
     private VerificationValidator $validator;
 
-    public function __construct($client)
+    public function __construct(Client $client)
     {
         parent::__construct($client);
         $this->validator = new VerificationValidator();
@@ -57,6 +59,10 @@ class VerificationService extends BaseService
 
     public function nin(string $nin): array
     {
+        if (empty($nin)) {
+            throw new InvalidArgumentException('NIN must be provided.');
+        }
+
         $data = [
             'nin' => $nin
         ];

@@ -67,7 +67,7 @@ class TransactionService extends BaseService
         );
     }
 
-    public function all(array $parameters): array
+    public function all(array $parameters = []): array
     {
         $this->validator->validateGetAllTransactions($parameters);
         return $this->makeRequest(
@@ -80,6 +80,9 @@ class TransactionService extends BaseService
 
     public function status(string $transactionReference): array
     {
+        if (empty($transactionReference)) {
+            throw new InvalidArgumentException('Transaction Reference must be provided');
+        }
         return $this->makeRequest(
             HttpMethod::GET,
             '/api/v2/transactions/'. $transactionReference
@@ -90,7 +93,7 @@ class TransactionService extends BaseService
      */
     public function statusByReference(string $reference, string $referenceType = 'transaction'): array
     {
-        if ($referenceType != 'transaction' || $referenceType != 'payment') {
+        if ($referenceType != 'transaction' && $referenceType != 'payment') {
             throw new InvalidArgumentException('Either transaction or payment must be provided as referenceType');
         } elseif ($referenceType == 'transaction') {
             $queryParam = 'transactionReference=' . $reference;

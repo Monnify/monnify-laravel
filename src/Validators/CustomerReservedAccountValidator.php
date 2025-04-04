@@ -40,8 +40,8 @@ class CustomerReservedAccountValidator
             'customerName' => 'string',
             'customerEmail' => 'required|email',
             'reservedAccountType' => 'string',
-            'bvn' => Rule::requiredIf(fn() => empty($data['nin'])),
-            'nin' => Rule::requiredIf(fn() => empty($data['bvn']))
+            'bvn' => 'sometimes',
+            'nin' => 'sometimes'
         ]);
 
         if ($validator->fails()) {

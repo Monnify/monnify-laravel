@@ -2,11 +2,12 @@
 
 namespace Monnify\MonnifyLaravel\Services;
 
+use GuzzleHttp\Client;
 use Monnify\MonnifyLaravel\Enums\HttpMethod;
 
 class OtherService extends BaseService
 {
-    public function __construct($client)
+    public function __construct(Client $client)
     {
         parent::__construct($client);
     }

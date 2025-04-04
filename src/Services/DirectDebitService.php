@@ -2,6 +2,8 @@
 
 namespace Monnify\MonnifyLaravel\Services;
 
+use GuzzleHttp\Client;
+use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Enums\HttpMethod;
 use Monnify\MonnifyLaravel\Validators\DirectDebitValidator;
 
@@ -9,7 +11,7 @@ class DirectDebitService extends BaseService
 {
     private DirectDebitValidator $validator;
 
-    public function __construct($client)
+    public function __construct(Client $client)
     {
         parent::__construct($client);
         $this->validator = new DirectDebitValidator();
@@ -27,11 +29,13 @@ class DirectDebitService extends BaseService
 
     public function get(string $mandateReference): array
     {
+        if (empty($mandateReference)) {
+            throw new InvalidArgumentException('Mandate Reference must be provided.');
+        }
+
         return $this->makeRequest(
             HttpMethod::GET,
-            '/api/v1/direct-debit/mandate/'
-            [],
-            ['mandateReferences' => $mandateReference]
+            '/api/v1/direct-debit/mandate/?mandateReferences='. $mandateReference
         );
     }
 
@@ -47,19 +51,25 @@ class DirectDebitService extends BaseService
 
     public function status(string $paymentReference): array
     {
+        if (empty($paymentReference)) {
+            throw new InvalidArgumentException('Payment Reference must be provided.');
+        }
+
         return $this->makeRequest(
             HttpMethod::GET,
-            '/api/v1/direct-debit/mandate/debit-status',
-            [],
-            ['paymentReference' => $paymentReference]
+            '/api/v1/direct-debit/mandate/debit-status?paymentReference='. $paymentReference
         );
     }
 
     public function cancel(string $mandateCode): array
     {
+        if (empty($mandateCode)) {
+            throw new InvalidArgumentException('Mandate Code must be provided.');
+        }
+
         return $this->makeRequest(
             HttpMethod::PUT,
-            '/api/v1/direct-debit/mandate/cancel-mandate/'.$mandateCode
+            '/api/v1/direct-debit/mandate/cancel-mandate/'. $mandateCode
         );
     }
 }

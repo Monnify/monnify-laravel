@@ -18,7 +18,7 @@ class TransactionValidator
             'currencyCode' => 'required|string',
             'contractCode' => 'required|string',
             'redirectUrl' =>'string',
-            'paymentMethods' => 'string',
+            'paymentMethods' => 'array',
             'incomeSplitConfig' => 'array',
             'incomeSplitConfig.subAccountCode' => 'sometimes|string',
             'incomeSplitConfig.feeBearer' => 'boolean',

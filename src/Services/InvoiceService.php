@@ -2,6 +2,8 @@
 
 namespace Monnify\MonnifyLaravel\Services;
 
+use GuzzleHttp\Client;
+use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Enums\HttpMethod;
 use Monnify\MonnifyLaravel\Validators\InvoiceValidator;
 
@@ -9,7 +11,7 @@ class InvoiceService extends BaseService
 {
     private InvoiceValidator $validator;
 
-    public function __construct($client)
+    public function __construct(Client $client)
     {
         parent::__construct($client);
         $this->validator = new InvoiceValidator();
@@ -27,6 +29,10 @@ class InvoiceService extends BaseService
 
     public function get(string $invoiceReference): array
     {
+        if (empty($invoiceReference)) {
+            throw new InvalidArgumentException('Invoice Reference must be provided.');
+        }
+
         return $this->makeRequest(
             HttpMethod::GET,
             '/api/v1/invoice/'.$invoiceReference.'/details'
@@ -43,6 +49,10 @@ class InvoiceService extends BaseService
 
     public function cancel(string $invoiceReference): array
     {
+        if (empty($invoiceReference)) {
+            throw new InvalidArgumentException('Invoice Reference must be provided.');
+        }
+
         return $this->makeRequest(
             HttpMethod::DELETE,
             '/api/v1/invoice/'.$invoiceReference.'/cancel'

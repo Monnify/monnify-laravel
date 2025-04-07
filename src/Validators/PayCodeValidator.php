@@ -27,7 +27,7 @@ class PayCodeValidator
         $validator = Validator::make($data, [
             'transactionReference' => 'sometimes|string',
             'beneficiaryName' => 'sometimes|string',
-            'transactionStatus ' => 'sometimes|string',
+            'transactionStatus' => 'sometimes|string',
             'from' => 'sometimes|integer',
             'to' => 'sometimes|integer',
         ]);

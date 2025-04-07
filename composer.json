@@ -1,6 +1,7 @@
 {
     "name": "monnify/monnify-laravel",
     "description": "A Laravel Monnify Package",
+    "version": "1.0.0",
     "type": "library",
     "license": "MIT",
     "authors": [

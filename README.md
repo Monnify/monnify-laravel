@@ -54,6 +54,20 @@ $transactionData = [
 
 $response = Monnify::transactions()->initialise($transactionData);
 ```
+## Error Handling
+
+The package throws exceptions for various error cases. It's recommended to wrap your API calls in try-catch blocks:
+
+```php
+try {
+    $response = Monnify::transactions()->initialise($data);
+} catch (Exception $e) {
+    // Handle the error
+    $errorMessage = $e->getMessage();
+    // $e->status  // error status
+    // $e->error  // error object
+}
+```
 
 ## Detailed Service Documentation
 
@@ -1061,19 +1075,6 @@ Monnify::helper()->banksWithUSSD(); // Get banks with USSD
 ```
 
 Each service method returns an array containing the API response. Always wrap your API calls in try-catch blocks to handle potential errors:
-
-## Error Handling
-
-The package throws exceptions for various error cases. It's recommended to wrap your API calls in try-catch blocks:
-
-```php
-try {
-    $response = Monnify::transactions()->initialise($data);
-} catch (Exception $e) {
-    // Handle the error
-    $errorMessage = $e->getMessage();
-}
-```
 
 ## Testing
 

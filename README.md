@@ -1,24 +1,23 @@
-# Laravel Monnify Package
+# Laravel Monnify Package Documentation
 
-A Laravel package for seamless integration with the Monnify payment gateway API.
+A Laravel package to effortlessly integrate the Monnify payment gateway API into your Laravel projects.
+
 
 ## Installation
 
-You can install the package via composer:
+Install via Composer:
 
 ```bash
 composer require monnify/monnify-laravel
 ```
 
-## Configuration
-
-1. Publish the configuration file:
+Publish the configuration file:
 
 ```bash
 php artisan vendor:publish --provider="Monnify\MonnifyLaravel\MonnifyServiceProvider"
 ```
 
-2. Add the following variables to your `.env` file:
+Add environment variables (`.env`):
 
 ```env
 MONNIFY_API_KEY=your_api_key
@@ -29,105 +28,114 @@ MONNIFY_ACCOUNT_NUMBER=your_account_number
 MONNIFY_ENVIRONMENT=SANDBOX # or LIVE
 ```
 
-## Usage
+## Quick Start
 
-### Basic Usage
+Here's how to quickly initialize a payment transaction:
 
 ```php
 use Monnify\MonnifyLaravel\Facades\Monnify;
 
-// Initialize a transaction
-$transactionData = [
+$data = [
     'amount' => 100.00,
-    'customerName' => 'John3 Doe',
-    'customerEmail' => 'john3@example.com',
-    'paymentReference' => 'Trial transaction 3',
-    'paymentDescription' => 'Payment for services',
+    'customerName' => 'Jane Doe',
+    'customerEmail' => 'jane@example.com',
+    'paymentReference' => 'UNIQUE_REF_001',
+    'paymentDescription' => 'Payment for Service',
     'currencyCode' => 'NGN',
     'contractCode' => config('monnify.contract_code'),
-    'redirectUrl' => 'https://my-merchants-page.com/transaction/confirm',
-    'paymentMethods' => [
-        'CARD',
-        'ACCOUNT_TRANSFER'
-    ],
+    'redirectUrl' => 'https://your-site.com/payment-confirmation',
+    'paymentMethods' => ['CARD', 'ACCOUNT_TRANSFER'],
 ];
 
-$response = Monnify::transactions()->initialise($transactionData);
-```
-## Error Handling
-
-The package throws exceptions for various error cases. It's recommended to wrap your API calls in try-catch blocks:
-
-```php
 try {
     $response = Monnify::transactions()->initialise($data);
+    return redirect($response['checkoutUrl']);
 } catch (Exception $e) {
-    // Handle the error
+    // Handle error
     $errorMessage = $e->getMessage();
     // $e->status  // error status
     // $e->error  // error object
 }
 ```
 
-## Detailed Service Documentation
+> This package throws exceptions for various error cases. Hence, wrapping your API calls in try-catch blocks.
 
-### 1. Transaction Service
+# Available Services
+
+This package provides the following services:
+
+1. **Transaction Service**: Manage payments, authorizations, and statuses.
+2. **Customer Reserved Account Service**: Create/manage virtual accounts.
+3. **Invoice Service**: Generate and manage invoices.
+4. **Disbursement Service**: Manage single and bulk fund transfers.
+5. **Wallet Service**: Manage wallet creation, balances, and transactions.
+6. **Verification Service**: Perform account, BVN, NIN verifications.
+7. **Sub Account Service**: Create/manage sub-accounts for split payments.
+8. **Refund Service**: Handle payment refunds.
+9. **Settlement Service**: Settlement transaction handling.
+10. **Limit Profile Service**: Manage transaction limits.
+11. **Pay Code Service**: Generate and manage pay codes.
+12. **Direct Debit Service**: Manage direct debit mandates.
+13. **Recurring Payment Service**: Automate recurring payments.
+14. **Helper Service**: Utility functions (fetch banks, etc).
+
+
+# Detailed Usage
+
+## Transaction Service
+
 The Transaction Service handles all payment-related operations.
 
-#### All Available Methods
+### All Available Methods
+
 ```php
-// Payment Initialization
-Monnify::transactions()->initialise($data);                    // Initialize a new transaction
-Monnify::transactions()->payWithBankTransfer($data);          // Initialize bank transfer payment
-Monnify::transactions()->chargeCard($data);                   // Charge a card
+// Initialize a new transaction
+Monnify::transactions()->initialise($data);  
 
-// Card Authorization
-Monnify::transactions()->authorizeOTP($data);                 // Authorize with OTP
-Monnify::transactions()->authorizeThreeDSCard($data);         // Authorize 3D secure card
+// Initialize bank transfer payment                 
+Monnify::transactions()->payWithBankTransfer($data);
 
-// Transaction Information
-Monnify::transactions()->all();                   	          // Get all transactions
-Monnify::transactions()->status($transactionReference);       // Get transaction status
-Monnify::transactions()->statusByReference($reference, $type); // Get status by reference
+// Charge a card
+Monnify::transactions()->chargeCard($data);                   
+
+/* Card Authorization */
+
+// Authorize with OTP
+Monnify::transactions()->authorizeOTP($data);   
+
+// Authorize 3D secure card
+Monnify::transactions()->authorizeThreeDSCard($data);        
+
+/* Transaction Information */
+
+// Get all transactions
+Monnify::transactions()->all();
+
+// Get transaction status
+Monnify::transactions()->status($transactionReference);  
+
+// Get status by reference
+Monnify::transactions()->statusByReference($reference, $type); 
 ```
 
-#### Initialize Transaction
-Creates a new payment transaction.
+## Transaction Initialization
+
 ```php
 Monnify::transactions()->initialise($data);
 ```
-**Required Parameters:**
-```php
-$data = [
-    'amount' => 1000.00,              // float: Amount to be paid
-    'customerName' => 'John Doe',      // string: Customer's full name
-    'customerEmail' => 'john@example.com', // string: Customer's email
-    'paymentReference' => 'UNIQUE-REF-123', // string: Unique payment reference
-    'paymentDescription' => 'Payment for services', // string: Description
-    'currencyCode' => 'NGN',          // string: Currency code (NGN, USD, etc.)
-    'contractCode' => 'CONTRACT-CODE', // string: Your Monnify contract code
-    'redirectUrl' => 'https://your-website.com/callback', // string: Redirect URL
-];
-```
-**Optional Parameters:**
-```php
-$data['paymentMethods'] = ['CARD', 'ACCOUNT_TRANSFER']; // array: Payment methods
-$data['incomeSplitConfig'] = [        // array: Split payment configuration
-    [
-        'subAccountCode' => 'MFY_SUB_319452883228',
-        'feePercentage' => 2.0,
-        'splitPercentage' => 20.0,
-        'feeBearer' => true
-    ]
-];
-```
+**Required fields:** `amount`, `customerName`, `customerEmail`, `paymentReference`, `currencyCode`, `contractCode`, `redirectUrl`.
 
-#### Pay with Bank Transfer
+**Optional fields:** `paymentMethods`, `incomeSplitConfig`.
+
+### Pay with Bank Transfer
+
 Initializes a bank transfer payment.
+
 ```php
 Monnify::transactions()->payWithBankTransfer($data);
 ```
 **Required Parameters:**
+
 ```php
 $data = [
     'amount' => 1000.00,
@@ -139,12 +147,16 @@ $data = [
 ];
 ```
 
-#### Charge Card
+### Charge Card
+
 Process a card payment.
+
 ```php
 Monnify::transactions()->chargeCard($data);
 ```
+
 **Required Parameters:**
+
 ```php
 $data = [
     'transactionReference' => 'TRANS-REF-123', // string: Transaction reference
@@ -156,12 +168,15 @@ $data = [
     ]
 ];
 ```
-#### Authorize OTP
-Authorize with OTP
+
+### Authorize with OTP
+
 ```php
 Monnify::transactions()->authorizeOTP($data);
 ```
+
 **Required Parameters:**
+
 ```php
 $data = [
     'transactionReference' => 'TRANS-REF-123',
@@ -169,12 +184,14 @@ $data = [
 ];
 ```
 
-#### Authorize 3DS Card
-Authorize 3D secure card
+### Authorize 3D secure card
+
 ```php
 Monnify::transactions()->authorizeThreeDSCard($data);
 ```
+
 **Required Parameters:**
+
 ```php
 $data = [
     'transactionReference' => 'TRANS-REF-123',
@@ -182,51 +199,79 @@ $data = [
 ];
 ```
 
-#### Get Transaction Status
-Check the status of a transaction.
+### Get Transaction Status
+
 ```php
 Monnify::transactions()->status($transactionReference);
 ```
+
 **Parameters:**
 - `$transactionReference` (string): The transaction reference to check
 
-#### Get Status by Reference
+### Get Status by Reference
+
 Check transaction status using different reference types.
+
 ```php
 Monnify::transactions()->statusByReference($reference, $referenceType);
 ```
+
 **Parameters:**
 - `$reference` (string): The reference number
 - `$referenceType` (string): Either 'transaction' or 'payment' (default: 'transaction')
 
-### 2. Customer Reserved Account Service
+## Customer Reserved Account Service
+
 Manages reserved account operations.
 
-#### All Available Methods
+### All Available Methods
+
 ```php
-// Account Creation and Management
-Monnify::customerReservedAccount()->createGeneralAccount($data);    // Create general account
-Monnify::customerReservedAccount()->createInvoiceAccount($data);    // Create invoice account
-Monnify::customerReservedAccount()->get($accountReference);         // Get account details
-Monnify::customerReservedAccount()->addLinkedAccounts($ref, $data); // Add linked accounts
-Monnify::customerReservedAccount()->deallocateAccount($ref);        // Remove account
+// Create general account
+Monnify::customerReservedAccount()->createGeneralAccount($data);
 
-// Account Updates
-Monnify::customerReservedAccount()->updateBVN($ref, $bvn);         // Update BVN
-Monnify::customerReservedAccount()->updateKYCInfo($ref, $data);    // Update KYC info
-Monnify::customerReservedAccount()->allowedPaymentSource($ref, $data); // Update payment sources
-Monnify::customerReservedAccount()->updateSplitConfig($ref, $data); // Update split config
+// Create invoice account
+Monnify::customerReservedAccount()->createInvoiceAccount($data);    
 
-// Transaction Information
-Monnify::customerReservedAccount()->transactions($ref, $params);    // Get transactions
+// Get account details
+Monnify::customerReservedAccount()->get($accountReference);
+
+// Add linked accounts
+Monnify::customerReservedAccount()->addLinkedAccounts($ref, $data); 
+
+// Remove account
+Monnify::customerReservedAccount()->deallocateAccount($ref);        
+
+
+/** Account Updates **/
+
+// Update BVN
+Monnify::customerReservedAccount()->updateBVN($ref, $bvn);  
+
+// Update KYC info
+Monnify::customerReservedAccount()->updateKYCInfo($ref, $data);  
+
+// Update payment sources
+Monnify::customerReservedAccount()->allowedPaymentSource($ref, $data); 
+
+// Update split config
+Monnify::customerReservedAccount()->updateSplitConfig($ref, $data); 
+
+/** Transaction Information **/
+
+ // Get transactions
+Monnify::customerReservedAccount()->transactions($ref, $params);   
 ```
 
-#### Create General Account
+### Create General Account
+
 Creates a new reserved general account.
+
 ```php
 Monnify::customerReservedAccount()->createGeneralAccount($data);
 ```
 **Required Parameters:**
+
 ```php
 $data = [
     'accountReference' => 'ACC-REF-123',    // string: Unique account reference
@@ -238,7 +283,9 @@ $data = [
     'getAllAvailableBanks' => true          // boolean: Get all available banks
 ];
 ```
+
 **Optional Parameters:**
+
 ```php
 $data['preferredBanks'] = ['035', '058'];  // array: Preferred bank codes
 $data['restrictPaymentSource'] = true;      // boolean: Restrict payment sources
@@ -255,12 +302,16 @@ $data['incomeSplitConfig'] = [              // array: Split payment configuratio
 ];
 ```
 
-#### Create Invoice Account
+### Create Invoice Account
+
 Creates a new reserved invoice account.
+
 ```php
 Monnify::customerReservedAccount()->createInvoiceAccount($data);
 ```
+
 **Required Parameters:**
+
 ```php
 $data = [
     'contractCode' => 'your_contract_code',
@@ -271,29 +322,40 @@ $data = [
     'reservedAccountType' => 'INVOICE'
 ];
 ```
+
 **Optional Parameters:**
+
 ```php
 $data['customerName'] = 'Customer Name'; 
 $data['bvn'] = '12345678901';
 $data['nin'] = '000000009090897878'
 ```
 
-#### Get Account Details
+### Get Account Details
+
 Get the full reserved account detail.
+
 ```php
 Monnify::customerReservedAccount()->get($accountReference);
 ```
+
 **Parameters:**
+
 - `$accountReference` (string): The reference of the main account
 
-#### Add Linked Accounts
+### Add Linked Accounts
+
 Add additional accounts to a reserved account.
+
 ```php
 Monnify::customerReservedAccount()->addLinkedAccounts($accountReference, $data);
 ```
+
 **Parameters:**
+
 - `$accountReference` (string): The reference of the main account
 - `$data` (array): Linked accounts configuration
+
 ```php
 $data = [
     'accountNames' => [
@@ -307,31 +369,38 @@ $data = [
 ];
 ```
 
-#### Deallocate Account
-Remove account.
+### Deallocate Account
+
 ```php
 Monnify::customerReservedAccount()->deallocateAccount($accountReference);
 ```
+
 **Parameters:**
+
 - `$accountReference` (string): The reference of the main account
 
-#### Update BVN
-Update the BVN for a reserved account.
+### Update the BVN for a reserved account.
+
 ```php
 Monnify::customerReservedAccount()->updateBVN($accountReference, $bvn);
 ```
+
 **Parameters:**
+
 - `$accountReference` (string): Account reference
 - `$bvn` (string): Bank Verification Number
 
-#### Update KYC Info
-Update the KYC Info for a reserved account.
+### Update the KYC Info for a reserved account.
+
 ```php
 Monnify::customerReservedAccount()->updateKYCInfo($accountReference, $data);
 ```
+
 **Parameters:**
+
 - `$accountReference` (string): Account reference
 - `$data` (array): KYC info (BVN, NIN or both)
+
 ```php
 $data = [
     'bvn' => '21212121212',
@@ -339,14 +408,17 @@ $data = [
 ];
 ```
 
-#### Allowed Payment Source
-Update payment sources for a reserved account.
+### Allowed Payment Source
+
 ```php
 Monnify::customerReservedAccount()->allowedPaymentSource($accountReference, $data);
 ```
+
 **Parameters:**
+
 - `$accountReference` (string): Account reference
 - `$data` (array): payment source setttings
+
 ```php
 $data = [
     'restrictPaymentSource' => true,
@@ -359,14 +431,17 @@ $data = [
 ];
 ```
 
-#### Update Split Config
-Update Split Config for a reserved account.
+### Update Split Config for a reserved account.
+
 ```php
 Monnify::customerReservedAccount()->updateSplitConfig($accountReference, $data);
 ```
+
 **Parameters:**
+
 - `$accountReference` (string): Account reference
 - `$data` (array): split configs
+
 ```php
 $data = [
     [
@@ -376,14 +451,16 @@ $data = [
 ];
 ```
 
-#### Get Account Transactions
-Retrieve transactions for a reserved account.
+### Get Account Transactions
+
 ```php
 Monnify::customerReservedAccount()->transactions($accountReference, $parameters);
 ```
+
 **Parameters:**
 - `$accountReference` (string): Account reference
 - `$parameters` (array): Optional parameters
+
 ```php
 $parameters = [
     'page' => 0,     // integer: Page number (default: 0)
@@ -391,25 +468,36 @@ $parameters = [
 ];
 ```
 
-### 3. Invoice Service
-Manages invoice creation and operations.
+## Invoice Service
 
-#### All Available Methods
+Manage invoice creation and operations.
+
+### All Available Methods
+
 ```php
-// Invoice Management
-Monnify::invoice()->create($data);                // Create new invoice
-Monnify::invoice()->get($invoiceReference);       // Get invoice details
-Monnify::invoice()->all();                        // Get all invoices
-Monnify::invoice()->cancel($invoiceReference);    // Cancel invoice
-Monnify::invoice()->attachReservedAccount($data); // Attach reserved account
+// Create new invoice
+Monnify::invoice()->create($data);    
+
+// Get invoice details
+Monnify::invoice()->get($invoiceReference);  
+
+// Get all invoices
+Monnify::invoice()->all();   
+
+// Cancel invoice
+Monnify::invoice()->cancel($invoiceReference); 
+
+// Attach reserved account
+Monnify::invoice()->attachReservedAccount($data); 
 ```
 
-#### Create Invoice
-Creates a new invoice.
+### Create a new Invoice
+
 ```php
 Monnify::invoice()->create($data);
 ```
 **Required Parameters:**
+
 ```php
 $data = [
     'amount' => 1000.00,                    // float: Invoice amount
@@ -423,34 +511,42 @@ $data = [
 ];
 ```
 
-#### Get Invoice Details
+### Get Invoice Details
+
 Retrieve details of a specific invoice.
+
 ```php
 Monnify::invoice()->get($invoiceReference);
 ```
+
 **Parameters:**
+
 - `$invoiceReference` (string): The invoice reference to retrieve
 
-#### Get All Invoices
-Retrieve all invoices.
+### Retrieve all invoices.
+
 ```php
 Monnify::invoice()->all();
 ```
 
-#### Cancel Invoice
-Cancel an existing invoice.
+### Cancel an existing invoice.
+
 ```php
 Monnify::invoice()->cancel($invoiceReference);
 ```
+
 **Parameters:**
+
 - `$invoiceReference` (string): The invoice reference to cancel
 
-#### Attach Reserved Account
-Attach a reserved account to an existing invoice.
+### Attach a reserved account to an existing invoice.
+
 ```php
 Monnify::invoice()->cancel($invoiceReference);
 ```
+
 **Required Parameters:**
+
 ```php
 $data = [
     'amount' => '999',
@@ -464,41 +560,64 @@ $data = [
     'expiryDate' => '2025-04-30 12:00:00'
 ];
 ```
+
 **Optional Parameters:**
+
 ```php
 $data['incomeSplitConfig'] = [];  // array: income split config 
 $data['redirectUrl'] = 'https://your-website.com';
 ```
 
+## Disbursement Service
 
-### 4. Disbursement Service
 Handles money transfers and disbursements.
 
-#### All Available Methods
+### All Available Methods
+
 ```php
 // Single Transfers
-Monnify::transfer()->single($data, $async);           // Single transfer
-Monnify::transfer()->authoriseSingle($data);          // Authorize single transfer
-Monnify::transfer()->singleStatus($reference);        // Get single transfer status
+Monnify::transfer()->single($data, $async);           
 
-// Bulk Transfers
-Monnify::transfer()->bulk($data);                     // Bulk transfer
-Monnify::transfer()->authoriseBulk($data);           // Authorize bulk transfer
-Monnify::transfer()->bulkStatus($ref, $pageSize, $pageNumber); // Get bulk status
-Monnify::transfer()->bulkTransaction($ref, $pageSize, $pageNumber); // Get transactions
+// Authorize single transfer
+Monnify::transfer()->authoriseSingle($data);   
 
-// Other Operations
-Monnify::transfer()->resendOTP($reference);          // Resend OTP
-Monnify::transfer()->all($type, $pageSize, $pageNumber); // Get all transfers
-Monnify::transfer()->search($accountNumber, $pageSize, $pageNumber); // Search
+// Get single transfer status
+Monnify::transfer()->singleStatus($reference);        
+
+// Bulk Transfer
+Monnify::transfer()->bulk($data);                     
+
+// Authorize bulk transfer
+Monnify::transfer()->authoriseBulk($data); 
+
+// Get bulk status
+Monnify::transfer()->bulkStatus($ref, $pageSize, $pageNumber); 
+
+// Get transactions
+Monnify::transfer()->bulkTransaction($ref, $pageSize, $pageNumber); 
+
+/** Other Operations **/
+
+// Resend OTP
+Monnify::transfer()->resendOTP($reference);   
+
+// Get all transfers
+Monnify::transfer()->all($type, $pageSize, $pageNumber);
+
+// Search
+Monnify::transfer()->search($accountNumber, $pageSize, $pageNumber); 
 ```
 
-#### Single Transfer
+### Single Transfer
+
 Process a single money transfer.
+
 ```php
 Monnify::transfer()->single($data, $async = false);
 ```
+
 **Required Parameters:**
+
 ```php
 $data = [
     'amount' => 1000.00,                    // float: Amount to transfer
@@ -510,14 +629,19 @@ $data = [
     'sourceAccountNumber' => '1234567890'   // string: Source account number
 ];
 ```
+
 **Optional Parameters:**
+
 - `$async` (boolean): Whether to process transfer asynchronously (default: false)
 
-#### Bulk Transfer
+### Bulk Transfer
+
 Process multiple transfers at once.
+
 ```php
 Monnify::transfer()->bulk($data);
 ```
+
 **Required Parameters:**
 ```php
 $data = [
@@ -541,13 +665,15 @@ $data = [
 ];
 ```
 
-#### Authorize Transfer
-Authorize a transfer with OTP.
+### Authorize a transfer with OTP.
+
 ```php
 Monnify::transfer()->authoriseSingle($data);  // For single transfer
 Monnify::transfer()->authoriseBulk($data);    // For bulk transfer
 ```
+
 **Required Parameters:**
+
 ```php
 $data = [
     'reference' => 'TRANSFER-123',  		// string: Transfer reference
@@ -555,25 +681,35 @@ $data = [
 ];
 ```
 
-#### Check Transfer Status
-```php
-Monnify::transfer()->singleStatus($reference);  // Single transfer status
-Monnify::transfer()->bulkStatus($batchReference, $pageSize = 10, $pageNumber = 0);  // Bulk transfer status
-```
-
-#### Get Transaction
-```php
-Monnify::transfer()->bulkTransaction($batchReference, $pageSize = 10, $pageNumber = 0);  // Bulk transfer status
-```
-
-#### Other Operations
+### Check Transfer Status
 
 ```php
-Monnify::transfer()->resendOTP($reference);          // Resend OTP
-Monnify::transfer()->all($type, $pageSize, $pageNumber); // Get all transfers
-Monnify::transfer()->search($accountNumber, $pageSize, $pageNumber); // Search
+// Single transfer status
+Monnify::transfer()->singleStatus($reference);  
+// Bulk transfer status
+Monnify::transfer()->bulkStatus($batchReference, $pageSize = 10, $pageNumber = 0);  
 ```
+
+### Get Transaction
+
+```php
+// Bulk transfer status
+Monnify::transfer()->bulkTransaction($batchReference, $pageSize = 10, $pageNumber = 0);  
+```
+
+### Other Operations
+
+```php
+// Resend OTP
+Monnify::transfer()->resendOTP($reference); 
+// Get all transfers       
+Monnify::transfer()->all($type, $pageSize, $pageNumber); 
+// Search
+Monnify::transfer()->search($accountNumber, $pageSize, $pageNumber); 
+```
+
 **Parameters:**
+
 - `$accountNumber` (string): Wallet account Number
 - `$reference` (string): transaction reference
 - `$type` (string): type of transaction (`single` or `bulk`)
@@ -581,23 +717,34 @@ Monnify::transfer()->search($accountNumber, $pageSize, $pageNumber); // Search
 - `$pageNumber` (integer): Page number (default: 0)
 
 
-### 5. Wallet Service
+## Wallet Service
+
 Manages wallet operations.
 
-#### All Available Methods
+### All Available Methods
+
 ```php
-// Wallet Operations
-Monnify::wallet()->create($data);                              // Create wallet
-Monnify::wallet()->get($customerEmail, $pageSize, $pageNumber); // Get wallet details
-Monnify::wallet()->balance($accountNumber);                     // Get balance
-Monnify::wallet()->transactions($accountNumber, $pageSize, $pageNumber); // Get transactions
+// Create wallet
+Monnify::wallet()->create($data);     
+
+// Get wallet details
+Monnify::wallet()->get($customerEmail, $pageSize, $pageNumber); 
+
+// Get balance
+Monnify::wallet()->balance($accountNumber);   
+
+// Get transactions
+Monnify::wallet()->transactions($accountNumber, $pageSize, $pageNumber); 
 ```
 
-#### Create Wallet
+### Create Wallet
+
 ```php
 Monnify::wallet()->create($data);
 ```
+
 **Required Parameters:**
+
 ```php
 $data = [
     'customerEmail' => 'john@example.com',  // string: Customer email
@@ -611,56 +758,74 @@ $data = [
 ];
 ```
 
-#### Get Wallet Details
+### Get Wallet Details
+
 ```php
 Monnify::wallet()->get($customerEmail, $pageSize = 10, $pageNumber = 0);
 ```
+
 **Parameters:**
+
 - `$customerEmail` (string): Customer's email address
 - `$pageSize` (integer): Number of records per page (default: 10)
 - `$pageNumber` (integer): Page number (default: 0)
 
-#### Check Wallet Balance
+
+### Check Wallet Balance
+
 ```php
 Monnify::wallet()->balance($accountNumber);
 ```
+
 **Parameters:**
 - `$accountNumber` (string): Wallet account number
 
-#### Get Wallet transactions
+### Get Wallet transactions
+
 ```php
 Monnify::wallet()->transactions($accountNumber, $pageSize, $pageNumber);
 ```
+
 **Parameters:**
+
 - `$accountNumber` (string): Wallet account number
 - `$pageSize` (integer): Number of records per page (default: 10)
 - `$pageNumber` (integer): Page number (default: 0)
 
-### 6. Verification Service
-Handles various verification operations.
+## Verification Service
 
-#### All Available Methods
+### All Available Methods
+
 ```php
-// Verification Operations
-Monnify::verificationAPI()->bankAccount($accountNumber, $bankCode); // Verify account
-Monnify::verificationAPI()->bvnInformation($data);                 // Verify BVN
-Monnify::verificationAPI()->matchBVNAndBankAccount($bvn, $bankCode, $accountNumber); // Match BVN
-Monnify::verificationAPI()->nin($nin);                            // Verify NIN
+// Verify account
+Monnify::verificationAPI()->bankAccount($accountNumber, $bankCode); 
+// Verify BVN
+Monnify::verificationAPI()->bvnInformation($data);        
+// Match BVN         
+Monnify::verificationAPI()->matchBVNAndBankAccount($bvn, $bankCode, $accountNumber); 
+// Verify NIN
+Monnify::verificationAPI()->nin($nin);                            
 ```
 
-#### Verify Bank Account
+### Verify Bank Account
+
 ```php
 Monnify::verificationAPI()->bankAccount($accountNumber, $bankCode);
 ```
+
 **Required Parameters:**
+
 - `$accountNumber` (string): Account number to verify
 - `$bankCode` (string): Bank code
 
-#### Verify BVN Information
+### Verify BVN Information
+
 ```php
 Monnify::verificationAPI()->bvnInformation($data);
 ```
+
 **Required Parameters:**
+
 ```php
 $data = [
     'bvn' => '12345678901',           // string: BVN to verify
@@ -670,38 +835,50 @@ $data = [
 ];
 ```
 
-#### Match BVN with Bank Account
+### Match BVN with Bank Account
+
 ```php
 Monnify::verificationAPI()->matchBVNAndBankAccount($bvn, $bankCode, $accountNumber);
 ```
+
 **Required Parameters:**
+
 - `$bvn` (string): BVN to match
 - `$bankCode` (string): Bank code
 - `$accountNumber` (string): Account number
 
-#### Verify NIN
+### Verify NIN
+
 ```php
 Monnify::verificationAPI()->nin($nin);
 ```
 
-### 7. Sub Account Service
+## Sub Account Service
 Manages sub-accounts for split payments.
 
-#### All Available Methods
+### All Available Methods
+
 ```php
-// Sub Account Operations
-Monnify::subAccount()->create($data);           // Create sub account
-Monnify::subAccount()->all();                   // Get all sub accounts
-Monnify::subAccount()->update($data);           // Update sub account
-Monnify::subAccount()->delete($subAccountCode); // Delete sub account
+// Create sub account
+Monnify::subAccount()->create($data);   
+// Get all sub accounts        
+Monnify::subAccount()->all();   
+// Update sub account                
+Monnify::subAccount()->update($data);    
+// Delete sub account       
+Monnify::subAccount()->delete($subAccountCode); 
 ```
 
-#### Create Sub Account
+### Create Sub Account
+
 Creates a new sub-account for split payments.
+
 ```php
 Monnify::subAccount()->create($data);
 ```
+
 **Required Parameters:**
+
 ```php
 $data = [
     'bankCode' => '058',              // string: Bank code
@@ -712,18 +889,24 @@ $data = [
 ];
 ```
 
-#### Get All Sub Accounts
+### Get All Sub Accounts
+
 Retrieves all sub-accounts associated with your contract.
+
 ```php
 Monnify::subAccount()->all();
 ```
 
-#### Update Sub Account
+### Update Sub Account
+
 Updates an existing sub-account's details.
+
 ```php
 Monnify::subAccount()->update($data);
 ```
+
 **Required Parameters:**
+
 ```php
 $data = [
     'subAccountCode' => 'SUB-ACC-123',  // string: Sub account code
@@ -735,32 +918,41 @@ $data = [
 ];
 ```
 
-#### Delete Sub Account
+### Delete Sub Account
+
 Removes a sub-account from your contract.
+
 ```php
 Monnify::subAccount()->delete($subAccountCode);
 ```
+
 **Required Parameters:**
+
 - `$subAccountCode` (string): The unique code of the sub-account to delete
 
+## Refund Service
 
-### 8. Refund Service
-Handles payment refunds.
+### All Available Methods
 
-#### All Available Methods
 ```php
-// Refund Operations
-Monnify::refund()->initialise($data);              // Initialize a refund
-Monnify::refund()->all($pageSize, $pageNumber);    // Get all refunds
-Monnify::refund()->status($refundReference);       // Check refund status
+// Initialize a refund
+Monnify::refund()->initialise($data);  
+// Get all refunds            
+Monnify::refund()->all($pageSize, $pageNumber);
+// Check refund status    
+Monnify::refund()->status($refundReference);       
 ```
 
-#### Initialize Refund
+### Initialize Refund
+
 Creates a new refund request.
+
 ```php
 Monnify::refund()->initialise($data);
 ```
+
 **Required Parameters:**
+
 ```php
 $data = [
     'transactionReference' => 'TRANS-123',  // string: Original transaction reference
@@ -771,80 +963,106 @@ $data = [
 ];
 ```
 
-#### Get Refund Status
+### Get Refund Status
+
 Check the status of a specific refund.
+
 ```php
 Monnify::refund()->status($refundReference);
 ```
+
 **Parameters:**
+
 - `$refundReference` (string): Refund reference to check
 
-#### Get All Refunds
+### Get All Refunds
+
 Retrieves all refunds with pagination.
+
 ```php
 Monnify::refund()->all($pageSize = 10, $pageNumber = 0);
 ```
+
 **Optional Parameters:**
+
 - `$pageSize` (integer): Number of records per page (default: 10)
 - `$pageNumber` (integer): Page number (default: 0)
 
+## Settlement Service
 
-### 9. Settlement Service
 Manages settlement information and transactions.
 
-#### All Available Methods
+### All Available Methods
+
 ```php
-// Settlement Operations
-Monnify::settlements()->transactions($settlementReference, $pageSize, $pageNumber); // Get settlement transactions
-Monnify::settlements()->getByTransaction($transactionReference);                    // Get by transaction reference
+// Get settlement transactions
+Monnify::settlements()->transactions($settlementReference, $pageSize, $pageNumber); 
+ // Get by transaction reference
+Monnify::settlements()->getByTransaction($transactionReference);                   
 ```
 
-#### Get Settlement Transactions
+### Get Settlement Transactions
+
 Retrieves transactions for a specific settlement.
+
 ```php
 Monnify::settlements()->transactions($settlementReference, $pageSize = 10, $pageNumber = 0);
 ```
 **Required Parameters:**
-- `$settlementReference` (string): Settlement reference to 
-query
+
+- `$settlementReference` (string): Settlement reference to query
 
 **Optional Parameters:**
+
 ```php
 $pageSize = 10;    // integer: Number of records per page
 $pageNumber = 0;   // integer: Page number for pagination
 ```
 
-#### Get Settlement by Transaction
+### Get Settlement by Transaction
+
 Retrieves settlement details for a specific transaction.
+
 ```php
 Monnify::settlements()->getByTransaction($transactionReference);
 ```
+
 **Required Parameters:**
+
 - `$transactionReference` (string): Transaction reference to query
 
-### 10. Limit Profile Service
+## Limit Profile Service
+
 Manages transaction limits.
 
-#### All Available Methods
+### All Available Methods
+
 ```php
-// Limit Profile Operations
-Monnify::limitProfile()->all();                                   // Get all profiles
-Monnify::limitProfile()->create($data);                           // Create profile
-Monnify::limitProfile()->update($limitProfileCode, $data);        // Update profile
-Monnify::limitProfile()->reserveAccount($data);                   // Reserve account
-Monnify::limitProfile()->updateReserveAccount($accountRef, $limitProfileCode); // Update account reserved account with Limit profile
+// Get all profiles
+Monnify::limitProfile()->all(); 
+// Create profile
+Monnify::limitProfile()->create($data);  
+// Update profile
+Monnify::limitProfile()->update($limitProfileCode, $data);   
+// Reserve account
+Monnify::limitProfile()->reserveAccount($data);      
+// Update account reserved account with Limit profile
+Monnify::limitProfile()->updateReserveAccount($accountRef, $limitProfileCode); 
 ```
 
-#### Get All Limit Profiles
+### Get All Limit Profiles
+
 ```php
 Monnify::limitProfile()->all();
 ```
 
-#### Create Limit Profile
+## Create Limit Profile
 ```php
 Monnify::limitProfile()->create($data);
 ```
+
 **Required Parameters:**
+
 ```php
 $data = [
     'limitProfileName' => 'Basic Tier',     // string: Profile name
@@ -854,20 +1072,27 @@ $data = [
 ];
 ```
 
-#### Update Limit Profile
+### Update Limit Profile
+
 ```php
 Monnify::limitProfile()->update($limitProfileCode, $data);
 ```
+
 **Parameters:**
+
 - `$limitProfileCode` (string): Profile code to update
 - `$data` (array): New limit settings (same structure as create)
 
-#### Reserve Account with Limit
+### Reserve Account with Limit
+
 Creates a reserved account with specific limits.
+
 ```php
 Monnify::limitProfile()->reserveAccount($data);
 ```
+
 **Required Parameters:**
+
 ```php
 $data = [
     'accountReference' => 'ACC-REF-123',    // string: Account reference
@@ -877,29 +1102,38 @@ $data = [
 ];
 ```
 
-#### Update Reserved Account with Limit Profile
+### Update Reserved Account with Limit Profile
+
 ```php
 Monnify::limitProfile()-updateReserveAccount($accountReference, $limitProfileCode);
 ```
 
-### 11. Pay Code Service
+## Pay Code Service
 Manages payment codes.
 
-#### All Available Methods
+### All Available Methods
+
 ```php
-// Pay Code Operations
-Monnify::payCodeAPI()->create($data);                  // Create pay code
-Monnify::payCodeAPI()->get($payCodeReference);         // Get pay code details
-Monnify::payCodeAPI()->getUnMasked($payCodeReference); // Get unmasked pay code
-Monnify::payCodeAPI()->history($parameters);           // Get pay code history
-Monnify::payCodeAPI()->delete($payCodeReference);      // Delete pay code
+// Create pay code
+Monnify::payCodeAPI()->create($data); 
+// Get pay code details
+Monnify::payCodeAPI()->get($payCodeReference);
+// Get unmasked pay code
+Monnify::payCodeAPI()->getUnMasked($payCodeReference);
+// Get pay code history
+Monnify::payCodeAPI()->history($parameters);  
+// Delete pay code
+Monnify::payCodeAPI()->delete($payCodeReference);      
 ```
 
-#### Create Pay Code
+### Create Pay Code
+
 ```php
 Monnify::payCodeAPI()->create($data);
 ```
+
 **Required Parameters:**
+
 ```php
 $data = [
     'amount' => 1000.00,                    // float: Amount
@@ -910,24 +1144,32 @@ $data = [
 ];
 ```
 
-#### Get Pay Code Details
+### Get Pay Code Details
+
 Retrieve the full detail of a payment code
+
 ```php
 Monnify::payCodeAPI()->get($payCodeReference);
 ```
 
-#### Get Pay Code Details with Pay Code Unmasked
+### Get Pay Code Details with Pay Code Unmasked
+
 Retrieve the full detail of a payment code Unmasked
+
 ```php
 Monnify::payCodeAPI()->getUnMasked($payCodeReference);
 ```
 
-#### Get Pay Code History
+### Get Pay Code History
+
 Retrieves history of payment codes.
+
 ```php
 Monnify::payCodeAPI()->history($parameters);
 ```
+
 **Parameters:**
+
 ```php
 $parameters = [
 	'transactionReference' => '', // string: Transaction Reference
@@ -938,30 +1180,39 @@ $parameters = [
 ];
 ```
 
-#### Delete Pay Code
-Delete a payment code
+### Delete a payment code
+
 ```php
 Monnify::payCodeAPI()->delete($payCodeReference);
 ```
 
-### 12. Direct Debit Service
+## Direct Debit Service
+
 Manages direct debit mandates.
 
-#### All Available Methods
+### All Available Methods
+
 ```php
-// Direct Debit Operations
-Monnify::directDebitMandate()->create($data);              // Create mandate
-Monnify::directDebitMandate()->get($mandateReference);     // Get mandate details
-Monnify::directDebitMandate()->debit($data);               // Debit mandate
-Monnify::directDebitMandate()->status($paymentReference);  // Get mandate status
-Monnify::directDebitMandate()->cancel($mandateCode);       // Cancel mandate
+// Create mandate
+Monnify::directDebitMandate()->create($data);    
+// Get mandate details
+Monnify::directDebitMandate()->get($mandateReference);     
+// Debit mandate
+Monnify::directDebitMandate()->debit($data);       
+// Get mandate status
+Monnify::directDebitMandate()->status($paymentReference);  
+// Cancel mandate
+Monnify::directDebitMandate()->cancel($mandateCode);       
 ```
 
-#### Create Mandate
+### Create Mandate
+
 ```php
 Monnify::directDebitMandate()->create($data);
 ```
+
 **Required Parameters:**
+
 ```php
 $data = [
     'contractCode' => config('monnify.contract_code'),
@@ -977,28 +1228,37 @@ $data = [
     'mandateEndDate' => '2025-05-22T10:15:30'
 ];
 ```
+
 **Optional Parameters:**
+
 ```php
 	'autoRenew' => false,
     'customerCancellation' => true,
     'customerAccountName' => 'Ankit Kushwaha',
 ```
 
-#### Get Mandate Details
+### Get Mandate Details
+
 Get full detail of a mandate payment.
+
 ```php
 Monnify::directDebitMandate()->get($mandateReference);
 ```
+
 **Required Parameters:**
+
 - `$mandateReference` (string): Mandate reference
 
+### Debit Mandate
 
-#### Debit Mandate
 Executes a debit on an existing mandate.
+
 ```php
 Monnify::directDebitMandate()->debit($data);
 ```
+
 **Required Parameters:**
+
 ```php
 $data = [
     'mandateCode' => 'MANDATE-123',    // string: Mandate code
@@ -1009,37 +1269,46 @@ $data = [
 ];
 ```
 
-#### Get Mandate Status
+### Get Mandate Status
+
 Checks the status of a mandate payment.
+
 ```php
 Monnify::directDebitMandate()->status($paymentReference);
 ```
+
 **Required Parameters:**
+
 - `$paymentReference` (string): Payment reference to check
 
-#### Cancel Mandate Payment
-Cancel mandate payment.
+### Cancel Mandate Payment
+
 ```php
 Monnify::directDebitMandate()->cancel($mandateCode);
 ```
+
 **Required Parameters:**
+
 - `$mandateCode` (string): Mandate code
 
 
-### 13. Recurring Payment Service
-Handles recurring payments.
+## Recurring Payment Service
 
-#### All Available Methods
+### All Available Methods
+
 ```php
-// Recurring Payment Operations
-Monnify::recurringPayment()->chargeCardToken($data); // Charge card using token
+// Charge card using token
+Monnify::recurringPayment()->chargeCardToken($data); 
 ```
 
-#### Charge Card Token
+### Charge Card Token
+
 ```php
 Monnify::recurringPayment()->chargeCardToken($data);
 ```
+
 **Required Parameters:**
+
 ```php
 $data = [
     'cardToken' => 'MNFY_0CD0138B45F7C3EC6D3698969',
@@ -1052,6 +1321,7 @@ $data = [
 ```
 
 **Optional Parameters:**
+
 ```php
 	'customerName' => 'Marvelous Benji',
     'paymentDescription' => 'Paying for Product A',
@@ -1063,38 +1333,61 @@ $data = [
     ]
 ```
 
+## Other / Helper Service
 
-### 14. Other / Helper Service
 Provides utility functions.
 
-#### All Available Methods
+### All Available Methods
+
 ```php
-// Helper Operations
-Monnify::helper()->banks();         // Get all banks
-Monnify::helper()->banksWithUSSD(); // Get banks with USSD
+// Get all banks
+Monnify::helper()->banks(); 
+      
+// Get banks with USSD  
+Monnify::helper()->banksWithUSSD(); 
 ```
 
-Each service method returns an array containing the API response. Always wrap your API calls in try-catch blocks to handle potential errors:
+## Error Handling
+
+Wrap API calls in try-catch blocks to handle exceptions efficiently:
+
+```php
+try {
+    $response = Monnify::transactions()->initialise($data);
+} catch (Exception $e) {
+    $error = $e->getMessage();
+}
+```
 
 ## Testing
+
+Run package tests with:
 
 ```bash
 composer test
 ```
 
+## Contributing
+
+- Fork repository
+- Create feature/fix branch
+- Submit Pull Request
+
 ## Security
 
-If you discover any security-related issues, please email Adelabu4fred@gmail.com instead of using the issue tracker.
+Report security issues directly to [Adelabu4fred@gmail.com](mailto:Adelabu4fred@gmail.com).
 
 ## Credits
 
 - [Babatunde Adelabu](https://github.com/fredneutron)
-<!-- - [All Contributors](../../contributors) -->
+- [Aransiola Ayodele](https://github.com/CodeLeom)
+
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+This package is licensed under the [MIT License](LICENSE.md).
+
 
 ## Support
 
-For support, please contact [Babatunde Adelabu](https://github.com/fredneutron).
+For support, contact [Babatunde Adelabu](https://github.com/fredneutron).

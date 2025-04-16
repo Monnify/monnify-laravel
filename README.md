@@ -1373,10 +1373,6 @@ composer test
 - Create feature/fix branch
 - Submit Pull Request
 
-## Security
-
-Report security issues directly to [Adelabu4fred@gmail.com](mailto:Adelabu4fred@gmail.com).
-
 ## Credits
 
 - [Babatunde Adelabu](https://github.com/fredneutron)
@@ -1390,4 +1386,4 @@ This package is licensed under the [MIT License](LICENSE.md).
 
 ## Support
 
-For support, contact [Babatunde Adelabu](https://github.com/fredneutron).
+For any support or security issues, please contact [integration-support@monnify.com](mailto:integration-support@monnify.com).

@@ -1,0 +1,214 @@
+<?php
+
+namespace Monnify\MonnifyLaravel\Tests\Unit\Services;
+
+use GuzzleHttp\Psr7\Response;
+use Illuminate\Support\Facades\Config;
+use InvalidArgumentException;
+use Monnify\MonnifyLaravel\Services\TransactionService;
+use Monnify\MonnifyLaravel\Tests\Support\CreatesMockClient;
+use Monnify\MonnifyLaravel\Tests\TestCase;
+
+class TransactionServiceTest extends TestCase
+{
+    use CreatesMockClient;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Config::set('accessToken', 'cached-token');
+        Config::set('expiresIn', time() + 300);
+    }
+
+    protected function tearDown(): void
+    {
+        Config::set('accessToken', null);
+        Config::set('expiresIn', null);
+
+        parent::tearDown();
+    }
+
+    public function test_initialise_posts_the_expected_payload(): void
+    {
+        $payload = $this->validInitializePayload();
+        $history = [];
+        $service = new TransactionService($this->makeClient([
+            new Response(200, [], json_encode(['ok' => true])),
+        ], $history));
+
+        $result = $service->initialise($payload);
+
+        $this->assertSame(200, $result['status']);
+        $this->assertSame('/api/v1/merchant/transactions/init-transaction', $history[0]['request']->getUri()->getPath());
+        $this->assertSame('POST', $history[0]['request']->getMethod());
+        $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
+    }
+
+    public function test_pay_with_bank_transfer_posts_the_expected_payload(): void
+    {
+        $payload = ['transactionReference' => 'txn-ref', 'bankCode' => '058'];
+        $history = [];
+        $service = new TransactionService($this->makeClient([
+            new Response(200, [], json_encode(['ok' => true])),
+        ], $history));
+
+        $service->payWithBankTransfer($payload);
+
+        $this->assertSame('/api/v1/merchant/bank-transfer/init-payment', $history[0]['request']->getUri()->getPath());
+        $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
+    }
+
+    public function test_charge_card_posts_the_expected_payload(): void
+    {
+        $payload = [
+            'transactionReference' => 'txn-ref',
+            'collectionChannel' => 'API_NOTIFICATION',
+            'card' => [
+                'number' => '4242424242424242',
+                'pin' => '1234',
+                'expiryMonth' => '09',
+                'expiryYear' => '29',
+                'cvv' => '123',
+            ],
+        ];
+        $history = [];
+        $service = new TransactionService($this->makeClient([
+            new Response(200, [], json_encode(['ok' => true])),
+        ], $history));
+
+        $service->chargeCard($payload);
+
+        $this->assertSame('/api/v1/merchant/cards/charge', $history[0]['request']->getUri()->getPath());
+    }
+
+    public function test_authorize_otp_posts_the_expected_payload(): void
+    {
+        $payload = [
+            'transactionReference' => 'txn-ref',
+            'collectionChannel' => 'API_NOTIFICATION',
+            'tokenId' => 'token-id',
+            'token' => '123456',
+        ];
+        $history = [];
+        $service = new TransactionService($this->makeClient([
+            new Response(200, [], json_encode(['ok' => true])),
+        ], $history));
+
+        $service->authorizeOTP($payload);
+
+        $this->assertSame('/api/v1/merchant/cards/otp/authorize', $history[0]['request']->getUri()->getPath());
+    }
+
+    public function test_authorize_three_ds_card_posts_the_expected_payload(): void
+    {
+        $payload = [
+            'transactionReference' => 'txn-ref',
+            'collectionChannel' => 'API_NOTIFICATION',
+            'card' => [
+                'number' => '4242424242424242',
+                'pin' => '1234',
+                'expiryMonth' => '09',
+                'expiryYear' => '29',
+                'cvv' => '123',
+            ],
+            'apiKey' => 'api-key',
+        ];
+        $history = [];
+        $service = new TransactionService($this->makeClient([
+            new Response(200, [], json_encode(['ok' => true])),
+        ], $history));
+
+        $service->authorizeThreeDSCard($payload);
+
+        $this->assertSame('/api/v1/sdk/cards/secure-3d/authorize', $history[0]['request']->getUri()->getPath());
+    }
+
+    public function test_all_adds_query_parameters_to_the_search_request(): void
+    {
+        $history = [];
+        $service = new TransactionService($this->makeClient([
+            new Response(200, [], json_encode(['ok' => true])),
+        ], $history));
+
+        $service->all([
+            'page' => 2,
+            'size' => 20,
+            'paymentReference' => 'pay-ref',
+        ]);
+
+        $this->assertSame('/api/v1/transactions/search', $history[0]['request']->getUri()->getPath());
+        $this->assertSame('page=2&size=20&paymentReference=pay-ref', $history[0]['request']->getUri()->getQuery());
+    }
+
+    public function test_status_requires_a_transaction_reference(): void
+    {
+        $service = new TransactionService($this->makeClient([]));
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Transaction Reference must be provided');
+
+        $service->status('');
+    }
+
+    public function test_status_uses_the_transaction_status_endpoint(): void
+    {
+        $history = [];
+        $service = new TransactionService($this->makeClient([
+            new Response(200, [], json_encode(['ok' => true])),
+        ], $history));
+
+        $service->status('txn-ref');
+
+        $this->assertSame('/api/v2/transactions/txn-ref', $history[0]['request']->getUri()->getPath());
+    }
+
+    public function test_status_by_reference_supports_transaction_references(): void
+    {
+        $history = [];
+        $service = new TransactionService($this->makeClient([
+            new Response(200, [], json_encode(['ok' => true])),
+        ], $history));
+
+        $service->statusByReference('txn-ref');
+
+        $this->assertSame('/api/v2/merchant/transactions/query', $history[0]['request']->getUri()->getPath());
+        $this->assertSame('transactionReference=txn-ref', $history[0]['request']->getUri()->getQuery());
+    }
+
+    public function test_status_by_reference_supports_payment_references(): void
+    {
+        $history = [];
+        $service = new TransactionService($this->makeClient([
+            new Response(200, [], json_encode(['ok' => true])),
+        ], $history));
+
+        $service->statusByReference('pay-ref', 'payment');
+
+        $this->assertSame('paymentReference=pay-ref', $history[0]['request']->getUri()->getQuery());
+    }
+
+    public function test_status_by_reference_rejects_unknown_reference_types(): void
+    {
+        $service = new TransactionService($this->makeClient([]));
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Either transaction or payment must be provided as referenceType');
+
+        $service->statusByReference('txn-ref', 'invoice');
+    }
+
+    private function validInitializePayload(): array
+    {
+        return [
+            'amount' => 5000,
+            'customerName' => 'Jane Doe',
+            'customerEmail' => 'jane@example.com',
+            'paymentReference' => 'pay-ref',
+            'paymentDescription' => 'Invoice payment',
+            'currencyCode' => 'NGN',
+            'contractCode' => 'contract-123',
+            'redirectUrl' => 'https://example.com/return',
+        ];
+    }
+}

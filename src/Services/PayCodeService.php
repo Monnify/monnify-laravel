@@ -11,10 +11,10 @@ class PayCodeService extends BaseService
 {
     private PayCodeValidator $validator;
 
-    public function __construct(Client $client)
+    public function __construct(Client $client, ?PayCodeValidator $validator = null)
     {
         parent::__construct($client);
-        $this->validator = new PayCodeValidator();
+        $this->validator = $validator ?? new PayCodeValidator();
     }
 
     public function create(array $data): array

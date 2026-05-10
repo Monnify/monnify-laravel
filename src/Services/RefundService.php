@@ -11,10 +11,10 @@ class RefundService extends BaseService
 {
     private RefundValidator $validator;
 
-    public function __construct(Client $client)
+    public function __construct(Client $client, ?RefundValidator $validator = null)
     {
         parent::__construct($client);
-        $this->validator = new RefundValidator();
+        $this->validator = $validator ?? new RefundValidator();
     }
 
     public function initialise(array $data): array

@@ -11,10 +11,10 @@ class LimitProfileService extends BaseService
 {
     private LimitProfileValidator $validator;
 
-    public function __construct(Client $client)
+    public function __construct(Client $client, ?LimitProfileValidator $validator = null)
     {
         parent::__construct($client);
-        $this->validator = new LimitProfileValidator();
+        $this->validator = $validator ?? new LimitProfileValidator();
     }
 
     public function all(): array

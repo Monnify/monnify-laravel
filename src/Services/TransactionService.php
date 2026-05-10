@@ -11,10 +11,10 @@ class TransactionService extends BaseService
 {
     private TransactionValidator $validator;
 
-    public function __construct(Client $client)
+    public function __construct(Client $client, ?TransactionValidator $validator = null)
     {
         parent::__construct($client);
-        $this->validator = new TransactionValidator();
+        $this->validator = $validator ?? new TransactionValidator();
     }
 
     public function initialise(array $data): array

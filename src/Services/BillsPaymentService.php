@@ -10,10 +10,10 @@ class BillsPaymentService extends BaseService
 {
     private BillsPaymentValidator $validator;
 
-    public function __construct(Client $client)
+    public function __construct(Client $client, ?BillsPaymentValidator $validator = null)
     {
         parent::__construct($client);
-        $this->validator = new BillsPaymentValidator();
+        $this->validator = $validator ?? new BillsPaymentValidator();
     }
 
     /**

@@ -11,10 +11,10 @@ class InvoiceService extends BaseService
 {
     private InvoiceValidator $validator;
 
-    public function __construct(Client $client)
+    public function __construct(Client $client, ?InvoiceValidator $validator = null)
     {
         parent::__construct($client);
-        $this->validator = new InvoiceValidator();
+        $this->validator = $validator ?? new InvoiceValidator();
     }
 
     public function create(array $data): array

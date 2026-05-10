@@ -11,10 +11,10 @@ class DisbursementService extends BaseService
 {
     private DisbursementValidator $validator;
 
-    public function __construct(Client $client)
+    public function __construct(Client $client, ?DisbursementValidator $validator = null)
     {
         parent::__construct($client);
-        $this->validator = new DisbursementValidator();
+        $this->validator = $validator ?? new DisbursementValidator();
     }
 
     public function single(array $data, bool $asynchronous = false): array

@@ -11,10 +11,10 @@ class WalletService extends BaseService
 {
     private WalletValidator $validator;
 
-    public function __construct(Client $client)
+    public function __construct(Client $client, ?WalletValidator $validator = null)
     {
         parent::__construct($client);
-        $this->validator = new WalletValidator();
+        $this->validator = $validator ?? new WalletValidator();
     }
 
     public function create(array $data): array

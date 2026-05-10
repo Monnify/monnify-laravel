@@ -11,10 +11,10 @@ class CustomerReservedAccountService extends BaseService
 {
     private CustomerReservedAccountValidator $validator;
 
-    public function __construct(Client $client)
+    public function __construct(Client $client, ?CustomerReservedAccountValidator $validator = null)
     {
         parent::__construct($client);
-        $this->validator = new CustomerReservedAccountValidator();
+        $this->validator = $validator ?? new CustomerReservedAccountValidator();
     }
 
     public function createGeneralAccount(array $data): array

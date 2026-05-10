@@ -22,6 +22,21 @@ use Monnify\MonnifyLaravel\Services\{
     VerificationService,
     WalletService
 };
+use Monnify\MonnifyLaravel\Validators\{
+    BillsPaymentValidator,
+    CustomerReservedAccountValidator,
+    DirectDebitValidator,
+    DisbursementValidator,
+    InvoiceValidator,
+    LimitProfileValidator,
+    PayCodeValidator,
+    RecurringPaymentValidator,
+    RefundValidator,
+    SubAccountValidator,
+    TransactionValidator,
+    VerificationValidator,
+    WalletValidator
+};
 
 /**
  * Class MonnifyServiceProvider
@@ -47,6 +62,21 @@ class MonnifyServiceProvider extends ServiceProvider
         PayCodeService::class,
         OtherService::class,
     ];
+    private const VALIDATOR_CLASSES = [
+        TransactionValidator::class,
+        BillsPaymentValidator::class,
+        CustomerReservedAccountValidator::class,
+        InvoiceValidator::class,
+        RecurringPaymentValidator::class,
+        DirectDebitValidator::class,
+        SubAccountValidator::class,
+        DisbursementValidator::class,
+        WalletValidator::class,
+        LimitProfileValidator::class,
+        RefundValidator::class,
+        VerificationValidator::class,
+        PayCodeValidator::class,
+    ];
 
     public function register(): void
     {
@@ -65,6 +95,7 @@ class MonnifyServiceProvider extends ServiceProvider
             ]);
         });
 
+        $this->registerValidatorSingletons();
         $this->registerServiceContextualBindings();
         $this->registerServiceSingletons();
 
@@ -91,6 +122,13 @@ class MonnifyServiceProvider extends ServiceProvider
     {
         foreach (self::SERVICE_CLASSES as $serviceClass) {
             $this->app->singleton($serviceClass);
+        }
+    }
+
+    protected function registerValidatorSingletons(): void
+    {
+        foreach (self::VALIDATOR_CLASSES as $validatorClass) {
+            $this->app->singleton($validatorClass);
         }
     }
 

@@ -11,10 +11,10 @@ class VerificationService extends BaseService
 {
     private VerificationValidator $validator;
 
-    public function __construct(Client $client)
+    public function __construct(Client $client, ?VerificationValidator $validator = null)
     {
         parent::__construct($client);
-        $this->validator = new VerificationValidator();
+        $this->validator = $validator ?? new VerificationValidator();
     }
 
     public function bankAccount(string $accountNumber, string $bankCode): array

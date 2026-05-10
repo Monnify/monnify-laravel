@@ -11,10 +11,10 @@ class DirectDebitService extends BaseService
 {
     private DirectDebitValidator $validator;
 
-    public function __construct(Client $client)
+    public function __construct(Client $client, ?DirectDebitValidator $validator = null)
     {
         parent::__construct($client);
-        $this->validator = new DirectDebitValidator();
+        $this->validator = $validator ?? new DirectDebitValidator();
     }
 
     public function create(array $data): array

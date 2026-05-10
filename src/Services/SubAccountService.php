@@ -11,10 +11,10 @@ class SubAccountService extends BaseService
 {
     private SubAccountValidator $validator;
 
-    public function __construct(Client $client)
+    public function __construct(Client $client, ?SubAccountValidator $validator = null)
     {
         parent::__construct($client);
-        $this->validator = new SubAccountValidator();
+        $this->validator = $validator ?? new SubAccountValidator();
     }
 
     public function create(array $data): array

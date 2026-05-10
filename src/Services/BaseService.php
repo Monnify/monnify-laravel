@@ -16,7 +16,32 @@ abstract class BaseService
         $this->client = $client;
     }
 
-    protected function makeRequest(
+    protected function requestGet(string $endpoint, array $parameters = []): array
+    {
+        return $this->makeRequest(HttpMethod::GET, $endpoint, [], $parameters);
+    }
+
+    protected function requestPost(string $endpoint, array $data = [], array $parameters = []): array
+    {
+        return $this->makeRequest(HttpMethod::POST, $endpoint, $data, $parameters);
+    }
+
+    protected function requestPut(string $endpoint, array $data = [], array $parameters = []): array
+    {
+        return $this->makeRequest(HttpMethod::PUT, $endpoint, $data, $parameters);
+    }
+
+    protected function requestPatch(string $endpoint, array $data = [], array $parameters = []): array
+    {
+        return $this->makeRequest(HttpMethod::PATCH, $endpoint, $data, $parameters);
+    }
+
+    protected function requestDelete(string $endpoint, array $data = [], array $parameters = []): array
+    {
+        return $this->makeRequest(HttpMethod::DELETE, $endpoint, $data, $parameters);
+    }
+
+    private function makeRequest(
         HttpMethod $method,
         string $endpoint,
         array $data = [],

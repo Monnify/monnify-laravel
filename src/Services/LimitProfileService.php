@@ -4,7 +4,6 @@ namespace Monnify\MonnifyLaravel\Services;
 
 use GuzzleHttp\Client;
 use InvalidArgumentException;
-use Monnify\MonnifyLaravel\Enums\HttpMethod;
 use Monnify\MonnifyLaravel\Validators\LimitProfileValidator;
 
 class LimitProfileService extends BaseService
@@ -19,20 +18,13 @@ class LimitProfileService extends BaseService
 
     public function all(): array
     {
-        return $this->makeRequest(
-            HttpMethod::GET,
-            '/api/v1/limit-profile/'
-        );
+        return $this->requestGet('/api/v1/limit-profile/');
     }
 
     public function create(array $data): array
     {
         $this->validator->validateLimitProfile($data);
-        return $this->makeRequest(
-            HttpMethod::POST,
-            '/api/v1/limit-profile/',
-            $data
-        );
+        return $this->requestPost('/api/v1/limit-profile/', $data);
     }
 
     public function update(string $limitProfileCode, array $data): array
@@ -42,21 +34,13 @@ class LimitProfileService extends BaseService
         }
 
         $this->validator->validateLimitProfile($data);
-        return $this->makeRequest(
-            HttpMethod::PUT,
-            '/api/v1/limit-profile/'. $limitProfileCode,
-            $data
-        );
+        return $this->requestPut('/api/v1/limit-profile/'. $limitProfileCode, $data);
     }
 
     public function reserveAccount(array $data): array
     {
         $this->validator->validateReserveAccount($data);
-        return $this->makeRequest(
-            HttpMethod::POST,
-            '/api/v1/bank-transfer/reserved-accounts/limit',
-            $data
-        );
+        return $this->requestPost('/api/v1/bank-transfer/reserved-accounts/limit', $data);
     }
 
     public function updateReserveAccount(string $accountReference, string $limitProfileCode): array
@@ -65,10 +49,6 @@ class LimitProfileService extends BaseService
             'accountReference' => $accountReference,
             'limitProfileCode' => $limitProfileCode
         ];
-        return $this->makeRequest(
-            HttpMethod::PUT,
-            '/api/v1/bank-transfer/reserved-accounts/limit',
-            $data
-        );
+        return $this->requestPut('/api/v1/bank-transfer/reserved-accounts/limit', $data);
     }
 }

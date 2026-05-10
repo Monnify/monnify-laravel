@@ -4,7 +4,6 @@ namespace Monnify\MonnifyLaravel\Services;
 
 use GuzzleHttp\Client;
 use InvalidArgumentException;
-use Monnify\MonnifyLaravel\Enums\HttpMethod;
 use Monnify\MonnifyLaravel\Validators\CustomerReservedAccountValidator;
 
 class CustomerReservedAccountService extends BaseService
@@ -20,21 +19,13 @@ class CustomerReservedAccountService extends BaseService
     public function createGeneralAccount(array $data): array
     {
         $this->validator->validateCreateGeneralAccount($data);
-        return $this->makeRequest(
-            HttpMethod::POST,
-            '/api/v2/bank-transfer/reserved-accounts',
-            $data
-        );
+        return $this->requestPost('/api/v2/bank-transfer/reserved-accounts', $data);
     }
 
     public function createInvoiceAccount(array $data): array
     {
         $this->validator->validateCreateInvoiceAccount($data);
-        return $this->makeRequest(
-            HttpMethod::POST,
-            '/api/v1/bank-transfer/reserved-accounts',
-            $data
-        );
+        return $this->requestPost('/api/v1/bank-transfer/reserved-accounts', $data);
     }
 
     public function get(string $accountReference): array
@@ -43,10 +34,7 @@ class CustomerReservedAccountService extends BaseService
             throw new InvalidArgumentException('Account Reference must be provided');
         }
 
-        return $this->makeRequest(
-            HttpMethod::GET,
-            '/api/v2/bank-transfer/reserved-accounts/'. $accountReference
-        );
+        return $this->requestGet('/api/v2/bank-transfer/reserved-accounts/'. $accountReference);
     }
 
     public function addLinkedAccounts(string $accountReference, array $data = []): array
@@ -56,11 +44,7 @@ class CustomerReservedAccountService extends BaseService
         }
 
         $this->validator->validateAddLinkedAccounts($data);
-        return $this->makeRequest(
-            HttpMethod::PUT,
-            '/api/v1/bank-transfer/reserved-accounts/add-linked-accounts/'. $accountReference,
-            $data
-        );
+        return $this->requestPut('/api/v1/bank-transfer/reserved-accounts/add-linked-accounts/'. $accountReference, $data);
     }
 
     public function updateBVN(string $accountReference, string $bvn): array
@@ -69,13 +53,7 @@ class CustomerReservedAccountService extends BaseService
             throw new InvalidArgumentException('Account Reference must be provided');
         }
 
-        return $this->makeRequest(
-            HttpMethod::PUT,
-            '/api/v1/bank-transfer/reserved-accounts/update-customer-bvn/'. $accountReference,
-            [
-                'bvn' => $bvn
-            ]
-        );
+        return $this->requestPut('/api/v1/bank-transfer/reserved-accounts/update-customer-bvn/'. $accountReference, ['bvn' => $bvn]);
     }
 
     public function allowedPaymentSource(string $accountReference, array $data): array
@@ -85,11 +63,7 @@ class CustomerReservedAccountService extends BaseService
         }
 
         $this->validator->validateAllowedPaymentSource($data);
-        return $this->makeRequest(
-            HttpMethod::PUT,
-            '/api/v1/bank-transfer/reserved-accounts/update-payment-source-filter/'. $accountReference,
-            $data
-        );
+        return $this->requestPut('/api/v1/bank-transfer/reserved-accounts/update-payment-source-filter/'. $accountReference, $data);
     }
 
     public function updateSplitConfig(string $accountReference, array $data): array
@@ -99,11 +73,7 @@ class CustomerReservedAccountService extends BaseService
         }
 
         $this->validator->validateUpdateSplitConfig($data);
-        return $this->makeRequest(
-            HttpMethod::PUT,
-            '/api/v1/bank-transfer/reserved-accounts/update-income-split-config/'. $accountReference,
-            $data
-        );
+        return $this->requestPut('/api/v1/bank-transfer/reserved-accounts/update-income-split-config/'. $accountReference, $data);
     }
 
     public function deallocateAccount(string $accountReference): array
@@ -112,10 +82,7 @@ class CustomerReservedAccountService extends BaseService
             throw new InvalidArgumentException('Account Reference must be provided');
         }
 
-        return $this->makeRequest(
-            HttpMethod::DELETE,
-            '/api/v1/bank-transfer/reserved-accounts/reference/'. $accountReference
-        );
+        return $this->requestDelete('/api/v1/bank-transfer/reserved-accounts/reference/'. $accountReference);
     }
 
     public function transactions(string $accountReference, array $parameters = []): array
@@ -125,12 +92,7 @@ class CustomerReservedAccountService extends BaseService
         }
 
         $this->validator->validateGetReservedAccountTransactions($parameters);
-        return $this->makeRequest(
-            HttpMethod::GET,
-            '/api/v1/bank-transfer/reserved-accounts/transactions',
-            [],
-            array_merge(['accountReference' => $accountReference], $parameters)
-        );
+        return $this->requestGet('/api/v1/bank-transfer/reserved-accounts/transactions'. $accountReference, $parameters);
     }
 
     public function updateKYCInfo(string $accountReference, array $data): array
@@ -140,10 +102,6 @@ class CustomerReservedAccountService extends BaseService
         }
         
         $this->validator->validateUpdateKYCInfo($data);
-        return $this->makeRequest(
-            HttpMethod::PUT,
-            '/api/v1/bank-transfer/reserved-accounts/'.$accountReference.'/kyc-info',
-            $data
-        );
+        return $this->requestPut('/api/v1/bank-transfer/reserved-accounts/'.$accountReference.'/kyc-info', $data);
     }
 }

@@ -4,7 +4,6 @@ namespace Monnify\MonnifyLaravel\Services;
 
 use GuzzleHttp\Client;
 use InvalidArgumentException;
-use Monnify\MonnifyLaravel\Enums\HttpMethod;
 
 class SettlementService extends BaseService
 {
@@ -21,12 +20,7 @@ class SettlementService extends BaseService
             'page' => $pageNumber
         ];
 
-        return $this->makeRequest(
-            HttpMethod::GET,
-            '/api/v1/transactions/find-by-settlement-reference',
-            [],
-            $parameters
-        );
+        return $this->requestGet('/api/v1/transactions/find-by-settlement-reference', $parameters);
     }
 
     public function getByTransaction(string $transactionReference): array
@@ -35,11 +29,6 @@ class SettlementService extends BaseService
             throw new InvalidArgumentException('Transaction Reference must be provided.');
         }
         
-        return $this->makeRequest(
-            HttpMethod::GET,
-            '/api/v1/settlement-detail',
-            [],
-            ['transactionReference' => $transactionReference]
-        );
+        return $this->requestGet('/api/v1/settlement-detail', ['transactionReference' => $transactionReference]);
     }
 }

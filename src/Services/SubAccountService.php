@@ -4,7 +4,6 @@ namespace Monnify\MonnifyLaravel\Services;
 
 use GuzzleHttp\Client;
 use InvalidArgumentException;
-use Monnify\MonnifyLaravel\Enums\HttpMethod;
 use Monnify\MonnifyLaravel\Validators\SubAccountValidator;
 
 class SubAccountService extends BaseService
@@ -20,29 +19,18 @@ class SubAccountService extends BaseService
     public function create(array $data): array
     {
         $this->validator->validateAccount($data);
-        return $this->makeRequest(
-            HttpMethod::POST,
-            '/api/v1/sub-accounts',
-            $data
-        );
+        return $this->requestPost('/api/v1/sub-accounts', $data);
     }
 
     public function all(): array
     {
-        return $this->makeRequest(
-            HttpMethod::GET,
-            '/api/v1/sub-accounts'
-        );
+        return $this->requestGet('/api/v1/sub-accounts');
     }
 
     public function update(array $data): array
     {
         $this->validator->validateAccount([$data]);
-        return $this->makeRequest(
-            HttpMethod::PUT,
-            '/api/v1/sub-accounts',
-            $data
-        );
+        return $this->requestPut('/api/v1/sub-accounts', $data);
     }
 
     public function delete(string $subAccountCode): array
@@ -50,9 +38,6 @@ class SubAccountService extends BaseService
         if (empty($subAccountCode)) {
             throw new InvalidArgumentException('Sub Account Code must be provided');
         }
-        return $this->makeRequest(
-            HttpMethod::DELETE,
-            '/api/v1/sub-accounts/'. $subAccountCode
-        );
+        return $this->requestDelete('/api/v1/sub-accounts/'. $subAccountCode);
     }
 }

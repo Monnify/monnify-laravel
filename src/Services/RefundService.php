@@ -4,7 +4,6 @@ namespace Monnify\MonnifyLaravel\Services;
 
 use GuzzleHttp\Client;
 use InvalidArgumentException;
-use Monnify\MonnifyLaravel\Enums\HttpMethod;
 use Monnify\MonnifyLaravel\Validators\RefundValidator;
 
 class RefundService extends BaseService
@@ -20,11 +19,7 @@ class RefundService extends BaseService
     public function initialise(array $data): array
     {
         $this->validator->validateRefund($data);
-        return $this->makeRequest(
-            HttpMethod::POST,
-            '/api/v1/refunds/initiate-refund',
-            $data
-        );
+        return $this->requestPost('/api/v1/refunds/initiate-refund', $data);
     }
 
     public function all(int $pageSize = 10, int $pageNumber = 0): array
@@ -34,12 +29,7 @@ class RefundService extends BaseService
             'page' => $pageNumber
         ];
 
-        return $this->makeRequest(
-            HttpMethod::GET,
-            '/api/v1/refunds',
-            [],
-            $parameters
-        );
+        return $this->requestGet('/api/v1/refunds', $parameters);
     }
 
     public function status(string $refundReference): array
@@ -48,9 +38,6 @@ class RefundService extends BaseService
             throw new InvalidArgumentException('Refund Reference must be provided.');
         }
 
-        return $this->makeRequest(
-            HttpMethod::GET,
-            '/api/v1/refunds/'. $refundReference
-        );
+        return $this->requestGet('/api/v1/refunds/'. $refundReference);
     }
 }

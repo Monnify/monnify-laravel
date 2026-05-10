@@ -8,7 +8,6 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Facades\Cache;
-use Monnify\MonnifyLaravel\Enums\HttpMethod;
 use Monnify\MonnifyLaravel\Tests\Support\CreatesMockClient;
 use Monnify\MonnifyLaravel\Tests\Support\TestBaseService;
 use Monnify\MonnifyLaravel\Tests\TestCase;
@@ -33,7 +32,7 @@ class BaseServiceTest extends TestCase
             new Response(200, [], json_encode(['message' => 'ok'])),
         ], $history));
 
-        $result = $service->send(HttpMethod::GET, '/api/v1/banks', [], ['page' => 1]);
+        $result = $service->sendGet('/api/v1/banks', ['page' => 1]);
 
         $this->assertSame(200, $result['status']);
         $this->assertSame(['message' => 'ok'], $result['body']);
@@ -55,12 +54,7 @@ class BaseServiceTest extends TestCase
             new Response(200, [], json_encode(['message' => 'ok'])),
         ], $history));
 
-        $result = $service->send(
-            HttpMethod::POST,
-            '/api/v1/test',
-            ['amount' => 5000],
-            ['reference' => 'abc123']
-        );
+        $result = $service->sendPost('/api/v1/test', ['amount' => 5000], ['reference' => 'abc123']);
 
         $this->assertSame(200, $result['status']);
         $this->assertSame(['message' => 'ok'], $result['body']);
@@ -85,7 +79,7 @@ class BaseServiceTest extends TestCase
             ),
         ]));
 
-        $result = $service->send(HttpMethod::POST, '/api/v1/test', ['amount' => 0]);
+        $result = $service->sendPost('/api/v1/test', ['amount' => 0]);
 
         $this->assertSame(422, $result['status']);
         $this->assertSame('Invalid payload', $result['error']->message);
@@ -102,7 +96,7 @@ class BaseServiceTest extends TestCase
             ),
         ]));
 
-        $result = $service->send(HttpMethod::GET, '/api/v1/test');
+        $result = $service->sendGet('/api/v1/test');
 
         $this->assertSame(0, $result['status']);
         $this->assertStringContainsString('Could not resolve host', $result['error']->message);

@@ -3,7 +3,6 @@
 namespace Monnify\MonnifyLaravel\Services;
 
 use GuzzleHttp\Client;
-use Monnify\MonnifyLaravel\Enums\HttpMethod;
 use Monnify\MonnifyLaravel\Validators\RecurringPaymentValidator;
 
 class RecurringPaymentService extends BaseService
@@ -19,10 +18,6 @@ class RecurringPaymentService extends BaseService
     public function chargeCardToken(array $data): array
     {
         $this->validator->validateChargeCardToken($data);
-        return $this->makeRequest(
-            HttpMethod::POST,
-            '/api/v1/merchant/cards/charge-card-token',
-            $data
-        );
+        return $this->requestPost('/api/v1/merchant/cards/charge-card-token', $data);
     }
 }

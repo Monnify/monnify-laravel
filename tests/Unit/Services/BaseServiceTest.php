@@ -7,7 +7,7 @@ use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
-use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Cache;
 use Monnify\MonnifyLaravel\Enums\HttpMethod;
 use Monnify\MonnifyLaravel\Tests\Support\CreatesMockClient;
 use Monnify\MonnifyLaravel\Tests\Support\TestBaseService;
@@ -19,16 +19,14 @@ class BaseServiceTest extends TestCase
 
     protected function tearDown(): void
     {
-        Config::set('accessToken', null);
-        Config::set('expiresIn', null);
+        Cache::forget('monnify_access_token');
 
         parent::tearDown();
     }
 
     public function test_it_reuses_a_cached_access_token_when_it_is_not_expired(): void
     {
-        Config::set('accessToken', 'cached-token');
-        Config::set('expiresIn', time() + 300);
+        Cache::put('monnify_access_token', 'cached-token', 300);
 
         $history = [];
         $service = new TestBaseService($this->makeClient([
@@ -72,14 +70,12 @@ class BaseServiceTest extends TestCase
         $this->assertSame('Bearer fresh-token', $history[1]['request']->getHeaderLine('Authorization'));
         $this->assertSame('reference=abc123', $history[1]['request']->getUri()->getQuery());
         $this->assertSame(json_encode(['amount' => 5000]), (string) $history[1]['request']->getBody());
-        $this->assertSame('fresh-token', Config::get('accessToken'));
-        $this->assertGreaterThan(time(), Config::get('expiresIn'));
+        $this->assertSame('fresh-token', Cache::get('monnify_access_token'));
     }
 
     public function test_it_returns_the_api_error_payload_for_request_exceptions_with_a_response(): void
     {
-        Config::set('accessToken', 'cached-token');
-        Config::set('expiresIn', time() + 300);
+        Cache::put('monnify_access_token', 'cached-token', 300);
 
         $service = new TestBaseService($this->makeClient([
             new RequestException(
@@ -95,10 +91,9 @@ class BaseServiceTest extends TestCase
         $this->assertSame('Invalid payload', $result['error']->message);
     }
 
-    public function test_it_bubbles_transport_failures_in_the_current_implementation(): void
+    public function test_it_returns_a_meaningful_error_for_transport_failures_without_a_response(): void
     {
-        Config::set('accessToken', 'cached-token');
-        Config::set('expiresIn', time() + 300);
+        Cache::put('monnify_access_token', 'cached-token', 300);
 
         $service = new TestBaseService($this->makeClient([
             new ConnectException(
@@ -107,19 +102,18 @@ class BaseServiceTest extends TestCase
             ),
         ]));
 
-        $this->expectException(ConnectException::class);
-        $this->expectExceptionMessage('Could not resolve host');
+        $result = $service->send(HttpMethod::GET, '/api/v1/test');
 
-        $service->send(HttpMethod::GET, '/api/v1/test');
+        $this->assertSame(0, $result['status']);
+        $this->assertStringContainsString('Could not resolve host', $result['error']->message);
     }
 
-    public function test_it_sets_access_token_values_in_config(): void
+    public function test_it_sets_access_token_values_in_cache(): void
     {
         $service = new TestBaseService(new Client(['base_uri' => 'https://example.com']));
 
         $service->setAccessToken('manual-token', 1234567890);
 
-        $this->assertSame('manual-token', Config::get('accessToken'));
-        $this->assertSame(1234567890, Config::get('expiresIn'));
+        $this->assertSame('manual-token', Cache::get('monnify_access_token'));
     }
 }

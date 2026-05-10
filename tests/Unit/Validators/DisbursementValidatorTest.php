@@ -151,6 +151,7 @@ class DisbursementValidatorTest extends TestCase
             'narration' => 'Vendor payout',
             'destinationBankCode' => '058',
             'destinationAccountNumber' => '0123456789',
+            'destinationAccountName' => 'John Doe',
             'currency' => 'NGN',
             'sourceAccountNumber' => '1234567890',
         ];

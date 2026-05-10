@@ -284,6 +284,16 @@ class TransactionValidatorTest extends TestCase
                 'expiryYear' => '29',
                 'cvv' => '123',
             ],
+            'deviceInformation' => [
+                'httpBrowserLanguage' => 'en-US',
+                'httpBrowserJavaEnabled' => false,
+                'httpBrowserJavaScriptEnabled' => true,
+                'httpBrowserColorDepth' => '24',
+                'httpBrowserScreenHeight' => '1080',
+                'httpBrowserScreenWidth' => '1920',
+                'httpBrowserTimeDifference' => '-60',
+                'userAgentBrowserValue' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            ],
         ];
     }
 }

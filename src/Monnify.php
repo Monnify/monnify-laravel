@@ -2,91 +2,43 @@
 
 namespace Monnify\MonnifyLaravel;
 
-use GuzzleHttp\Client;
-use InvalidArgumentException;
-
 use Monnify\MonnifyLaravel\Services\{
-    TransactionService,
+    BillsPaymentService,
     CustomerReservedAccountService,
-    InvoiceService,
-    RecurringPaymentService,
     DirectDebitService,
-    SubAccountService,
     DisbursementService,
-    WalletService,
+    InvoiceService,
     LimitProfileService,
+    OtherService,
+    PayCodeService,
+    RecurringPaymentService,
     RefundService,
     SettlementService,
+    SubAccountService,
+    TransactionService,
     VerificationService,
-    PayCodeService,
-    OtherService,
-    BillsPaymentService
+    WalletService
 };
 
 class Monnify
 {
-    protected Client $client;
-    public TransactionService $transactions;
-    public CustomerReservedAccountService $customerReservedAccount;
-    public InvoiceService $invoice;
-    public RecurringPaymentService $recurringPayment;
-    public DirectDebitService $directDebitMandate;
-    public SubAccountService $subAccount;
-    public DisbursementService $transfer;
-    public WalletService $wallet;
-    public LimitProfileService $limitProfile;
-    public RefundService $refund;
-    public SettlementService $settlements;
-    public VerificationService $verificationAPI;
-    public PayCodeService $payCodeAPI;
-    public OtherService $helper;
-    public BillsPaymentService $billsPayment;
-
     public function __construct(
-        private string $apiKey,
-        private string $secretKey,
-        private string $environment
+        private TransactionService $transactions,
+        private BillsPaymentService $billsPayment,
+        private CustomerReservedAccountService $customerReservedAccount,
+        private InvoiceService $invoice,
+        private RecurringPaymentService $recurringPayment,
+        private DirectDebitService $directDebitMandate,
+        private SubAccountService $subAccount,
+        private DisbursementService $transfer,
+        private WalletService $wallet,
+        private LimitProfileService $limitProfile,
+        private RefundService $refund,
+        private SettlementService $settlements,
+        private VerificationService $verificationAPI,
+        private PayCodeService $payCodeAPI,
+        private OtherService $helper
     ) {
-        if ($environment !== 'SANDBOX' && $environment !== 'LIVE') {
-            throw new InvalidArgumentException("Unknown environment passed: $environment, Please specify between SANDBOX or LIVE");
-        }
-
-        // Create single client instance
-        $this->client = new Client([
-            'base_uri' => $environment === 'SANDBOX' ? 'https://sandbox.monnify.com' : 'https://api.monnify.com',
-            'headers' => [
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json'
-            ]
-        ]);
-
-        // Initialize services with the same client instance
-        $this->initializeServices();
-    }
-
-    protected function initializeServices(): void
-    {
-        $this->transactions = new TransactionService($this->client);
-        $this->customerReservedAccount = new CustomerReservedAccountService($this->client);
-        $this->invoice = new InvoiceService($this->client);
-        $this->recurringPayment = new RecurringPaymentService($this->client);
-        $this->directDebitMandate = new DirectDebitService($this->client);
-        $this->subAccount = new SubAccountService($this->client);
-        $this->transfer = new DisbursementService($this->client);
-        $this->wallet = new WalletService($this->client);
-        $this->limitProfile = new LimitProfileService($this->client);
-        $this->refund = new RefundService($this->client);
-        $this->settlements = new SettlementService($this->client);
-        $this->verificationAPI = new VerificationService($this->client);
-        $this->payCodeAPI = new PayCodeService($this->client);
-        $this->helper = new OtherService($this->client);
-        $this->billsPayment = new BillsPaymentService($this->client);
-    }
-
-    // Add getter for testing purposes
-    public function getClient(): Client
-    {
-        return $this->client;
     }
 
     public function transactions(): TransactionService

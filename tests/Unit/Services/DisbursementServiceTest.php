@@ -3,7 +3,7 @@
 namespace Monnify\MonnifyLaravel\Tests\Unit\Services;
 
 use GuzzleHttp\Psr7\Response;
-use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Cache;
 use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Enums\DisbursementValidationFailure;
 use Monnify\MonnifyLaravel\Services\DisbursementService;
@@ -18,14 +18,12 @@ class DisbursementServiceTest extends TestCase
     {
         parent::setUp();
 
-        Config::set('accessToken', 'cached-token');
-        Config::set('expiresIn', time() + 300);
+        Cache::put('monnify_access_token', 'cached-token', 300);
     }
 
     protected function tearDown(): void
     {
-        Config::set('accessToken', null);
-        Config::set('expiresIn', null);
+        Cache::forget('monnify_access_token');
 
         parent::tearDown();
     }
@@ -213,6 +211,7 @@ class DisbursementServiceTest extends TestCase
             'narration' => 'Vendor payout',
             'destinationBankCode' => '058',
             'destinationAccountNumber' => '0123456789',
+            'destinationAccountName' => 'John Doe',
             'currency' => 'NGN',
             'sourceAccountNumber' => '1234567890',
         ];

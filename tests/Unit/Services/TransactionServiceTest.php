@@ -3,7 +3,7 @@
 namespace Monnify\MonnifyLaravel\Tests\Unit\Services;
 
 use GuzzleHttp\Psr7\Response;
-use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Cache;
 use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Services\TransactionService;
 use Monnify\MonnifyLaravel\Tests\Support\CreatesMockClient;
@@ -17,14 +17,12 @@ class TransactionServiceTest extends TestCase
     {
         parent::setUp();
 
-        Config::set('accessToken', 'cached-token');
-        Config::set('expiresIn', time() + 300);
+        Cache::put('monnify_access_token', 'cached-token', 300);
     }
 
     protected function tearDown(): void
     {
-        Config::set('accessToken', null);
-        Config::set('expiresIn', null);
+        Cache::forget('monnify_access_token');
 
         parent::tearDown();
     }
@@ -113,6 +111,16 @@ class TransactionServiceTest extends TestCase
                 'cvv' => '123',
             ],
             'apiKey' => 'api-key',
+            'deviceInformation' => [
+                'httpBrowserLanguage' => 'en-US',
+                'httpBrowserJavaEnabled' => false,
+                'httpBrowserJavaScriptEnabled' => true,
+                'httpBrowserColorDepth' => '24',
+                'httpBrowserScreenHeight' => '1080',
+                'httpBrowserScreenWidth' => '1920',
+                'httpBrowserTimeDifference' => '-60',
+                'userAgentBrowserValue' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            ],
         ];
         $history = [];
         $service = new TransactionService($this->makeClient([

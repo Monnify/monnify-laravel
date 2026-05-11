@@ -92,7 +92,8 @@ class CustomerReservedAccountService extends BaseService
         }
 
         $this->validator->validateGetReservedAccountTransactions($parameters);
-        return $this->requestGet('/api/v1/bank-transfer/reserved-accounts/transactions'. $accountReference, $parameters);
+        $parameters = array_merge(['accountReference' => $accountReference], $parameters);
+        return $this->requestGet('/api/v1/bank-transfer/reserved-accounts/transactions', $parameters);
     }
 
     public function updateKYCInfo(string $accountReference, array $data): array

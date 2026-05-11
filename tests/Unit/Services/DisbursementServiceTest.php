@@ -211,7 +211,7 @@ class DisbursementServiceTest extends TestCase
             'narration' => 'Vendor payout',
             'destinationBankCode' => '058',
             'destinationAccountNumber' => '0123456789',
-            'destinationAccountName' => 'John Doe',
+            'destinationAccountName' => 'Jane Doe',
             'currency' => 'NGN',
             'sourceAccountNumber' => '1234567890',
         ];
@@ -233,6 +233,7 @@ class DisbursementServiceTest extends TestCase
                     'narration' => 'Salary payment',
                     'destinationBankCode' => '058',
                     'destinationAccountNumber' => '0123456789',
+                    'destinationAccountName' => 'Jane Doe',
                     'currency' => 'NGN',
                 ],
             ],

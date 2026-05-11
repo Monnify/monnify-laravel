@@ -98,6 +98,12 @@ class DisbursementValidatorTest extends TestCase
                 },
                 'The amount field must be at least 20.',
             ],
+            'missing destination account name' => [
+                static function (array &$payload): void {
+                    unset($payload['destinationAccountName']);
+                },
+                'The destination account name field is required.',
+            ],
         ];
     }
 
@@ -121,6 +127,12 @@ class DisbursementValidatorTest extends TestCase
                     $payload['transactionList'][0]['destinationBankCode'] = '1234';
                 },
                 'The transactionList.0.destinationBankCode field must not be greater than 3 characters.',
+            ],
+            'missing nested destination account name' => [
+                static function (array &$payload): void {
+                    unset($payload['transactionList'][0]['destinationAccountName']);
+                },
+                'The transactionList.0.destinationAccountName field is required.',
             ],
         ];
     }
@@ -151,7 +163,7 @@ class DisbursementValidatorTest extends TestCase
             'narration' => 'Vendor payout',
             'destinationBankCode' => '058',
             'destinationAccountNumber' => '0123456789',
-            'destinationAccountName' => 'John Doe',
+            'destinationAccountName' => 'Jane Doe',
             'currency' => 'NGN',
             'sourceAccountNumber' => '1234567890',
         ];
@@ -173,6 +185,7 @@ class DisbursementValidatorTest extends TestCase
                     'narration' => 'Salary payment',
                     'destinationBankCode' => '058',
                     'destinationAccountNumber' => '0123456789',
+                    'destinationAccountName' => 'Jane Doe',
                     'currency' => 'NGN',
                 ],
             ],

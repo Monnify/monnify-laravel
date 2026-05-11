@@ -3,7 +3,7 @@
 namespace Monnify\MonnifyLaravel\Tests\Unit\Services;
 
 use GuzzleHttp\Psr7\Response;
-use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Cache;
 use Monnify\MonnifyLaravel\Services\OtherService;
 use Monnify\MonnifyLaravel\Tests\Support\CreatesMockClient;
 use Monnify\MonnifyLaravel\Tests\TestCase;
@@ -16,8 +16,14 @@ class OtherServiceTest extends TestCase
     {
         parent::setUp();
 
-        Config::set('accessToken', 'cached-token');
-        Config::set('expiresIn', time() + 300);
+        Cache::put('monnify_access_token', 'cached-token', 300);
+    }
+
+    protected function tearDown(): void
+    {
+        Cache::forget('monnify_access_token');
+
+        parent::tearDown();
     }
 
     public function test_banks_uses_the_expected_endpoint(): void

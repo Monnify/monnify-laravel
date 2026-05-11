@@ -3,6 +3,7 @@
 namespace Monnify\MonnifyLaravel\Tests\Unit\Services;
 
 use GuzzleHttp\Psr7\Response;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Monnify\MonnifyLaravel\Services\RecurringPaymentService;
 use Monnify\MonnifyLaravel\Tests\Support\CreatesMockClient;
@@ -16,8 +17,14 @@ class RecurringPaymentServiceTest extends TestCase
     {
         parent::setUp();
 
-        Config::set('accessToken', 'cached-token');
-        Config::set('expiresIn', time() + 300);
+        Cache::put('monnify_access_token', 'cached-token', 300);
+    }
+
+    protected function tearDown(): void
+    {
+        Cache::forget('monnify_access_token');
+
+        parent::tearDown();
     }
 
     public function test_charge_card_token_posts_the_expected_payload(): void

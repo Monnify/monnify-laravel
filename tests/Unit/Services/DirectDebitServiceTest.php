@@ -3,7 +3,7 @@
 namespace Monnify\MonnifyLaravel\Tests\Unit\Services;
 
 use GuzzleHttp\Psr7\Response;
-use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Cache;
 use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Services\DirectDebitService;
 use Monnify\MonnifyLaravel\Tests\Support\CreatesMockClient;
@@ -17,8 +17,14 @@ class DirectDebitServiceTest extends TestCase
     {
         parent::setUp();
 
-        Config::set('accessToken', 'cached-token');
-        Config::set('expiresIn', time() + 300);
+        Cache::put('monnify_access_token', 'cached-token', 300);
+    }
+
+    protected function tearDown(): void
+    {
+        Cache::forget('monnify_access_token');
+
+        parent::tearDown();
     }
 
     public function test_create_posts_the_expected_payload(): void
@@ -122,7 +128,7 @@ class DirectDebitServiceTest extends TestCase
 
         $service->cancel('mandate-code');
 
-        $this->assertSame('PUT', $history[0]['request']->getMethod());
+        $this->assertSame('PATCH', $history[0]['request']->getMethod());
         $this->assertSame('/api/v1/direct-debit/mandate/cancel-mandate/mandate-code', $history[0]['request']->getUri()->getPath());
     }
 

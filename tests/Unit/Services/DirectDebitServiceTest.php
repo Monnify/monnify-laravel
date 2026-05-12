@@ -86,6 +86,33 @@ class DirectDebitServiceTest extends TestCase
         $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
     }
 
+    public function test_debit_accepts_income_split_config_payloads(): void
+    {
+        $history = [];
+        $service = new DirectDebitService($this->makeClient([
+            new Response(200, [], json_encode(['requestSuccessful' => true])),
+        ], $history));
+
+        $payload = [
+            'paymentReference' => 'payment-123',
+            'mandateCode' => 'mandate-code',
+            'debitAmount' => 5000,
+            'narration' => 'Subscription charge',
+            'customerEmail' => 'jane@example.com',
+            'incomeSplitConfig' => [
+                [
+                    'subAccountCode' => 'SUB_123',
+                    'feeBearer' => true,
+                    'splitPercentage' => 20,
+                ],
+            ],
+        ];
+
+        $service->debit($payload);
+
+        $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
+    }
+
     public function test_status_requires_a_payment_reference(): void
     {
         $service = new DirectDebitService($this->makeClient([]));

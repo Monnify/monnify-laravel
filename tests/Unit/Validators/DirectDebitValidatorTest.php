@@ -50,6 +50,22 @@ class DirectDebitValidatorTest extends TestCase
         $this->assertTrue(true);
     }
 
+    public function test_validate_debit_accepts_income_split_config(): void
+    {
+        $payload = $this->validDebitPayload();
+        $payload['incomeSplitConfig'] = [
+            [
+                'subAccountCode' => 'SUB_123',
+                'feeBearer' => true,
+                'splitPercentage' => 20,
+            ],
+        ];
+
+        $this->validator->validateDebit($payload);
+
+        $this->assertTrue(true);
+    }
+
     #[DataProvider('provideInvalidDebitPayloads')]
     public function test_validate_debit_rejects_invalid_payloads(
         array $overrides,
@@ -96,6 +112,17 @@ class DirectDebitValidatorTest extends TestCase
                 ['customerEmail' => 'not-an-email'],
                 [],
                 'The customer email field must be a valid email address.',
+            ],
+            'missing income split sub account code' => [
+                [
+                    'incomeSplitConfig' => [
+                        [
+                            'splitPercentage' => 20,
+                        ],
+                    ],
+                ],
+                [],
+                'The incomeSplitConfig.0.subAccountCode field is required when income split config is present.',
             ],
         ];
     }

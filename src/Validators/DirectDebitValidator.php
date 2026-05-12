@@ -40,6 +40,18 @@ class DirectDebitValidator
             'debitAmount' => 'numeric|min:20|regex:/^\d*\.?\d*$/',
             'narration' => 'required|string',
             'customerEmail' => 'required|email',
+            'incomeSplit' => 'sometimes|array',
+            'incomeSplit.*.subAccountCode' => 'required_with:incomeSplit|string',
+            'incomeSplit.*.feeBearer' => 'sometimes|boolean',
+            'incomeSplit.*.feePercentage' => 'sometimes|numeric',
+            'incomeSplit.*.splitPercentage' => 'sometimes|numeric',
+            'incomeSplit.*.splitAmount' => 'sometimes|numeric',
+            'incomeSplitConfig' => 'sometimes|array',
+            'incomeSplitConfig.*.subAccountCode' => 'required_with:incomeSplitConfig|string',
+            'incomeSplitConfig.*.feeBearer' => 'sometimes|boolean',
+            'incomeSplitConfig.*.feePercentage' => 'sometimes|numeric',
+            'incomeSplitConfig.*.splitPercentage' => 'sometimes|numeric',
+            'incomeSplitConfig.*.splitAmount' => 'sometimes|numeric',
         ]);
 
         if ($validator->fails()) {

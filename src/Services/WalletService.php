@@ -51,7 +51,7 @@ class WalletService extends BaseService
 
         return $this->makeRequest(
             HttpMethod::GET,
-            '/api/v2/disbursements/wallet-balance',
+            '/api/v1/disbursements/wallet/balance',
             [],
             ['accountNumber' => $accountNumber]
         );

@@ -166,4 +166,18 @@ class DisbursementService extends BaseService
             $parameters
         );
     }
+
+    public function walletBalance(string $accountNumber): array
+    {
+        if (empty($accountNumber)) {
+            throw new InvalidArgumentException('Account Number must be provided.');
+        }
+
+        return $this->makeRequest(
+            HttpMethod::GET,
+            '/api/v2/disbursements/wallet-balance',
+            [],
+            ['accountNumber' => $accountNumber]
+        );
+    }
 }

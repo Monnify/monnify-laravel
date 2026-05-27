@@ -531,6 +531,7 @@ Monnify::transfer()->bulkBatchSummary($batchReference);
 Monnify::transfer()->bulkTransaction($batchReference, $pageSize, $pageNumber);
 Monnify::transfer()->all($type, $pageSize, $pageNumber);
 Monnify::transfer()->search($sourceAccountNumber, $pageSize, $pageNumber);
+Monnify::transfer()->walletBalance($accountNumber);
 ```
 
 ---
@@ -679,6 +680,18 @@ $response = Monnify::transfer()->search(
 
 ---
 
+#### Get Disbursement Wallet Balance
+
+Returns the available balance on your Monnify disbursement wallet account.
+
+```php
+$response = Monnify::transfer()->walletBalance(config('monnify.account_number'));
+```
+
+> **Note:** This returns the balance for your Monnify **disbursement** (merchant) wallet — identified by `accountNumber`. For the balance of a customer sub-wallet, use `Monnify::wallet()->balance($accountNumber)` instead.
+
+---
+
 ### Wallets
 
 > **Activation required:** The Wallet service is not enabled by default. Contact [sales@monnify.com](mailto:sales@monnify.com) to have it activated on your account.
@@ -719,9 +732,13 @@ $response = Monnify::wallet()->get('jane@example.com', $pageSize = 10, $pageNumb
 
 #### Check Wallet Balance
 
+Returns the balance for a specific customer sub-wallet (Wallet Service endpoint).
+
 ```php
 $response = Monnify::wallet()->balance('0123456789');
 ```
+
+> **Note:** This uses the Wallet Service endpoint (`/api/v1/disbursements/wallet/balance`) and requires the customer's sub-wallet account number. To check your Monnify disbursement wallet balance instead, use `Monnify::transfer()->walletBalance($accountNumber)`.
 
 ---
 

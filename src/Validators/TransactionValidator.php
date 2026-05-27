@@ -78,14 +78,23 @@ class TransactionValidator
     public function validateAuthorizeThreeDSCard(array $data): void
     {
         $validator = Validator::make($data, [
-            'transactionReference' => 'required|string',
-            'collectionChannel' => 'string',
-            'card.number' => 'required|string',
-            'card.pin' => 'required|string',
-            'card.expiryMonth' => 'required|string',
-            'card.expiryYear' => 'required|string',
-            'card.cvv' => 'required|string',
-            'apiKey' => 'required|string',
+            'transactionReference'                          => 'required|string',
+            'collectionChannel'                             => 'required|string',
+            'card.number'                                   => 'required|string',
+            'card.pin'                                      => 'required|string',
+            'card.expiryMonth'                              => 'required|string',
+            'card.expiryYear'                               => 'required|string',
+            'card.cvv'                                      => 'required|string',
+            'apiKey'                                        => 'required|string',
+            'deviceInformation'                             => 'required|array',
+            'deviceInformation.httpBrowserLanguage'         => 'required|string',
+            'deviceInformation.httpBrowserJavaEnabled'      => 'required|boolean',
+            'deviceInformation.httpBrowserJavaScriptEnabled'=> 'required|boolean',
+            'deviceInformation.httpBrowserColorDepth'       => 'required|string',
+            'deviceInformation.httpBrowserScreenHeight'     => 'required|string',
+            'deviceInformation.httpBrowserScreenWidth'      => 'required|string',
+            'deviceInformation.httpBrowserTimeDifference'   => 'required|string',
+            'deviceInformation.userAgentBrowserValue'       => 'required|string',
         ]);
 
         if ($validator->fails()) {

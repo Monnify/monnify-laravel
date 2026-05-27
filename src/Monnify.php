@@ -2,15 +2,15 @@
 
 namespace Monnify\MonnifyLaravel;
 
-use Error;
 use GuzzleHttp\Client;
+use InvalidArgumentException;
 
 use Monnify\MonnifyLaravel\Services\{
     TransactionService,
     CustomerReservedAccountService,
     InvoiceService,
     RecurringPaymentService,
-    DirectDebitService, 
+    DirectDebitService,
     SubAccountService,
     DisbursementService,
     WalletService,
@@ -19,7 +19,8 @@ use Monnify\MonnifyLaravel\Services\{
     SettlementService,
     VerificationService,
     PayCodeService,
-    OtherService
+    OtherService,
+    BillsPaymentService
 };
 
 class Monnify
@@ -39,6 +40,7 @@ class Monnify
     public VerificationService $verificationAPI;
     public PayCodeService $payCodeAPI;
     public OtherService $helper;
+    public BillsPaymentService $billsPayment;
 
     public function __construct(
         private string $apiKey,
@@ -46,7 +48,7 @@ class Monnify
         private string $environment
     ) {
         if ($environment !== 'SANDBOX' && $environment !== 'LIVE') {
-            throw new Error("Unknown environment passed: $environment, Please specify between SANDBOX or LIVE");
+            throw new InvalidArgumentException("Unknown environment passed: $environment, Please specify between SANDBOX or LIVE");
         }
 
         // Create single client instance
@@ -78,6 +80,7 @@ class Monnify
         $this->verificationAPI = new VerificationService($this->client);
         $this->payCodeAPI = new PayCodeService($this->client);
         $this->helper = new OtherService($this->client);
+        $this->billsPayment = new BillsPaymentService($this->client);
     }
 
     // Add getter for testing purposes
@@ -154,5 +157,10 @@ class Monnify
     public function helper(): OtherService
     {
         return $this->helper;
+    }
+
+    public function billsPayment(): BillsPaymentService
+    {
+        return $this->billsPayment;
     }
 }

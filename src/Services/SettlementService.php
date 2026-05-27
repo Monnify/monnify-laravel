@@ -37,7 +37,9 @@ class SettlementService extends BaseService
         
         return $this->makeRequest(
             HttpMethod::GET,
-            '/api/v1/settlement-detail?transactionReference='. $transactionReference
+            '/api/v1/settlement-detail',
+            [],
+            ['transactionReference' => $transactionReference]
         );
     }
 }

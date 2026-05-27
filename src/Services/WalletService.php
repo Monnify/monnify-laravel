@@ -48,10 +48,12 @@ class WalletService extends BaseService
         if (empty($accountNumber)) {
             throw new InvalidArgumentException('Account Number must provided.');
         }
-        
+
         return $this->makeRequest(
             HttpMethod::GET,
-            '/api/v1/disbursements/wallet/balance?accountNumber='. $accountNumber
+            '/api/v2/disbursements/wallet-balance',
+            [],
+            ['accountNumber' => $accountNumber]
         );
     }
 

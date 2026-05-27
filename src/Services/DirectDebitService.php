@@ -35,7 +35,9 @@ class DirectDebitService extends BaseService
 
         return $this->makeRequest(
             HttpMethod::GET,
-            '/api/v1/direct-debit/mandate/?mandateReferences='. $mandateReference
+            '/api/v1/direct-debit/mandate/',
+            [],
+            ['mandateReferences' => $mandateReference]
         );
     }
 
@@ -57,7 +59,9 @@ class DirectDebitService extends BaseService
 
         return $this->makeRequest(
             HttpMethod::GET,
-            '/api/v1/direct-debit/mandate/debit-status?paymentReference='. $paymentReference
+            '/api/v1/direct-debit/mandate/debit-status',
+            [],
+            ['paymentReference' => $paymentReference]
         );
     }
 
@@ -68,7 +72,7 @@ class DirectDebitService extends BaseService
         }
 
         return $this->makeRequest(
-            HttpMethod::PUT,
+            HttpMethod::PATCH,
             '/api/v1/direct-debit/mandate/cancel-mandate/'. $mandateCode
         );
     }

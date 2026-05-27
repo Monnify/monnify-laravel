@@ -66,8 +66,8 @@ class DisbursementService extends BaseService
         if (empty($reference)) {
             throw new InvalidArgumentException("Reference must be provided");
         }
-        
-        $data['reference'] = $reference;
+
+        $data = ['reference' => $reference];
         return $this->makeRequest(
             HttpMethod::POST,
             '/api/v2/disbursements/single/resend-otp',
@@ -75,11 +75,41 @@ class DisbursementService extends BaseService
         );
     }
 
+    public function bulkResendOTP(string $reference): array
+    {
+        if (empty($reference)) {
+            throw new InvalidArgumentException("Reference must be provided");
+        }
+
+        $data = ['reference' => $reference];
+        return $this->makeRequest(
+            HttpMethod::POST,
+            '/api/v2/disbursements/batch/resend-otp',
+            $data
+        );
+    }
+
+    public function bulkBatchSummary(string $batchReference): array
+    {
+        if (empty($batchReference)) {
+            throw new InvalidArgumentException("Batch Reference must be provided");
+        }
+
+        return $this->makeRequest(
+            HttpMethod::GET,
+            '/api/v2/disbursements/batch/summary',
+            [],
+            ['reference' => $batchReference]
+        );
+    }
+
     public function singleStatus(string $reference): array
     {
         return $this->makeRequest(
             HttpMethod::GET,
-            '/api/v2/disbursements/single/summary?reference='.$reference
+            '/api/v2/disbursements/single/summary',
+            [],
+            ['reference' => $reference]
         );
     }
 

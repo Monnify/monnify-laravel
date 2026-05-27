@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Monnify\MonnifyLaravel\Services\VerificationService verificationAPI()
  * @method static \Monnify\MonnifyLaravel\Services\PayCodeService payCodeAPI()
  * @method static \Monnify\MonnifyLaravel\Services\OtherService helper()
+ * @method static \Monnify\MonnifyLaravel\Services\BillsPaymentService billsPayment()
  *
  * @see \Monnify\MonnifyLaravel\Monnify
  */

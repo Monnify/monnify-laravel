@@ -5,7 +5,7 @@ namespace Monnify\MonnifyLaravel\Services;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
-use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Cache;
 use Monnify\MonnifyLaravel\Enums\HttpMethod;
 
 abstract class BaseService
@@ -30,7 +30,7 @@ abstract class BaseService
                     'Content-Type' => 'application/json'
                 ]
             ];
-            
+
             if (!empty($data)) {
                 $options['json'] = $data;
             }
@@ -46,18 +46,19 @@ abstract class BaseService
                 'body' => json_decode($response->getBody()->getContents(), true),
             ];
         } catch (RequestException $e) {
+            $errorBody = $e->getResponse()?->getBody()->getContents() ?? '';
             return [
                 'status' => (int) $e->getCode(),
-                'error' => json_decode($e->getResponse()->getBody()->getContents()),
+                'error' => json_decode($errorBody),
             ];
         }
     }
 
     public function getAccessToken(): string
     {
-        if (config('accessToken') != 'null' && config('expiresIn') != null && (config('expiresIn') > floor(microtime(true)))) {
-            $accessToken = config('accessToken');
-            return $accessToken;
+        $cachedToken = Cache::get('monnify_access_token');
+        if ($cachedToken !== null) {
+            return $cachedToken;
         }
 
         try {
@@ -71,8 +72,8 @@ abstract class BaseService
             $response = (object) json_decode($response->getBody()->getContents(), true);
             $content = (object) $response->responseBody;
             $accessToken = $content->accessToken;
-            // store token
-            $this->setAccessToken($accessToken, $content->expiresIn + floor(microtime(true)));
+            // store token with its TTL so it is persisted across requests
+            $this->setAccessToken($accessToken, (int) $content->expiresIn);
 
             return $accessToken;
         } catch (Exception $e) {
@@ -87,7 +88,6 @@ abstract class BaseService
         string $accessToken,
         int $expiresIn
     ): void {
-        Config::set('accessToken', $accessToken);
-        Config::set('expiresIn', $expiresIn);
+        Cache::put('monnify_access_token', $accessToken, $expiresIn);
     }
 }

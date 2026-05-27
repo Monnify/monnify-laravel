@@ -11,12 +11,12 @@ class RefundValidator
     {
         $validator = Validator::make($data, [
             'transactionReference' => 'required|string',
-            'refundAmount' => 'required|int',
+            'refundAmount' => 'required|numeric',
             'refundReference' => 'required|string',
             'refundReason' => 'required|string',
             'customerNote' => 'required|string',
             'destinationAccountNumber' => 'sometimes|string',
-            'destnationAccountBankCode' => 'sometimes|string',
+            'destinationAccountBankCode' => 'sometimes|string',
         ]);
 
         if ($validator->fails()) {

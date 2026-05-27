@@ -93,17 +93,17 @@ class TransactionService extends BaseService
      */
     public function statusByReference(string $reference, string $referenceType = 'transaction'): array
     {
-        if ($referenceType != 'transaction' && $referenceType != 'payment') {
+        if ($referenceType !== 'transaction' && $referenceType !== 'payment') {
             throw new InvalidArgumentException('Either transaction or payment must be provided as referenceType');
-        } elseif ($referenceType == 'transaction') {
-            $queryParam = 'transactionReference=' . $reference;
-        } else {
-            $queryParam = 'paymentReference=' . $reference;
         }
-        
+
+        $paramKey = $referenceType === 'transaction' ? 'transactionReference' : 'paymentReference';
+
         return $this->makeRequest(
             HttpMethod::GET,
-            '/api/v2/merchant/transactions/query?' . $queryParam
+            '/api/v2/merchant/transactions/query',
+            [],
+            [$paramKey => $reference]
         );
     }
 }

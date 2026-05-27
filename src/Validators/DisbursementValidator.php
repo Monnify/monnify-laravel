@@ -17,6 +17,7 @@ class DisbursementValidator
             'narration' => 'required|string',
             'destinationBankCode' => 'required|string|max:3',
             'destinationAccountNumber' => 'required|string',
+            'destinationAccountName' => 'required|string',
             'currency' => 'required|string',
             'sourceAccountNumber' => 'required|string'
         ]);

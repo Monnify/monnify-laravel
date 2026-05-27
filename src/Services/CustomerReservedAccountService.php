@@ -127,9 +127,9 @@ class CustomerReservedAccountService extends BaseService
         $this->validator->validateGetReservedAccountTransactions($parameters);
         return $this->makeRequest(
             HttpMethod::GET,
-            '/api/v1/bank-transfer/reserved-accounts/'. $accountReference,
+            '/api/v1/bank-transfer/reserved-accounts/transactions',
             [],
-            $parameters
+            array_merge(['accountReference' => $accountReference], $parameters)
         );
     }
 

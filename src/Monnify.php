@@ -2,6 +2,7 @@
 
 namespace Monnify\MonnifyLaravel;
 
+use Illuminate\Contracts\Foundation\Application;
 use Monnify\MonnifyLaravel\Services\{
     BillsPaymentService,
     CustomerReservedAccountService,
@@ -22,97 +23,82 @@ use Monnify\MonnifyLaravel\Services\{
 
 class Monnify
 {
-    public function __construct(
-        private TransactionService $transactions,
-        private BillsPaymentService $billsPayment,
-        private CustomerReservedAccountService $customerReservedAccount,
-        private InvoiceService $invoice,
-        private RecurringPaymentService $recurringPayment,
-        private DirectDebitService $directDebitMandate,
-        private SubAccountService $subAccount,
-        private DisbursementService $transfer,
-        private WalletService $wallet,
-        private LimitProfileService $limitProfile,
-        private RefundService $refund,
-        private SettlementService $settlements,
-        private VerificationService $verificationAPI,
-        private PayCodeService $payCodeAPI,
-        private OtherService $helper
-    ) {
+    public function __construct(private Application $app)
+    {
     }
 
     public function transactions(): TransactionService
     {
-        return $this->transactions;
+        return $this->app->make(TransactionService::class);
     }
 
     public function customerReservedAccount(): CustomerReservedAccountService
     {
-        return $this->customerReservedAccount;
+        return $this->app->make(CustomerReservedAccountService::class);
     }
 
     public function invoice(): InvoiceService
     {
-        return $this->invoice;
+        return $this->app->make(InvoiceService::class);
     }
 
     public function recurringPayment(): RecurringPaymentService
     {
-        return $this->recurringPayment;
+        return $this->app->make(RecurringPaymentService::class);
     }
 
     public function directDebitMandate(): DirectDebitService
     {
-        return $this->directDebitMandate;
+        return $this->app->make(DirectDebitService::class);
     }
 
     public function subAccount(): SubAccountService
     {
-        return $this->subAccount;
+        return $this->app->make(SubAccountService::class);
     }
 
     public function transfer(): DisbursementService
     {
-        return $this->transfer;
+        return $this->app->make(DisbursementService::class);
     }
 
     public function wallet(): WalletService
     {
-        return $this->wallet;
+        return $this->app->make(WalletService::class);
     }
 
     public function limitProfile(): LimitProfileService
     {
-        return $this->limitProfile;
+        return $this->app->make(LimitProfileService::class);
     }
 
     public function refund(): RefundService
     {
-        return $this->refund;
+        return $this->app->make(RefundService::class);
     }
 
     public function settlements(): SettlementService
     {
-        return $this->settlements;
+        return $this->app->make(SettlementService::class);
     }
 
     public function verificationAPI(): VerificationService
     {
-        return $this->verificationAPI;
+        return $this->app->make(VerificationService::class);
     }
 
     public function payCodeAPI(): PayCodeService
     {
-        return $this->payCodeAPI;
+        return $this->app->make(PayCodeService::class);
     }
 
     public function helper(): OtherService
     {
-        return $this->helper;
+        return $this->app->make(OtherService::class);
     }
 
     public function billsPayment(): BillsPaymentService
     {
-        return $this->billsPayment;
+        return $this->app->make(BillsPaymentService::class);
     }
 }

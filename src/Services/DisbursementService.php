@@ -50,7 +50,7 @@ class DisbursementService extends BaseService
             throw new InvalidArgumentException("Reference must be provided");
         }
         
-        $data['reference'] = $reference;
+        $data = ['reference' => $reference];
         return $this->requestPost('/api/v2/disbursements/single/resend-otp', $data);
     }
 
@@ -88,16 +88,23 @@ class DisbursementService extends BaseService
         return $this->requestGet('/api/v2/disbursements/bulk/'.$batchReference.'/transactions', $parameters);
     }
     /**
-     * @param string $type Type only have two correct value which is 'single' or 'bulk'
+     * @param 'single'|'bulk' $type
+     *
+     * Note: bulk listing requires the disbursement feature to be enabled on your Monnify merchant account.
+     * Calling with $type = 'bulk' on an account without this feature returns 404.
      */
     public function all(string $type = 'single', int $pageSize = 10, int $pageNumber = 0): array
     {
-        $url = $type == 'single' ? '/api/v2/disbursements/single/transactions' : '/api/v2/disbursements/bulk/transactions';
+        if (!in_array($type, ['single', 'bulk'], true)) {
+            throw new InvalidArgumentException("Type must be 'single' or 'bulk'.");
+        }
+
+        $url = $type === 'single' ? '/api/v2/disbursements/single/transactions' : '/api/v2/disbursements/bulk/transactions';
         $parameters = [
             'pageSize' => $pageSize,
             'pageNo' => $pageNumber
         ];
-        
+
         return $this->requestGet($url, $parameters);
     }
 

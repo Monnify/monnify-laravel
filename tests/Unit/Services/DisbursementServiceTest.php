@@ -174,6 +174,16 @@ class DisbursementServiceTest extends TestCase
         $this->assertSame('pageSize=15&pageNo=1', $history[0]['request']->getUri()->getQuery());
     }
 
+    public function test_all_rejects_an_invalid_type(): void
+    {
+        $service = new DisbursementService($this->makeClient([]));
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Type must be 'single' or 'bulk'.");
+
+        $service->all('invalid');
+    }
+
     public function test_bulk_transaction_delegates_to_bulk_status(): void
     {
         $history = [];

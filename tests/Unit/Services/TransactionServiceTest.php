@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Services\TransactionService;
 use Monnify\MonnifyLaravel\Tests\Support\CreatesMockClient;
 use Monnify\MonnifyLaravel\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class TransactionServiceTest extends TestCase
 {
@@ -27,7 +28,8 @@ class TransactionServiceTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_initialise_posts_the_expected_payload(): void
+    #[Test]
+    public function initialise_posts_the_expected_payload(): void
     {
         $payload = $this->validInitializePayload();
         $history = [];
@@ -43,7 +45,8 @@ class TransactionServiceTest extends TestCase
         $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
     }
 
-    public function test_pay_with_bank_transfer_posts_the_expected_payload(): void
+    #[Test]
+    public function pay_with_bank_transfer_posts_the_expected_payload(): void
     {
         $payload = ['transactionReference' => 'txn-ref', 'bankCode' => '058'];
         $history = [];
@@ -57,7 +60,8 @@ class TransactionServiceTest extends TestCase
         $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
     }
 
-    public function test_charge_card_posts_the_expected_payload(): void
+    #[Test]
+    public function charge_card_posts_the_expected_payload(): void
     {
         $payload = [
             'transactionReference' => 'txn-ref',
@@ -80,7 +84,8 @@ class TransactionServiceTest extends TestCase
         $this->assertSame('/api/v1/merchant/cards/charge', $history[0]['request']->getUri()->getPath());
     }
 
-    public function test_authorize_otp_posts_the_expected_payload(): void
+    #[Test]
+    public function authorize_otp_posts_the_expected_payload(): void
     {
         $payload = [
             'transactionReference' => 'txn-ref',
@@ -98,7 +103,8 @@ class TransactionServiceTest extends TestCase
         $this->assertSame('/api/v1/merchant/cards/otp/authorize', $history[0]['request']->getUri()->getPath());
     }
 
-    public function test_authorize_three_ds_card_posts_the_expected_payload(): void
+    #[Test]
+    public function authorize_three_ds_card_posts_the_expected_payload(): void
     {
         $payload = [
             'transactionReference' => 'txn-ref',
@@ -132,7 +138,8 @@ class TransactionServiceTest extends TestCase
         $this->assertSame('/api/v1/sdk/cards/secure-3d/authorize', $history[0]['request']->getUri()->getPath());
     }
 
-    public function test_all_adds_query_parameters_to_the_search_request(): void
+    #[Test]
+    public function all_adds_query_parameters_to_the_search_request(): void
     {
         $history = [];
         $service = new TransactionService($this->makeClient([
@@ -149,7 +156,8 @@ class TransactionServiceTest extends TestCase
         $this->assertSame('page=2&size=20&paymentReference=pay-ref', $history[0]['request']->getUri()->getQuery());
     }
 
-    public function test_status_requires_a_transaction_reference(): void
+    #[Test]
+    public function status_requires_a_transaction_reference(): void
     {
         $service = new TransactionService($this->makeClient([]));
 
@@ -159,7 +167,8 @@ class TransactionServiceTest extends TestCase
         $service->status('');
     }
 
-    public function test_status_uses_the_transaction_status_endpoint(): void
+    #[Test]
+    public function status_uses_the_transaction_status_endpoint(): void
     {
         $history = [];
         $service = new TransactionService($this->makeClient([
@@ -171,7 +180,8 @@ class TransactionServiceTest extends TestCase
         $this->assertSame('/api/v2/transactions/txn-ref', $history[0]['request']->getUri()->getPath());
     }
 
-    public function test_status_by_reference_supports_transaction_references(): void
+    #[Test]
+    public function status_by_reference_supports_transaction_references(): void
     {
         $history = [];
         $service = new TransactionService($this->makeClient([
@@ -184,7 +194,8 @@ class TransactionServiceTest extends TestCase
         $this->assertSame('transactionReference=txn-ref', $history[0]['request']->getUri()->getQuery());
     }
 
-    public function test_status_by_reference_supports_payment_references(): void
+    #[Test]
+    public function status_by_reference_supports_payment_references(): void
     {
         $history = [];
         $service = new TransactionService($this->makeClient([
@@ -196,7 +207,8 @@ class TransactionServiceTest extends TestCase
         $this->assertSame('paymentReference=pay-ref', $history[0]['request']->getUri()->getQuery());
     }
 
-    public function test_status_by_reference_rejects_unknown_reference_types(): void
+    #[Test]
+    public function status_by_reference_rejects_unknown_reference_types(): void
     {
         $service = new TransactionService($this->makeClient([]));
 

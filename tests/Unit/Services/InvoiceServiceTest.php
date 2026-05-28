@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Services\InvoiceService;
 use Monnify\MonnifyLaravel\Tests\Support\CreatesMockClient;
 use Monnify\MonnifyLaravel\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class InvoiceServiceTest extends TestCase
 {
@@ -27,7 +28,8 @@ class InvoiceServiceTest extends TestCase
         parent::tearDown();
     }
     
-    public function test_create_posts_the_expected_payload(): void
+    #[Test]
+    public function create_posts_the_expected_payload(): void
     {
         $payload = $this->validInvoicePayload();
         $history = [];
@@ -42,7 +44,8 @@ class InvoiceServiceTest extends TestCase
         $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
     }
 
-    public function test_get_requires_an_invoice_reference(): void
+    #[Test]
+    public function get_requires_an_invoice_reference(): void
     {
         $service = new InvoiceService($this->makeClient([]));
 
@@ -52,7 +55,8 @@ class InvoiceServiceTest extends TestCase
         $service->get('');
     }
 
-    public function test_get_uses_the_invoice_details_endpoint(): void
+    #[Test]
+    public function get_uses_the_invoice_details_endpoint(): void
     {
         $history = [];
         $service = new InvoiceService($this->makeClient([
@@ -64,7 +68,8 @@ class InvoiceServiceTest extends TestCase
         $this->assertSame('/api/v1/invoice/inv-123/details', $history[0]['request']->getUri()->getPath());
     }
 
-    public function test_all_uses_the_invoice_listing_endpoint(): void
+    #[Test]
+    public function all_uses_the_invoice_listing_endpoint(): void
     {
         $history = [];
         $service = new InvoiceService($this->makeClient([
@@ -76,7 +81,8 @@ class InvoiceServiceTest extends TestCase
         $this->assertSame('/api/v1/invoice/all', $history[0]['request']->getUri()->getPath());
     }
 
-    public function test_cancel_requires_an_invoice_reference(): void
+    #[Test]
+    public function cancel_requires_an_invoice_reference(): void
     {
         $service = new InvoiceService($this->makeClient([]));
 
@@ -86,7 +92,8 @@ class InvoiceServiceTest extends TestCase
         $service->cancel('');
     }
 
-    public function test_cancel_uses_the_invoice_cancel_endpoint(): void
+    #[Test]
+    public function cancel_uses_the_invoice_cancel_endpoint(): void
     {
         $history = [];
         $service = new InvoiceService($this->makeClient([
@@ -99,7 +106,8 @@ class InvoiceServiceTest extends TestCase
         $this->assertSame('DELETE', $history[0]['request']->getMethod());
     }
 
-    public function test_attach_reserved_account_posts_the_expected_payload(): void
+    #[Test]
+    public function attach_reserved_account_posts_the_expected_payload(): void
     {
         $payload = $this->validInvoicePayload();
         $history = [];

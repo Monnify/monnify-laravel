@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Cache;
 use Monnify\MonnifyLaravel\Tests\Support\CreatesMockClient;
 use Monnify\MonnifyLaravel\Tests\Support\TestBaseService;
 use Monnify\MonnifyLaravel\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class BaseServiceTest extends TestCase
 {
@@ -23,7 +24,8 @@ class BaseServiceTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_it_reuses_a_cached_access_token_when_it_is_not_expired(): void
+    #[Test]
+    public function it_reuses_a_cached_access_token_when_it_is_not_expired(): void
     {
         Cache::put('monnify_access_token', 'cached-token', 300);
 
@@ -41,7 +43,8 @@ class BaseServiceTest extends TestCase
         $this->assertSame('page=1', $history[0]['request']->getUri()->getQuery());
     }
 
-    public function test_it_fetches_and_caches_an_access_token_before_making_requests(): void
+    #[Test]
+    public function it_fetches_and_caches_an_access_token_before_making_requests(): void
     {
         $history = [];
         $service = new TestBaseService($this->makeClient([
@@ -67,7 +70,8 @@ class BaseServiceTest extends TestCase
         $this->assertSame('fresh-token', Cache::get('monnify_access_token'));
     }
 
-    public function test_it_returns_the_api_error_payload_for_request_exceptions_with_a_response(): void
+    #[Test]
+    public function it_returns_the_api_error_payload_for_request_exceptions_with_a_response(): void
     {
         Cache::put('monnify_access_token', 'cached-token', 300);
 
@@ -85,7 +89,8 @@ class BaseServiceTest extends TestCase
         $this->assertSame('Invalid payload', $result['error']->message);
     }
 
-    public function test_it_returns_a_meaningful_error_for_transport_failures_without_a_response(): void
+    #[Test]
+    public function it_returns_a_meaningful_error_for_transport_failures_without_a_response(): void
     {
         Cache::put('monnify_access_token', 'cached-token', 300);
 
@@ -102,7 +107,8 @@ class BaseServiceTest extends TestCase
         $this->assertStringContainsString('Could not resolve host', $result['error']->message);
     }
 
-    public function test_it_sets_access_token_values_in_cache(): void
+    #[Test]
+    public function it_sets_access_token_values_in_cache(): void
     {
         $service = new TestBaseService(new Client(['base_uri' => 'https://example.com']));
 

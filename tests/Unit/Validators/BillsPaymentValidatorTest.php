@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Tests\TestCase;
 use Monnify\MonnifyLaravel\Validators\BillsPaymentValidator;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 
 class BillsPaymentValidatorTest extends TestCase
 {
@@ -18,14 +19,16 @@ class BillsPaymentValidatorTest extends TestCase
         $this->validator = new BillsPaymentValidator();
     }
 
-    public function test_validate_pagination_accepts_default_parameters(): void
+    #[Test]
+    public function validate_pagination_accepts_default_parameters(): void
     {
         $this->validator->validatePagination(['size' => 10, 'page' => 0]);
 
         $this->assertTrue(true);
     }
 
-    public function test_validate_pagination_accepts_empty_payload(): void
+    #[Test]
+    public function validate_pagination_accepts_empty_payload(): void
     {
         $this->validator->validatePagination([]);
 
@@ -33,7 +36,8 @@ class BillsPaymentValidatorTest extends TestCase
     }
 
     #[DataProvider('provideInvalidPaginationPayloads')]
-    public function test_validate_pagination_rejects_invalid_payloads(
+    #[Test]
+    public function validate_pagination_rejects_invalid_payloads(
         array $payload,
         string $expectedMessage
     ): void {
@@ -57,28 +61,32 @@ class BillsPaymentValidatorTest extends TestCase
         ];
     }
 
-    public function test_validate_billers_accepts_payload_without_category_code(): void
+    #[Test]
+    public function validate_billers_accepts_payload_without_category_code(): void
     {
         $this->validator->validateBillers(['size' => 10, 'page' => 0]);
 
         $this->assertTrue(true);
     }
 
-    public function test_validate_billers_accepts_payload_with_category_code(): void
+    #[Test]
+    public function validate_billers_accepts_payload_with_category_code(): void
     {
         $this->validator->validateBillers(['size' => 10, 'page' => 0, 'category_code' => 'ELECTRICITY']);
 
         $this->assertTrue(true);
     }
 
-    public function test_validate_products_accepts_a_valid_payload(): void
+    #[Test]
+    public function validate_products_accepts_a_valid_payload(): void
     {
         $this->validator->validateProducts(['biller_code' => 'BILLER-001', 'size' => 10, 'page' => 0]);
 
         $this->assertTrue(true);
     }
 
-    public function test_validate_products_requires_biller_code(): void
+    #[Test]
+    public function validate_products_requires_biller_code(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The biller code field is required.');
@@ -86,7 +94,8 @@ class BillsPaymentValidatorTest extends TestCase
         $this->validator->validateProducts(['size' => 10, 'page' => 0]);
     }
 
-    public function test_validate_customer_accepts_a_valid_payload(): void
+    #[Test]
+    public function validate_customer_accepts_a_valid_payload(): void
     {
         $this->validator->validateCustomer(['productCode' => 'PROD-001', 'customerId' => 'CUST-123']);
 
@@ -94,7 +103,8 @@ class BillsPaymentValidatorTest extends TestCase
     }
 
     #[DataProvider('provideInvalidCustomerPayloads')]
-    public function test_validate_customer_rejects_invalid_payloads(
+    #[Test]
+    public function validate_customer_rejects_invalid_payloads(
         array $payload,
         string $expectedMessage
     ): void {
@@ -118,7 +128,8 @@ class BillsPaymentValidatorTest extends TestCase
         ];
     }
 
-    public function test_validate_vend_accepts_a_valid_payload(): void
+    #[Test]
+    public function validate_vend_accepts_a_valid_payload(): void
     {
         $this->validator->validateVend($this->validVendPayload());
 
@@ -126,7 +137,8 @@ class BillsPaymentValidatorTest extends TestCase
     }
 
     #[DataProvider('provideInvalidVendPayloads')]
-    public function test_validate_vend_rejects_invalid_payloads(
+    #[Test]
+    public function validate_vend_rejects_invalid_payloads(
         \Closure $mutate,
         string $expectedMessage
     ): void {
@@ -161,14 +173,16 @@ class BillsPaymentValidatorTest extends TestCase
         ];
     }
 
-    public function test_validate_requery_accepts_a_valid_payload(): void
+    #[Test]
+    public function validate_requery_accepts_a_valid_payload(): void
     {
         $this->validator->validateRequery(['vendReference' => 'vend-ref-123']);
 
         $this->assertTrue(true);
     }
 
-    public function test_validate_requery_requires_vend_reference(): void
+    #[Test]
+    public function validate_requery_requires_vend_reference(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The vend reference field is required.');

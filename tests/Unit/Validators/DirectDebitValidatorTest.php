@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Tests\TestCase;
 use Monnify\MonnifyLaravel\Validators\DirectDebitValidator;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 
 class DirectDebitValidatorTest extends TestCase
 {
@@ -18,7 +19,8 @@ class DirectDebitValidatorTest extends TestCase
         $this->validator = new DirectDebitValidator();
     }
 
-    public function test_validate_mandate_accepts_a_valid_payload(): void
+    #[Test]
+    public function validate_mandate_accepts_a_valid_payload(): void
     {
         $this->validator->validateMandate($this->validMandatePayload());
 
@@ -26,7 +28,8 @@ class DirectDebitValidatorTest extends TestCase
     }
 
     #[DataProvider('provideInvalidMandatePayloads')]
-    public function test_validate_mandate_rejects_invalid_payloads(
+    #[Test]
+    public function validate_mandate_rejects_invalid_payloads(
         array $overrides,
         array $missingKeys,
         string $expectedMessage
@@ -43,14 +46,16 @@ class DirectDebitValidatorTest extends TestCase
         $this->validator->validateMandate($payload);
     }
 
-    public function test_validate_debit_accepts_a_valid_payload(): void
+    #[Test]
+    public function validate_debit_accepts_a_valid_payload(): void
     {
         $this->validator->validateDebit($this->validDebitPayload());
 
         $this->assertTrue(true);
     }
 
-    public function test_validate_debit_accepts_income_split_config(): void
+    #[Test]
+    public function validate_debit_accepts_income_split_config(): void
     {
         $payload = $this->validDebitPayload();
         $payload['incomeSplitConfig'] = [
@@ -67,7 +72,8 @@ class DirectDebitValidatorTest extends TestCase
     }
 
     #[DataProvider('provideInvalidDebitPayloads')]
-    public function test_validate_debit_rejects_invalid_payloads(
+    #[Test]
+    public function validate_debit_rejects_invalid_payloads(
         array $overrides,
         array $missingKeys,
         string $expectedMessage

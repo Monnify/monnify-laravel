@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Cache;
 use Monnify\MonnifyLaravel\Services\BillsPaymentService;
 use Monnify\MonnifyLaravel\Tests\Support\CreatesMockClient;
 use Monnify\MonnifyLaravel\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class BillsPaymentServiceTest extends TestCase
 {
@@ -26,7 +27,8 @@ class BillsPaymentServiceTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_categories_uses_the_expected_endpoint(): void
+    #[Test]
+    public function categories_uses_the_expected_endpoint(): void
     {
         $history = [];
         $service = new BillsPaymentService($this->makeClient([
@@ -39,7 +41,8 @@ class BillsPaymentServiceTest extends TestCase
         $this->assertSame('GET', $history[0]['request']->getMethod());
     }
 
-    public function test_categories_sends_pagination_parameters(): void
+    #[Test]
+    public function categories_sends_pagination_parameters(): void
     {
         $history = [];
         $service = new BillsPaymentService($this->makeClient([
@@ -51,7 +54,8 @@ class BillsPaymentServiceTest extends TestCase
         $this->assertSame('size=20&page=2', $history[0]['request']->getUri()->getQuery());
     }
 
-    public function test_billers_uses_the_expected_endpoint(): void
+    #[Test]
+    public function billers_uses_the_expected_endpoint(): void
     {
         $history = [];
         $service = new BillsPaymentService($this->makeClient([
@@ -64,7 +68,8 @@ class BillsPaymentServiceTest extends TestCase
         $this->assertSame('GET', $history[0]['request']->getMethod());
     }
 
-    public function test_billers_includes_category_code_when_provided(): void
+    #[Test]
+    public function billers_includes_category_code_when_provided(): void
     {
         $history = [];
         $service = new BillsPaymentService($this->makeClient([
@@ -77,7 +82,8 @@ class BillsPaymentServiceTest extends TestCase
         $this->assertStringContainsString('category_code=ELECTRICITY', $query);
     }
 
-    public function test_billers_omits_category_code_when_not_provided(): void
+    #[Test]
+    public function billers_omits_category_code_when_not_provided(): void
     {
         $history = [];
         $service = new BillsPaymentService($this->makeClient([
@@ -89,7 +95,8 @@ class BillsPaymentServiceTest extends TestCase
         $this->assertStringNotContainsString('category_code', $history[0]['request']->getUri()->getQuery());
     }
 
-    public function test_products_requires_a_biller_code(): void
+    #[Test]
+    public function products_requires_a_biller_code(): void
     {
         $service = new BillsPaymentService($this->makeClient([]));
 
@@ -98,7 +105,8 @@ class BillsPaymentServiceTest extends TestCase
         $service->products('');
     }
 
-    public function test_products_uses_the_expected_endpoint(): void
+    #[Test]
+    public function products_uses_the_expected_endpoint(): void
     {
         $history = [];
         $service = new BillsPaymentService($this->makeClient([
@@ -111,7 +119,8 @@ class BillsPaymentServiceTest extends TestCase
         $this->assertStringContainsString('biller_code=BILLER-001', $history[0]['request']->getUri()->getQuery());
     }
 
-    public function test_validate_customer_posts_the_expected_payload(): void
+    #[Test]
+    public function validate_customer_posts_the_expected_payload(): void
     {
         $payload = ['productCode' => 'PROD-001', 'customerId' => 'CUST-123'];
         $history = [];
@@ -126,7 +135,8 @@ class BillsPaymentServiceTest extends TestCase
         $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
     }
 
-    public function test_vend_posts_the_expected_payload(): void
+    #[Test]
+    public function vend_posts_the_expected_payload(): void
     {
         $payload = $this->validVendPayload();
         $history = [];
@@ -141,7 +151,8 @@ class BillsPaymentServiceTest extends TestCase
         $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
     }
 
-    public function test_requery_uses_the_expected_endpoint(): void
+    #[Test]
+    public function requery_uses_the_expected_endpoint(): void
     {
         $history = [];
         $service = new BillsPaymentService($this->makeClient([

@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Tests\TestCase;
 use Monnify\MonnifyLaravel\Validators\LimitProfileValidator;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 
 class LimitProfileValidatorTest extends TestCase
 {
@@ -18,7 +19,8 @@ class LimitProfileValidatorTest extends TestCase
         $this->validator = new LimitProfileValidator();
     }
 
-    public function test_validate_limit_profile_accepts_a_valid_payload(): void
+    #[Test]
+    public function validate_limit_profile_accepts_a_valid_payload(): void
     {
         $this->validator->validateLimitProfile($this->validLimitProfilePayload());
 
@@ -26,7 +28,8 @@ class LimitProfileValidatorTest extends TestCase
     }
 
     #[DataProvider('provideInvalidLimitProfilePayloads')]
-    public function test_validate_limit_profile_rejects_invalid_payloads(
+    #[Test]
+    public function validate_limit_profile_rejects_invalid_payloads(
         array $overrides,
         array $missingKeys,
         string $expectedMessage
@@ -43,7 +46,8 @@ class LimitProfileValidatorTest extends TestCase
         $this->validator->validateLimitProfile($payload);
     }
 
-    public function test_validate_reserve_account_accepts_a_valid_payload(): void
+    #[Test]
+    public function validate_reserve_account_accepts_a_valid_payload(): void
     {
         $this->validator->validateReserveAccount($this->validReserveAccountPayload());
 
@@ -51,7 +55,8 @@ class LimitProfileValidatorTest extends TestCase
     }
 
     #[DataProvider('provideInvalidReserveAccountPayloads')]
-    public function test_validate_reserve_account_rejects_invalid_payloads(
+    #[Test]
+    public function validate_reserve_account_rejects_invalid_payloads(
         array $overrides,
         array $missingKeys,
         string $expectedMessage

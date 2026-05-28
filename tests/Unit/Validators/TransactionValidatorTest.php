@@ -7,6 +7,7 @@ use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Tests\TestCase;
 use Monnify\MonnifyLaravel\Validators\TransactionValidator;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 
 class TransactionValidatorTest extends TestCase
 {
@@ -19,7 +20,8 @@ class TransactionValidatorTest extends TestCase
         $this->validator = new TransactionValidator();
     }
 
-    public function test_validate_initialize_accepts_a_valid_payload(): void
+    #[Test]
+    public function validate_initialize_accepts_a_valid_payload(): void
     {
         $this->validator->validateInitialize($this->validInitializePayload());
 
@@ -27,7 +29,8 @@ class TransactionValidatorTest extends TestCase
     }
 
     #[DataProvider('provideInvalidInitializePayloads')]
-    public function test_validate_initialize_rejects_invalid_payloads(
+    #[Test]
+    public function validate_initialize_rejects_invalid_payloads(
         array $payload,
         string $expectedMessage
     ): void {
@@ -37,7 +40,8 @@ class TransactionValidatorTest extends TestCase
         $this->validator->validateInitialize($payload);
     }
 
-    public function test_validate_pay_with_bank_transfer_accepts_a_valid_payload(): void
+    #[Test]
+    public function validate_pay_with_bank_transfer_accepts_a_valid_payload(): void
     {
         $this->validator->validatePayWithBankTransfer([
             'transactionReference' => 'txn-ref',
@@ -48,7 +52,8 @@ class TransactionValidatorTest extends TestCase
     }
 
     #[DataProvider('provideInvalidPayWithBankTransferPayloads')]
-    public function test_validate_pay_with_bank_transfer_rejects_invalid_payloads(
+    #[Test]
+    public function validate_pay_with_bank_transfer_rejects_invalid_payloads(
         array $payload,
         string $expectedMessage
     ): void {
@@ -58,7 +63,8 @@ class TransactionValidatorTest extends TestCase
         $this->validator->validatePayWithBankTransfer($payload);
     }
 
-    public function test_validate_charge_card_accepts_a_valid_payload(): void
+    #[Test]
+    public function validate_charge_card_accepts_a_valid_payload(): void
     {
         $this->validator->validateChargeCard($this->validChargeCardPayload());
 
@@ -66,7 +72,8 @@ class TransactionValidatorTest extends TestCase
     }
 
     #[DataProvider('provideInvalidChargeCardPayloads')]
-    public function test_validate_charge_card_rejects_invalid_payloads(
+    #[Test]
+    public function validate_charge_card_rejects_invalid_payloads(
         Closure $mutator,
         string $expectedMessage
     ): void {
@@ -79,7 +86,8 @@ class TransactionValidatorTest extends TestCase
         $this->validator->validateChargeCard($payload);
     }
 
-    public function test_validate_authorize_otp_accepts_a_valid_payload(): void
+    #[Test]
+    public function validate_authorize_otp_accepts_a_valid_payload(): void
     {
         $this->validator->validateAuthorizeOTP([
             'transactionReference' => 'txn-ref',
@@ -92,7 +100,8 @@ class TransactionValidatorTest extends TestCase
     }
 
     #[DataProvider('provideInvalidAuthorizeOtpPayloads')]
-    public function test_validate_authorize_otp_rejects_invalid_payloads(
+    #[Test]
+    public function validate_authorize_otp_rejects_invalid_payloads(
         array $payload,
         string $expectedMessage
     ): void {
@@ -102,7 +111,8 @@ class TransactionValidatorTest extends TestCase
         $this->validator->validateAuthorizeOTP($payload);
     }
 
-    public function test_validate_authorize_three_ds_card_accepts_a_valid_payload(): void
+    #[Test]
+    public function validate_authorize_three_ds_card_accepts_a_valid_payload(): void
     {
         $payload = $this->validChargeCardPayload();
         $payload['apiKey'] = 'api-key';
@@ -113,7 +123,8 @@ class TransactionValidatorTest extends TestCase
     }
 
     #[DataProvider('provideInvalidAuthorizeThreeDsCardPayloads')]
-    public function test_validate_authorize_three_ds_card_rejects_invalid_payloads(
+    #[Test]
+    public function validate_authorize_three_ds_card_rejects_invalid_payloads(
         Closure $mutator,
         string $expectedMessage
     ): void {
@@ -127,7 +138,8 @@ class TransactionValidatorTest extends TestCase
         $this->validator->validateAuthorizeThreeDSCard($payload);
     }
 
-    public function test_validate_get_all_transactions_accepts_valid_search_parameters(): void
+    #[Test]
+    public function validate_get_all_transactions_accepts_valid_search_parameters(): void
     {
         $this->validator->validateGetAllTransactions([
             'page' => 1,
@@ -144,7 +156,8 @@ class TransactionValidatorTest extends TestCase
     }
 
     #[DataProvider('provideInvalidGetAllTransactionsPayloads')]
-    public function test_validate_get_all_transactions_rejects_invalid_payloads(
+    #[Test]
+    public function validate_get_all_transactions_rejects_invalid_payloads(
         array $payload,
         string $expectedMessage
     ): void {

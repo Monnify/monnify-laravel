@@ -23,10 +23,12 @@ use Monnify\MonnifyLaravel\Services\TransactionService;
 use Monnify\MonnifyLaravel\Services\VerificationService;
 use Monnify\MonnifyLaravel\Services\WalletService;
 use Monnify\MonnifyLaravel\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class MonnifyTest extends TestCase
 {
-    public function test_it_registers_the_package_singleton(): void
+    #[Test]
+    public function it_registers_the_package_singleton(): void
     {
         $first = $this->app->make(MonnifyServiceProvider::BINDING);
         $second = $this->app->make(MonnifyServiceProvider::BINDING);
@@ -35,14 +37,16 @@ class MonnifyTest extends TestCase
         $this->assertSame($first, $second);
     }
 
-    public function test_it_resolves_the_monnify_facade_root(): void
+    #[Test]
+    public function it_resolves_the_monnify_facade_root(): void
     {
         $service = $this->app->make(MonnifyServiceProvider::BINDING);
 
         $this->assertSame($service, MonnifyFacade::getFacadeRoot());
     }
 
-    public function test_it_uses_a_package_specific_http_client_binding(): void
+    #[Test]
+    public function it_uses_a_package_specific_http_client_binding(): void
     {
         $client = $this->app->make(MonnifyServiceProvider::HTTP_CLIENT_BINDING);
         $appClient = new Client(['base_uri' => 'https://app.example.com']);
@@ -59,7 +63,8 @@ class MonnifyTest extends TestCase
         $this->assertSame($this->app->make(TransactionService::class), $monnify->transactions());
     }
 
-    public function test_it_uses_the_correct_base_uri_for_sandbox(): void
+    #[Test]
+    public function it_uses_the_correct_base_uri_for_sandbox(): void
     {
         $this->app['config']->set('monnify.environment', 'SANDBOX');
         $client = $this->app->make(MonnifyServiceProvider::HTTP_CLIENT_BINDING);
@@ -70,7 +75,8 @@ class MonnifyTest extends TestCase
         );
     }
 
-    public function test_it_uses_the_correct_base_uri_for_live(): void
+    #[Test]
+    public function it_uses_the_correct_base_uri_for_live(): void
     {
         $this->app['config']->set('monnify.environment', 'LIVE');
         $client = $this->app->make(MonnifyServiceProvider::HTTP_CLIENT_BINDING);
@@ -81,7 +87,8 @@ class MonnifyTest extends TestCase
         );
     }
 
-    public function test_it_configures_default_http_headers_on_the_client(): void
+    #[Test]
+    public function it_configures_default_http_headers_on_the_client(): void
     {
         $client = $this->app->make(MonnifyServiceProvider::HTTP_CLIENT_BINDING);
 
@@ -89,7 +96,8 @@ class MonnifyTest extends TestCase
         $this->assertSame('application/json', $client->getConfig('headers')['Content-Type']);
     }
 
-    public function test_it_rejects_unknown_environments(): void
+    #[Test]
+    public function it_rejects_unknown_environments(): void
     {
         $this->app['config']->set('monnify.environment', 'STAGING');
 
@@ -99,7 +107,8 @@ class MonnifyTest extends TestCase
         $this->app->make(MonnifyServiceProvider::HTTP_CLIENT_BINDING);
     }
 
-    public function test_it_resolves_service_accessors_from_container_singletons(): void
+    #[Test]
+    public function it_resolves_service_accessors_from_container_singletons(): void
     {
         $monnify = $this->app->make(MonnifyServiceProvider::BINDING);
 

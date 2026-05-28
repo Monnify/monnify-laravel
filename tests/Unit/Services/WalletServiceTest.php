@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Services\WalletService;
 use Monnify\MonnifyLaravel\Tests\Support\CreatesMockClient;
 use Monnify\MonnifyLaravel\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class WalletServiceTest extends TestCase
 {
@@ -27,7 +28,8 @@ class WalletServiceTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_create_posts_the_expected_payload(): void
+    #[Test]
+    public function create_posts_the_expected_payload(): void
     {
         $payload = [
             'walletReference' => 'wallet-123',
@@ -47,7 +49,8 @@ class WalletServiceTest extends TestCase
         $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
     }
 
-    public function test_get_adds_the_expected_query_parameters(): void
+    #[Test]
+    public function get_adds_the_expected_query_parameters(): void
     {
         $history = [];
         $service = new WalletService($this->makeClient([
@@ -60,7 +63,8 @@ class WalletServiceTest extends TestCase
         $this->assertSame('customerEmail=jane%40example.com&pageSize=20&pageNo=2', $history[0]['request']->getUri()->getQuery());
     }
 
-    public function test_balance_requires_an_account_number(): void
+    #[Test]
+    public function balance_requires_an_account_number(): void
     {
         $service = new WalletService($this->makeClient([]));
 
@@ -70,7 +74,8 @@ class WalletServiceTest extends TestCase
         $service->balance('');
     }
 
-    public function test_balance_uses_the_expected_endpoint(): void
+    #[Test]
+    public function balance_uses_the_expected_endpoint(): void
     {
         $history = [];
         $service = new WalletService($this->makeClient([
@@ -83,7 +88,8 @@ class WalletServiceTest extends TestCase
         $this->assertSame('accountNumber=0123456789', $history[0]['request']->getUri()->getQuery());
     }
 
-    public function test_transactions_requires_an_account_number(): void
+    #[Test]
+    public function transactions_requires_an_account_number(): void
     {
         $service = new WalletService($this->makeClient([]));
 
@@ -93,7 +99,8 @@ class WalletServiceTest extends TestCase
         $service->transactions('');
     }
 
-    public function test_transactions_adds_the_expected_query_parameters(): void
+    #[Test]
+    public function transactions_adds_the_expected_query_parameters(): void
     {
         $history = [];
         $service = new WalletService($this->makeClient([

@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Tests\TestCase;
 use Monnify\MonnifyLaravel\Validators\VerificationValidator;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 
 class VerificationValidatorTest extends TestCase
 {
@@ -18,7 +19,8 @@ class VerificationValidatorTest extends TestCase
         $this->validator = new VerificationValidator();
     }
 
-    public function test_validate_bvn_information_accepts_a_valid_payload(): void
+    #[Test]
+    public function validate_bvn_information_accepts_a_valid_payload(): void
     {
         $this->validator->validateBVNInformation($this->validBvnInformationPayload());
 
@@ -26,7 +28,8 @@ class VerificationValidatorTest extends TestCase
     }
 
     #[DataProvider('provideInvalidBvnInformationPayloads')]
-    public function test_validate_bvn_information_rejects_invalid_payloads(
+    #[Test]
+    public function validate_bvn_information_rejects_invalid_payloads(
         array $overrides,
         array $missingKeys,
         string $expectedMessage

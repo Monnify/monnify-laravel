@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Config;
 use Monnify\MonnifyLaravel\Services\RecurringPaymentService;
 use Monnify\MonnifyLaravel\Tests\Support\CreatesMockClient;
 use Monnify\MonnifyLaravel\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class RecurringPaymentServiceTest extends TestCase
 {
@@ -27,7 +28,8 @@ class RecurringPaymentServiceTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_charge_card_token_posts_the_expected_payload(): void
+    #[Test]
+    public function charge_card_token_posts_the_expected_payload(): void
     {
         $history = [];
         $service = new RecurringPaymentService($this->makeClient([

@@ -9,6 +9,7 @@ use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Services\LimitProfileService;
 use Monnify\MonnifyLaravel\Tests\Support\CreatesMockClient;
 use Monnify\MonnifyLaravel\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class LimitProfileServiceTest extends TestCase
 {
@@ -28,7 +29,8 @@ class LimitProfileServiceTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_all_uses_the_expected_endpoint(): void
+    #[Test]
+    public function all_uses_the_expected_endpoint(): void
     {
         $history = [];
         $service = new LimitProfileService($this->makeClient([
@@ -40,7 +42,8 @@ class LimitProfileServiceTest extends TestCase
         $this->assertSame('/api/v1/limit-profile/', $history[0]['request']->getUri()->getPath());
     }
 
-    public function test_create_posts_the_expected_payload(): void
+    #[Test]
+    public function create_posts_the_expected_payload(): void
     {
         $history = [];
         $service = new LimitProfileService($this->makeClient([
@@ -55,7 +58,8 @@ class LimitProfileServiceTest extends TestCase
         $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
     }
 
-    public function test_update_requires_a_limit_profile_code(): void
+    #[Test]
+    public function update_requires_a_limit_profile_code(): void
     {
         $service = new LimitProfileService($this->makeClient([]));
 
@@ -65,7 +69,8 @@ class LimitProfileServiceTest extends TestCase
         $service->update('', $this->validLimitProfilePayload());
     }
 
-    public function test_update_uses_the_expected_endpoint_and_payload(): void
+    #[Test]
+    public function update_uses_the_expected_endpoint_and_payload(): void
     {
         $history = [];
         $service = new LimitProfileService($this->makeClient([
@@ -80,7 +85,8 @@ class LimitProfileServiceTest extends TestCase
         $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
     }
 
-    public function test_reserve_account_posts_the_expected_payload(): void
+    #[Test]
+    public function reserve_account_posts_the_expected_payload(): void
     {
         $history = [];
         $service = new LimitProfileService($this->makeClient([
@@ -94,7 +100,8 @@ class LimitProfileServiceTest extends TestCase
         $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
     }
 
-    public function test_update_reserve_account_uses_the_expected_payload(): void
+    #[Test]
+    public function update_reserve_account_uses_the_expected_payload(): void
     {
         $history = [];
         $service = new LimitProfileService($this->makeClient([

@@ -9,6 +9,7 @@ use Monnify\MonnifyLaravel\Enums\DisbursementValidationFailure;
 use Monnify\MonnifyLaravel\Services\DisbursementService;
 use Monnify\MonnifyLaravel\Tests\Support\CreatesMockClient;
 use Monnify\MonnifyLaravel\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class DisbursementServiceTest extends TestCase
 {
@@ -28,7 +29,8 @@ class DisbursementServiceTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_single_posts_the_expected_payload(): void
+    #[Test]
+    public function single_posts_the_expected_payload(): void
     {
         $payload = $this->validSingleTransferPayload();
         $history = [];
@@ -42,7 +44,8 @@ class DisbursementServiceTest extends TestCase
         $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
     }
 
-    public function test_single_can_mark_requests_as_async(): void
+    #[Test]
+    public function single_can_mark_requests_as_async(): void
     {
         $payload = $this->validSingleTransferPayload();
         $history = [];
@@ -57,7 +60,8 @@ class DisbursementServiceTest extends TestCase
         $this->assertTrue($body['async']);
     }
 
-    public function test_bulk_posts_the_expected_payload(): void
+    #[Test]
+    public function bulk_posts_the_expected_payload(): void
     {
         $payload = $this->validBulkTransferPayload();
         $history = [];
@@ -70,7 +74,8 @@ class DisbursementServiceTest extends TestCase
         $this->assertSame('/api/v2/disbursements/batch', $history[0]['request']->getUri()->getPath());
     }
 
-    public function test_authorise_single_posts_the_expected_payload(): void
+    #[Test]
+    public function authorise_single_posts_the_expected_payload(): void
     {
         $history = [];
         $service = new DisbursementService($this->makeClient([
@@ -85,7 +90,8 @@ class DisbursementServiceTest extends TestCase
         $this->assertSame('/api/v2/disbursements/single/validate-otp', $history[0]['request']->getUri()->getPath());
     }
 
-    public function test_authorise_bulk_posts_the_expected_payload(): void
+    #[Test]
+    public function authorise_bulk_posts_the_expected_payload(): void
     {
         $history = [];
         $service = new DisbursementService($this->makeClient([
@@ -100,7 +106,8 @@ class DisbursementServiceTest extends TestCase
         $this->assertSame('/api/v2/disbursements/batch/validate-otp', $history[0]['request']->getUri()->getPath());
     }
 
-    public function test_resend_otp_requires_a_reference(): void
+    #[Test]
+    public function resend_otp_requires_a_reference(): void
     {
         $service = new DisbursementService($this->makeClient([]));
 
@@ -110,7 +117,8 @@ class DisbursementServiceTest extends TestCase
         $service->resendOTP('');
     }
 
-    public function test_resend_otp_posts_the_reference_payload(): void
+    #[Test]
+    public function resend_otp_posts_the_reference_payload(): void
     {
         $history = [];
         $service = new DisbursementService($this->makeClient([
@@ -123,7 +131,8 @@ class DisbursementServiceTest extends TestCase
         $this->assertSame(json_encode(['reference' => 'ref-123']), (string) $history[0]['request']->getBody());
     }
 
-    public function test_single_status_uses_the_summary_endpoint(): void
+    #[Test]
+    public function single_status_uses_the_summary_endpoint(): void
     {
         $history = [];
         $service = new DisbursementService($this->makeClient([
@@ -136,7 +145,8 @@ class DisbursementServiceTest extends TestCase
         $this->assertSame('reference=ref-123', $history[0]['request']->getUri()->getQuery());
     }
 
-    public function test_bulk_status_adds_pagination_parameters(): void
+    #[Test]
+    public function bulk_status_adds_pagination_parameters(): void
     {
         $history = [];
         $service = new DisbursementService($this->makeClient([
@@ -149,7 +159,8 @@ class DisbursementServiceTest extends TestCase
         $this->assertSame('pageSize=25&pageNo=2', $history[0]['request']->getUri()->getQuery());
     }
 
-    public function test_all_uses_the_single_transactions_endpoint_by_default(): void
+    #[Test]
+    public function all_uses_the_single_transactions_endpoint_by_default(): void
     {
         $history = [];
         $service = new DisbursementService($this->makeClient([
@@ -161,7 +172,8 @@ class DisbursementServiceTest extends TestCase
         $this->assertSame('/api/v2/disbursements/single/transactions', $history[0]['request']->getUri()->getPath());
     }
 
-    public function test_all_can_switch_to_the_bulk_transactions_endpoint(): void
+    #[Test]
+    public function all_can_switch_to_the_bulk_transactions_endpoint(): void
     {
         $history = [];
         $service = new DisbursementService($this->makeClient([
@@ -174,7 +186,8 @@ class DisbursementServiceTest extends TestCase
         $this->assertSame('pageSize=15&pageNo=1', $history[0]['request']->getUri()->getQuery());
     }
 
-    public function test_all_rejects_an_invalid_type(): void
+    #[Test]
+    public function all_rejects_an_invalid_type(): void
     {
         $service = new DisbursementService($this->makeClient([]));
 
@@ -184,7 +197,8 @@ class DisbursementServiceTest extends TestCase
         $service->all('invalid');
     }
 
-    public function test_bulk_transaction_delegates_to_bulk_status(): void
+    #[Test]
+    public function bulk_transaction_delegates_to_bulk_status(): void
     {
         $history = [];
         $service = new DisbursementService($this->makeClient([
@@ -197,7 +211,8 @@ class DisbursementServiceTest extends TestCase
         $this->assertSame('pageSize=30&pageNo=4', $history[0]['request']->getUri()->getQuery());
     }
 
-    public function test_search_adds_the_expected_query_parameters(): void
+    #[Test]
+    public function search_adds_the_expected_query_parameters(): void
     {
         $history = [];
         $service = new DisbursementService($this->makeClient([

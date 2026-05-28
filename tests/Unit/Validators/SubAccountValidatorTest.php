@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Tests\TestCase;
 use Monnify\MonnifyLaravel\Validators\SubAccountValidator;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 
 class SubAccountValidatorTest extends TestCase
 {
@@ -18,7 +19,8 @@ class SubAccountValidatorTest extends TestCase
         $this->validator = new SubAccountValidator();
     }
 
-    public function test_validate_account_accepts_a_valid_payload(): void
+    #[Test]
+    public function validate_account_accepts_a_valid_payload(): void
     {
         $this->validator->validateAccount($this->validPayload());
 
@@ -26,7 +28,8 @@ class SubAccountValidatorTest extends TestCase
     }
 
     #[DataProvider('provideInvalidAccountPayloads')]
-    public function test_validate_account_rejects_invalid_payloads(
+    #[Test]
+    public function validate_account_rejects_invalid_payloads(
         array $payload,
         string $expectedMessage
     ): void {

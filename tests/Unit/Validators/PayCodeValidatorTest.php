@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Tests\TestCase;
 use Monnify\MonnifyLaravel\Validators\PayCodeValidator;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 
 class PayCodeValidatorTest extends TestCase
 {
@@ -18,7 +19,8 @@ class PayCodeValidatorTest extends TestCase
         $this->validator = new PayCodeValidator();
     }
 
-    public function test_validate_accepts_a_valid_payload(): void
+    #[Test]
+    public function validate_accepts_a_valid_payload(): void
     {
         $this->validator->validate($this->validPayload());
 
@@ -26,7 +28,8 @@ class PayCodeValidatorTest extends TestCase
     }
 
     #[DataProvider('provideInvalidPayloads')]
-    public function test_validate_rejects_invalid_payloads(
+    #[Test]
+    public function validate_rejects_invalid_payloads(
         array $overrides,
         array $missingKeys,
         string $expectedMessage
@@ -43,7 +46,8 @@ class PayCodeValidatorTest extends TestCase
         $this->validator->validate($payload);
     }
 
-    public function test_validate_history_parameters_accepts_valid_input(): void
+    #[Test]
+    public function validate_history_parameters_accepts_valid_input(): void
     {
         $this->validator->validateHistoryParameters([
             'transactionReference' => 'txn-123',
@@ -57,7 +61,8 @@ class PayCodeValidatorTest extends TestCase
     }
 
     #[DataProvider('provideInvalidHistoryPayloads')]
-    public function test_validate_history_parameters_rejects_invalid_payloads(
+    #[Test]
+    public function validate_history_parameters_rejects_invalid_payloads(
         array $payload,
         string $expectedMessage
     ): void {

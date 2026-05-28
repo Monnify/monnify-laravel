@@ -9,6 +9,7 @@ use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Services\RefundService;
 use Monnify\MonnifyLaravel\Tests\Support\CreatesMockClient;
 use Monnify\MonnifyLaravel\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class RefundServiceTest extends TestCase
 {
@@ -28,7 +29,8 @@ class RefundServiceTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_initialise_posts_the_expected_payload(): void
+    #[Test]
+    public function initialise_posts_the_expected_payload(): void
     {
         $history = [];
         $service = new RefundService($this->makeClient([
@@ -51,7 +53,8 @@ class RefundServiceTest extends TestCase
         $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
     }
 
-    public function test_all_adds_the_expected_query_parameters(): void
+    #[Test]
+    public function all_adds_the_expected_query_parameters(): void
     {
         $history = [];
         $service = new RefundService($this->makeClient([
@@ -64,7 +67,8 @@ class RefundServiceTest extends TestCase
         $this->assertSame('size=25&page=2', $history[0]['request']->getUri()->getQuery());
     }
 
-    public function test_status_requires_a_refund_reference(): void
+    #[Test]
+    public function status_requires_a_refund_reference(): void
     {
         $service = new RefundService($this->makeClient([]));
 
@@ -74,7 +78,8 @@ class RefundServiceTest extends TestCase
         $service->status('');
     }
 
-    public function test_status_uses_the_expected_endpoint(): void
+    #[Test]
+    public function status_uses_the_expected_endpoint(): void
     {
         $history = [];
         $service = new RefundService($this->makeClient([

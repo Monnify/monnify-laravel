@@ -8,6 +8,7 @@ use Monnify\MonnifyLaravel\Enums\DisbursementValidationFailure;
 use Monnify\MonnifyLaravel\Tests\TestCase;
 use Monnify\MonnifyLaravel\Validators\DisbursementValidator;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 
 class DisbursementValidatorTest extends TestCase
 {
@@ -20,7 +21,8 @@ class DisbursementValidatorTest extends TestCase
         $this->validator = new DisbursementValidator();
     }
 
-    public function test_validate_single_transfer_accepts_a_valid_payload(): void
+    #[Test]
+    public function validate_single_transfer_accepts_a_valid_payload(): void
     {
         $this->validator->validateSingleTransfer($this->validSingleTransferPayload());
 
@@ -28,7 +30,8 @@ class DisbursementValidatorTest extends TestCase
     }
 
     #[DataProvider('provideInvalidSingleTransferPayloads')]
-    public function test_validate_single_transfer_rejects_invalid_payloads(
+    #[Test]
+    public function validate_single_transfer_rejects_invalid_payloads(
         Closure $mutator,
         string $expectedMessage
     ): void {
@@ -41,7 +44,8 @@ class DisbursementValidatorTest extends TestCase
         $this->validator->validateSingleTransfer($payload);
     }
 
-    public function test_validate_bulk_transfer_accepts_a_valid_payload(): void
+    #[Test]
+    public function validate_bulk_transfer_accepts_a_valid_payload(): void
     {
         $this->validator->validateBulkTransfer($this->validBulkTransferPayload());
 
@@ -49,7 +53,8 @@ class DisbursementValidatorTest extends TestCase
     }
 
     #[DataProvider('provideInvalidBulkTransferPayloads')]
-    public function test_validate_bulk_transfer_rejects_invalid_payloads(
+    #[Test]
+    public function validate_bulk_transfer_rejects_invalid_payloads(
         Closure $mutator,
         string $expectedMessage
     ): void {
@@ -62,7 +67,8 @@ class DisbursementValidatorTest extends TestCase
         $this->validator->validateBulkTransfer($payload);
     }
 
-    public function test_validate_authorization_accepts_a_valid_payload(): void
+    #[Test]
+    public function validate_authorization_accepts_a_valid_payload(): void
     {
         $this->validator->validateAuthorization([
             'reference' => 'ref-123',
@@ -73,7 +79,8 @@ class DisbursementValidatorTest extends TestCase
     }
 
     #[DataProvider('provideInvalidAuthorizationPayloads')]
-    public function test_validate_authorization_rejects_invalid_payloads(
+    #[Test]
+    public function validate_authorization_rejects_invalid_payloads(
         array $payload,
         string $expectedMessage
     ): void {

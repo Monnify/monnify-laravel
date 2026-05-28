@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Services\CustomerReservedAccountService;
 use Monnify\MonnifyLaravel\Tests\Support\CreatesMockClient;
 use Monnify\MonnifyLaravel\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class CustomerReservedAccountServiceTest extends TestCase
 {
@@ -27,7 +28,8 @@ class CustomerReservedAccountServiceTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_create_general_account_posts_the_expected_payload(): void
+    #[Test]
+    public function create_general_account_posts_the_expected_payload(): void
     {
         $payload = $this->validGeneralAccountPayload();
         $history = [];
@@ -41,7 +43,8 @@ class CustomerReservedAccountServiceTest extends TestCase
         $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
     }
 
-    public function test_create_invoice_account_posts_the_expected_payload(): void
+    #[Test]
+    public function create_invoice_account_posts_the_expected_payload(): void
     {
         $payload = $this->validInvoiceAccountPayload();
         $history = [];
@@ -54,7 +57,8 @@ class CustomerReservedAccountServiceTest extends TestCase
         $this->assertSame('/api/v1/bank-transfer/reserved-accounts', $history[0]['request']->getUri()->getPath());
     }
 
-    public function test_get_requires_an_account_reference(): void
+    #[Test]
+    public function get_requires_an_account_reference(): void
     {
         $service = new CustomerReservedAccountService($this->makeClient([]));
 
@@ -64,7 +68,8 @@ class CustomerReservedAccountServiceTest extends TestCase
         $service->get('');
     }
 
-    public function test_get_uses_the_expected_endpoint(): void
+    #[Test]
+    public function get_uses_the_expected_endpoint(): void
     {
         $history = [];
         $service = new CustomerReservedAccountService($this->makeClient([
@@ -76,7 +81,8 @@ class CustomerReservedAccountServiceTest extends TestCase
         $this->assertSame('/api/v2/bank-transfer/reserved-accounts/acct-ref', $history[0]['request']->getUri()->getPath());
     }
 
-    public function test_add_linked_accounts_uses_the_expected_endpoint_and_payload(): void
+    #[Test]
+    public function add_linked_accounts_uses_the_expected_endpoint_and_payload(): void
     {
         $payload = [
             'getAllAvailableBanks' => false,
@@ -94,7 +100,8 @@ class CustomerReservedAccountServiceTest extends TestCase
         $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
     }
 
-    public function test_update_bvn_uses_the_expected_payload(): void
+    #[Test]
+    public function update_bvn_uses_the_expected_payload(): void
     {
         $history = [];
         $service = new CustomerReservedAccountService($this->makeClient([
@@ -107,7 +114,8 @@ class CustomerReservedAccountServiceTest extends TestCase
         $this->assertSame(json_encode(['bvn' => '12345678901']), (string) $history[0]['request']->getBody());
     }
 
-    public function test_deallocate_account_uses_the_expected_endpoint(): void
+    #[Test]
+    public function deallocate_account_uses_the_expected_endpoint(): void
     {
         $history = [];
         $service = new CustomerReservedAccountService($this->makeClient([
@@ -120,7 +128,8 @@ class CustomerReservedAccountServiceTest extends TestCase
         $this->assertSame('DELETE', $history[0]['request']->getMethod());
     }
 
-    public function test_transactions_adds_the_expected_query_parameters(): void
+    #[Test]
+    public function transactions_adds_the_expected_query_parameters(): void
     {
         $history = [];
         $service = new CustomerReservedAccountService($this->makeClient([
@@ -133,7 +142,8 @@ class CustomerReservedAccountServiceTest extends TestCase
         $this->assertSame('accountReference=acct-ref&page=2&size=25', $history[0]['request']->getUri()->getQuery());
     }
 
-    public function test_update_kyc_info_uses_the_expected_endpoint_and_payload(): void
+    #[Test]
+    public function update_kyc_info_uses_the_expected_endpoint_and_payload(): void
     {
         $payload = ['bvn' => '12345678901'];
         $history = [];

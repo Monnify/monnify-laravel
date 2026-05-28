@@ -9,6 +9,7 @@ use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Services\PayCodeService;
 use Monnify\MonnifyLaravel\Tests\Support\CreatesMockClient;
 use Monnify\MonnifyLaravel\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class PayCodeServiceTest extends TestCase
 {
@@ -28,7 +29,8 @@ class PayCodeServiceTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_create_posts_the_expected_payload(): void
+    #[Test]
+    public function create_posts_the_expected_payload(): void
     {
         $history = [];
         $service = new PayCodeService($this->makeClient([
@@ -42,7 +44,8 @@ class PayCodeServiceTest extends TestCase
         $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
     }
 
-    public function test_get_requires_a_reference(): void
+    #[Test]
+    public function get_requires_a_reference(): void
     {
         $service = new PayCodeService($this->makeClient([]));
 
@@ -52,7 +55,8 @@ class PayCodeServiceTest extends TestCase
         $service->get('');
     }
 
-    public function test_get_uses_the_expected_endpoint(): void
+    #[Test]
+    public function get_uses_the_expected_endpoint(): void
     {
         $history = [];
         $service = new PayCodeService($this->makeClient([
@@ -64,7 +68,8 @@ class PayCodeServiceTest extends TestCase
         $this->assertSame('/api/v1/paycode/paycode-123', $history[0]['request']->getUri()->getPath());
     }
 
-    public function test_get_unmasked_requires_a_reference(): void
+    #[Test]
+    public function get_unmasked_requires_a_reference(): void
     {
         $service = new PayCodeService($this->makeClient([]));
 
@@ -74,7 +79,8 @@ class PayCodeServiceTest extends TestCase
         $service->getUnMasked('');
     }
 
-    public function test_get_unmasked_uses_the_expected_endpoint(): void
+    #[Test]
+    public function get_unmasked_uses_the_expected_endpoint(): void
     {
         $history = [];
         $service = new PayCodeService($this->makeClient([
@@ -86,7 +92,8 @@ class PayCodeServiceTest extends TestCase
         $this->assertSame('/api/v1/paycode/paycode-123/authorize', $history[0]['request']->getUri()->getPath());
     }
 
-    public function test_history_adds_the_expected_query_parameters(): void
+    #[Test]
+    public function history_adds_the_expected_query_parameters(): void
     {
         $history = [];
         $service = new PayCodeService($this->makeClient([
@@ -108,7 +115,8 @@ class PayCodeServiceTest extends TestCase
         $this->assertSame(array_map('strval', $parameters), $actualParameters);
     }
 
-    public function test_delete_requires_a_reference(): void
+    #[Test]
+    public function delete_requires_a_reference(): void
     {
         $service = new PayCodeService($this->makeClient([]));
 
@@ -118,7 +126,8 @@ class PayCodeServiceTest extends TestCase
         $service->delete('');
     }
 
-    public function test_delete_uses_the_expected_endpoint(): void
+    #[Test]
+    public function delete_uses_the_expected_endpoint(): void
     {
         $history = [];
         $service = new PayCodeService($this->makeClient([

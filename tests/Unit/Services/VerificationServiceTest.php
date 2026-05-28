@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Services\VerificationService;
 use Monnify\MonnifyLaravel\Tests\Support\CreatesMockClient;
 use Monnify\MonnifyLaravel\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class VerificationServiceTest extends TestCase
 {
@@ -27,7 +28,8 @@ class VerificationServiceTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_bank_account_adds_the_expected_query_parameters(): void
+    #[Test]
+    public function bank_account_adds_the_expected_query_parameters(): void
     {
         $history = [];
         $service = new VerificationService($this->makeClient([
@@ -40,7 +42,8 @@ class VerificationServiceTest extends TestCase
         $this->assertSame('accountNumber=0123456789&bankCode=058', $history[0]['request']->getUri()->getQuery());
     }
 
-    public function test_bvn_information_posts_the_expected_payload(): void
+    #[Test]
+    public function bvn_information_posts_the_expected_payload(): void
     {
         $payload = [
             'bvn' => '12345678901',
@@ -59,7 +62,8 @@ class VerificationServiceTest extends TestCase
         $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
     }
 
-    public function test_match_bvn_and_bank_account_builds_the_expected_payload(): void
+    #[Test]
+    public function match_bvn_and_bank_account_builds_the_expected_payload(): void
     {
         $history = [];
         $service = new VerificationService($this->makeClient([
@@ -79,7 +83,8 @@ class VerificationServiceTest extends TestCase
         );
     }
 
-    public function test_nin_requires_a_nin_value(): void
+    #[Test]
+    public function nin_requires_a_nin_value(): void
     {
         $service = new VerificationService($this->makeClient([]));
 
@@ -89,7 +94,8 @@ class VerificationServiceTest extends TestCase
         $service->nin('');
     }
 
-    public function test_nin_posts_the_expected_payload(): void
+    #[Test]
+    public function nin_posts_the_expected_payload(): void
     {
         $history = [];
         $service = new VerificationService($this->makeClient([

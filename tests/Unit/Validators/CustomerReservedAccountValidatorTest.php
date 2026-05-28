@@ -7,6 +7,7 @@ use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Tests\TestCase;
 use Monnify\MonnifyLaravel\Validators\CustomerReservedAccountValidator;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 
 class CustomerReservedAccountValidatorTest extends TestCase
 {
@@ -19,7 +20,8 @@ class CustomerReservedAccountValidatorTest extends TestCase
         $this->validator = new CustomerReservedAccountValidator();
     }
 
-    public function test_validate_create_general_account_accepts_a_valid_payload(): void
+    #[Test]
+    public function validate_create_general_account_accepts_a_valid_payload(): void
     {
         $this->validator->validateCreateGeneralAccount($this->validGeneralAccountPayload());
 
@@ -27,7 +29,8 @@ class CustomerReservedAccountValidatorTest extends TestCase
     }
 
     #[DataProvider('provideInvalidCreateGeneralAccountPayloads')]
-    public function test_validate_create_general_account_rejects_invalid_payloads(
+    #[Test]
+    public function validate_create_general_account_rejects_invalid_payloads(
         Closure $mutator,
         string $expectedMessage
     ): void {
@@ -40,14 +43,16 @@ class CustomerReservedAccountValidatorTest extends TestCase
         $this->validator->validateCreateGeneralAccount($payload);
     }
 
-    public function test_validate_create_invoice_account_accepts_a_valid_payload(): void
+    #[Test]
+    public function validate_create_invoice_account_accepts_a_valid_payload(): void
     {
         $this->validator->validateCreateInvoiceAccount($this->validInvoiceAccountPayload());
 
         $this->assertTrue(true);
     }
 
-    public function test_validate_add_linked_accounts_rejects_invalid_payloads(): void
+    #[Test]
+    public function validate_add_linked_accounts_rejects_invalid_payloads(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The preferred banks field must be an array.');
@@ -57,7 +62,8 @@ class CustomerReservedAccountValidatorTest extends TestCase
         ]);
     }
 
-    public function test_validate_allowed_payment_source_rejects_invalid_payloads(): void
+    #[Test]
+    public function validate_allowed_payment_source_rejects_invalid_payloads(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The allowed payment source.bvns field must be an array.');
@@ -69,7 +75,8 @@ class CustomerReservedAccountValidatorTest extends TestCase
         ]);
     }
 
-    public function test_validate_update_split_config_rejects_invalid_payloads(): void
+    #[Test]
+    public function validate_update_split_config_rejects_invalid_payloads(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The splits.0.splitPercentage field must be at least 0.');
@@ -81,7 +88,8 @@ class CustomerReservedAccountValidatorTest extends TestCase
         ]);
     }
 
-    public function test_validate_get_reserved_account_transactions_rejects_invalid_payloads(): void
+    #[Test]
+    public function validate_get_reserved_account_transactions_rejects_invalid_payloads(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The page field must be an integer.');
@@ -91,7 +99,8 @@ class CustomerReservedAccountValidatorTest extends TestCase
         ]);
     }
 
-    public function test_validate_update_kyc_info_rejects_invalid_payloads(): void
+    #[Test]
+    public function validate_update_kyc_info_rejects_invalid_payloads(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The bvn field must be a string.');

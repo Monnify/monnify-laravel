@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Services\DirectDebitService;
 use Monnify\MonnifyLaravel\Tests\Support\CreatesMockClient;
 use Monnify\MonnifyLaravel\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class DirectDebitServiceTest extends TestCase
 {
@@ -27,7 +28,8 @@ class DirectDebitServiceTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_create_posts_the_expected_payload(): void
+    #[Test]
+    public function create_posts_the_expected_payload(): void
     {
         $history = [];
         $service = new DirectDebitService($this->makeClient([
@@ -42,7 +44,8 @@ class DirectDebitServiceTest extends TestCase
         $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
     }
 
-    public function test_get_requires_a_mandate_reference(): void
+    #[Test]
+    public function get_requires_a_mandate_reference(): void
     {
         $service = new DirectDebitService($this->makeClient([]));
 
@@ -52,7 +55,8 @@ class DirectDebitServiceTest extends TestCase
         $service->get('');
     }
 
-    public function test_get_uses_the_expected_query_string(): void
+    #[Test]
+    public function get_uses_the_expected_query_string(): void
     {
         $history = [];
         $service = new DirectDebitService($this->makeClient([
@@ -65,7 +69,8 @@ class DirectDebitServiceTest extends TestCase
         $this->assertSame('mandateReferences=mandate-123', $history[0]['request']->getUri()->getQuery());
     }
 
-    public function test_debit_posts_the_expected_payload(): void
+    #[Test]
+    public function debit_posts_the_expected_payload(): void
     {
         $history = [];
         $service = new DirectDebitService($this->makeClient([
@@ -86,7 +91,8 @@ class DirectDebitServiceTest extends TestCase
         $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
     }
 
-    public function test_debit_accepts_income_split_config_payloads(): void
+    #[Test]
+    public function debit_accepts_income_split_config_payloads(): void
     {
         $history = [];
         $service = new DirectDebitService($this->makeClient([
@@ -113,7 +119,8 @@ class DirectDebitServiceTest extends TestCase
         $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
     }
 
-    public function test_status_requires_a_payment_reference(): void
+    #[Test]
+    public function status_requires_a_payment_reference(): void
     {
         $service = new DirectDebitService($this->makeClient([]));
 
@@ -123,7 +130,8 @@ class DirectDebitServiceTest extends TestCase
         $service->status('');
     }
 
-    public function test_status_uses_the_expected_query_string(): void
+    #[Test]
+    public function status_uses_the_expected_query_string(): void
     {
         $history = [];
         $service = new DirectDebitService($this->makeClient([
@@ -136,7 +144,8 @@ class DirectDebitServiceTest extends TestCase
         $this->assertSame('paymentReference=payment-123', $history[0]['request']->getUri()->getQuery());
     }
 
-    public function test_cancel_requires_a_mandate_code(): void
+    #[Test]
+    public function cancel_requires_a_mandate_code(): void
     {
         $service = new DirectDebitService($this->makeClient([]));
 
@@ -146,7 +155,8 @@ class DirectDebitServiceTest extends TestCase
         $service->cancel('');
     }
 
-    public function test_cancel_uses_the_expected_endpoint(): void
+    #[Test]
+    public function cancel_uses_the_expected_endpoint(): void
     {
         $history = [];
         $service = new DirectDebitService($this->makeClient([

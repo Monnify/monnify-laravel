@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Tests\TestCase;
 use Monnify\MonnifyLaravel\Validators\InvoiceValidator;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 
 class InvoiceValidatorTest extends TestCase
 {
@@ -18,7 +19,8 @@ class InvoiceValidatorTest extends TestCase
         $this->validator = new InvoiceValidator();
     }
 
-    public function test_validate_account_accepts_a_valid_payload(): void
+    #[Test]
+    public function validate_account_accepts_a_valid_payload(): void
     {
         $this->validator->validateAccount($this->validPayload());
 
@@ -26,7 +28,8 @@ class InvoiceValidatorTest extends TestCase
     }
 
     #[DataProvider('provideInvalidInvoicePayloads')]
-    public function test_validate_account_rejects_invalid_payloads(
+    #[Test]
+    public function validate_account_rejects_invalid_payloads(
         array $overrides,
         array $missingKeys,
         string $expectedMessage

@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Tests\TestCase;
 use Monnify\MonnifyLaravel\Validators\RecurringPaymentValidator;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 
 class RecurringPaymentValidatorTest extends TestCase
 {
@@ -18,7 +19,8 @@ class RecurringPaymentValidatorTest extends TestCase
         $this->validator = new RecurringPaymentValidator();
     }
 
-    public function test_validate_charge_card_token_accepts_a_valid_payload(): void
+    #[Test]
+    public function validate_charge_card_token_accepts_a_valid_payload(): void
     {
         $this->validator->validateChargeCardToken($this->validPayload());
 
@@ -26,7 +28,8 @@ class RecurringPaymentValidatorTest extends TestCase
     }
 
     #[DataProvider('provideInvalidChargeCardTokenPayloads')]
-    public function test_validate_charge_card_token_rejects_invalid_payloads(
+    #[Test]
+    public function validate_charge_card_token_rejects_invalid_payloads(
         array $overrides,
         array $missingKeys,
         string $expectedMessage

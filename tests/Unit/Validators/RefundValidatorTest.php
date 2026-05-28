@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Tests\TestCase;
 use Monnify\MonnifyLaravel\Validators\RefundValidator;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 
 class RefundValidatorTest extends TestCase
 {
@@ -18,7 +19,8 @@ class RefundValidatorTest extends TestCase
         $this->validator = new RefundValidator();
     }
 
-    public function test_validate_refund_accepts_a_valid_payload(): void
+    #[Test]
+    public function validate_refund_accepts_a_valid_payload(): void
     {
         $this->validator->validateRefund($this->validPayload());
 
@@ -26,7 +28,8 @@ class RefundValidatorTest extends TestCase
     }
 
     #[DataProvider('provideInvalidRefundPayloads')]
-    public function test_validate_refund_rejects_invalid_payloads(
+    #[Test]
+    public function validate_refund_rejects_invalid_payloads(
         array $overrides,
         array $missingKeys,
         string $expectedMessage

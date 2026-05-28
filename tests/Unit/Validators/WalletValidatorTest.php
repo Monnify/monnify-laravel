@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Tests\TestCase;
 use Monnify\MonnifyLaravel\Validators\WalletValidator;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 
 class WalletValidatorTest extends TestCase
 {
@@ -18,7 +19,8 @@ class WalletValidatorTest extends TestCase
         $this->validator = new WalletValidator();
     }
 
-    public function test_validate_create_accepts_a_valid_payload(): void
+    #[Test]
+    public function validate_create_accepts_a_valid_payload(): void
     {
         $this->validator->validateCreate($this->validPayload());
 
@@ -26,7 +28,8 @@ class WalletValidatorTest extends TestCase
     }
 
     #[DataProvider('provideInvalidCreatePayloads')]
-    public function test_validate_create_rejects_invalid_payloads(
+    #[Test]
+    public function validate_create_rejects_invalid_payloads(
         array $overrides,
         string $expectedMessage
     ): void {

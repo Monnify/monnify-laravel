@@ -9,6 +9,7 @@ use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Services\SettlementService;
 use Monnify\MonnifyLaravel\Tests\Support\CreatesMockClient;
 use Monnify\MonnifyLaravel\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class SettlementServiceTest extends TestCase
 {
@@ -28,7 +29,8 @@ class SettlementServiceTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_transactions_adds_the_expected_query_parameters(): void
+    #[Test]
+    public function transactions_adds_the_expected_query_parameters(): void
     {
         $history = [];
         $service = new SettlementService($this->makeClient([
@@ -41,7 +43,8 @@ class SettlementServiceTest extends TestCase
         $this->assertSame('reference=settlement-123&size=25&page=2', $history[0]['request']->getUri()->getQuery());
     }
 
-    public function test_get_by_transaction_requires_a_transaction_reference(): void
+    #[Test]
+    public function get_by_transaction_requires_a_transaction_reference(): void
     {
         $service = new SettlementService($this->makeClient([]));
 
@@ -51,7 +54,8 @@ class SettlementServiceTest extends TestCase
         $service->getByTransaction('');
     }
 
-    public function test_get_by_transaction_uses_the_expected_endpoint(): void
+    #[Test]
+    public function get_by_transaction_uses_the_expected_endpoint(): void
     {
         $history = [];
         $service = new SettlementService($this->makeClient([

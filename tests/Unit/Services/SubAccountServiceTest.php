@@ -9,6 +9,7 @@ use InvalidArgumentException;
 use Monnify\MonnifyLaravel\Services\SubAccountService;
 use Monnify\MonnifyLaravel\Tests\Support\CreatesMockClient;
 use Monnify\MonnifyLaravel\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class SubAccountServiceTest extends TestCase
 {
@@ -28,7 +29,8 @@ class SubAccountServiceTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_create_posts_the_expected_payload(): void
+    #[Test]
+    public function create_posts_the_expected_payload(): void
     {
         $history = [];
         $service = new SubAccountService($this->makeClient([
@@ -43,7 +45,8 @@ class SubAccountServiceTest extends TestCase
         $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
     }
 
-    public function test_all_uses_the_expected_endpoint(): void
+    #[Test]
+    public function all_uses_the_expected_endpoint(): void
     {
         $history = [];
         $service = new SubAccountService($this->makeClient([
@@ -56,7 +59,8 @@ class SubAccountServiceTest extends TestCase
         $this->assertSame('GET', $history[0]['request']->getMethod());
     }
 
-    public function test_update_uses_the_expected_endpoint_and_payload(): void
+    #[Test]
+    public function update_uses_the_expected_endpoint_and_payload(): void
     {
         $history = [];
         $service = new SubAccountService($this->makeClient([
@@ -75,7 +79,8 @@ class SubAccountServiceTest extends TestCase
         $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
     }
 
-    public function test_delete_requires_a_sub_account_code(): void
+    #[Test]
+    public function delete_requires_a_sub_account_code(): void
     {
         $service = new SubAccountService($this->makeClient([]));
 
@@ -85,7 +90,8 @@ class SubAccountServiceTest extends TestCase
         $service->delete('');
     }
 
-    public function test_delete_uses_the_expected_endpoint(): void
+    #[Test]
+    public function delete_uses_the_expected_endpoint(): void
     {
         $history = [];
         $service = new SubAccountService($this->makeClient([

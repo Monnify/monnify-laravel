@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Cache;
 use Monnify\MonnifyLaravel\Services\OtherService;
 use Monnify\MonnifyLaravel\Tests\Support\CreatesMockClient;
 use Monnify\MonnifyLaravel\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class OtherServiceTest extends TestCase
 {
@@ -26,7 +27,8 @@ class OtherServiceTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_banks_uses_the_expected_endpoint(): void
+    #[Test]
+    public function banks_uses_the_expected_endpoint(): void
     {
         $history = [];
         $service = new OtherService($this->makeClient([
@@ -38,7 +40,8 @@ class OtherServiceTest extends TestCase
         $this->assertSame('/api/v1/banks', $history[0]['request']->getUri()->getPath());
     }
 
-    public function test_banks_with_ussd_uses_the_expected_endpoint(): void
+    #[Test]
+    public function banks_with_ussd_uses_the_expected_endpoint(): void
     {
         $history = [];
         $service = new OtherService($this->makeClient([

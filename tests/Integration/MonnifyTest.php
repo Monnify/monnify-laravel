@@ -108,6 +108,28 @@ class MonnifyTest extends TestCase
     }
 
     #[Test]
+    public function it_resolves_service_accessors_via_property_access(): void
+    {
+        $monnify = $this->app->make(MonnifyServiceProvider::BINDING);
+
+        $this->assertSame($this->app->make(TransactionService::class), $monnify->transactions);
+        $this->assertSame($this->app->make(BillsPaymentService::class), $monnify->billsPayment);
+        $this->assertSame($this->app->make(CustomerReservedAccountService::class), $monnify->customerReservedAccount);
+        $this->assertSame($this->app->make(InvoiceService::class), $monnify->invoice);
+        $this->assertSame($this->app->make(RecurringPaymentService::class), $monnify->recurringPayment);
+        $this->assertSame($this->app->make(DirectDebitService::class), $monnify->directDebitMandate);
+        $this->assertSame($this->app->make(SubAccountService::class), $monnify->subAccount);
+        $this->assertSame($this->app->make(DisbursementService::class), $monnify->transfer);
+        $this->assertSame($this->app->make(WalletService::class), $monnify->wallet);
+        $this->assertSame($this->app->make(LimitProfileService::class), $monnify->limitProfile);
+        $this->assertSame($this->app->make(RefundService::class), $monnify->refund);
+        $this->assertSame($this->app->make(SettlementService::class), $monnify->settlements);
+        $this->assertSame($this->app->make(VerificationService::class), $monnify->verificationAPI);
+        $this->assertSame($this->app->make(PayCodeService::class), $monnify->payCodeAPI);
+        $this->assertSame($this->app->make(OtherService::class), $monnify->helper);
+    }
+
+    #[Test]
     public function it_resolves_service_accessors_from_container_singletons(): void
     {
         $monnify = $this->app->make(MonnifyServiceProvider::BINDING);

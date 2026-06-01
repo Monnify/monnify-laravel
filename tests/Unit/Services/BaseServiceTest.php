@@ -71,7 +71,7 @@ class BaseServiceTest extends TestCase
     }
 
     #[Test]
-    public function it_returns_the_api_error_payload_for_request_exceptions_with_a_response(): void
+    public function it_returns_the_http_status_code_for_request_exceptions_with_a_response(): void
     {
         Cache::put('monnify_access_token', 'cached-token', 300);
 
@@ -90,6 +90,21 @@ class BaseServiceTest extends TestCase
     }
 
     #[Test]
+    public function it_returns_a_meaningful_error_for_request_exceptions_without_a_response(): void
+    {
+        Cache::put('monnify_access_token', 'cached-token', 300);
+
+        $service = new TestBaseService($this->makeClient([
+            new RequestException('Connection refused', new Request('POST', '/api/v1/test')),
+        ]));
+
+        $result = $service->sendPost('/api/v1/test', ['amount' => 0]);
+
+        $this->assertNull($result['status']);
+        $this->assertStringContainsString('Connection refused', $result['error']->message);
+    }
+
+    #[Test]
     public function it_returns_a_meaningful_error_for_transport_failures_without_a_response(): void
     {
         Cache::put('monnify_access_token', 'cached-token', 300);
@@ -103,8 +118,26 @@ class BaseServiceTest extends TestCase
 
         $result = $service->sendGet('/api/v1/test');
 
-        $this->assertSame(0, $result['status']);
+        $this->assertNull($result['status']);
+        $this->assertSame('network_error', $result['error']->type);
         $this->assertStringContainsString('Could not resolve host', $result['error']->message);
+    }
+
+    #[Test]
+    public function it_applies_a_60_second_buffer_to_the_token_cache_ttl(): void
+    {
+        $service = new TestBaseService($this->makeClient([
+            new Response(200, [], json_encode([
+                'responseBody' => [
+                    'accessToken' => 'buffered-token',
+                    'expiresIn'   => 300,
+                ],
+            ])),
+        ]));
+
+        $service->getAccessToken();
+
+        $this->assertSame(240, $service->lastTokenTtl);
     }
 
     #[Test]

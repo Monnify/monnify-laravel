@@ -21,10 +21,44 @@ use Monnify\MonnifyLaravel\Services\{
     WalletService
 };
 
+/**
+ * @property-read BillsPaymentService $billsPayment
+ * @property-read CustomerReservedAccountService $customerReservedAccount
+ * @property-read DirectDebitService $directDebitMandate
+ * @property-read DisbursementService $transfer;
+ * @property-read InvoiceService $invoice
+ * @property-read LimitProfileService $limitProfile
+ * @property-read OtherService $helper
+ * @property-read PayCodeService $payCodeAPI
+ * @property-read RecurringPaymentService $recurringPayment
+ * @property-read RefundService $refund
+ * @property-read SettlementService $settlements
+ * @property-read SubAccountService $subAccount
+ * @property-read TransactionService $transactions
+ * @property-read VerificationService $verificationAPI
+ * @property-read WalletService $wallet
+ */
 class Monnify
 {
+    protected array $resolved = [];
+
     public function __construct(private Application $app)
     {
+    }
+
+    public function __get(string $name): mixed
+    {
+        if (! method_exists($this, $name)) {
+            throw new \RuntimeException("Undefined property [$name]");
+        }
+
+        return $this->resolved[$name]
+            ??= $this->{$name}();
+    }
+
+    public function __isset(string $name): bool
+    {
+        return method_exists($this, $name);
     }
 
     public function transactions(): TransactionService

@@ -71,21 +71,22 @@ abstract class BaseService
                 'status' => $response->getStatusCode(),
                 'body' => json_decode($response->getBody()->getContents(), true),
             ];
-        } catch (RequestException | ConnectException $e) {
-            $response = $e instanceof RequestException ? $e->getResponse() : null;
-
-            if ($response === null) {
-                return [
-                    'status' => (int) $e->getCode(),
-                    'error' => (object) [
-                        'message' => $e->getMessage(),
-                    ],
-                ];
-            }
+        } catch (RequestException $e) {
+            $response = $e->getResponse();
 
             return [
-                'status' => (int) $e->getCode(),
-                'error' => json_decode($response->getBody()->getContents()),
+                'status' => $response?->getStatusCode(),
+                'error' => $response !== null
+                    ? json_decode($response->getBody()->getContents())
+                    : (object) ['message' => $e->getMessage()],
+            ];
+        } catch (ConnectException $e) {
+            return [
+                'status' => null,
+                'error' => (object) [
+                    'type'    => 'network_error',
+                    'message' => $e->getMessage(),
+                ],
             ];
         }
     }
@@ -109,7 +110,7 @@ abstract class BaseService
             $content = (object) $response->responseBody;
             $accessToken = $content->accessToken;
             // store token with its TTL so it is persisted across requests
-            $this->setAccessToken($accessToken, (int) $content->expiresIn);
+            $this->setAccessToken($accessToken, max(1, (int) $content->expiresIn - 60));
 
             return $accessToken;
         } catch (Exception $e) {

@@ -47,5 +47,10 @@
     "require-dev": {
         "orchestra/testbench": "^8.34",
         "phpstan/phpstan": "^2.0"
+    },
+    "config": {
+        "platform": {
+            "php": "8.2"
+        }
     }
 }

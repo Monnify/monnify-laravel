@@ -1,0 +1,979 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Property Monnify\\MonnifyLaravel\\Monnify\:\:\$resolved type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Monnify.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\BaseService\:\:makeRequest\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/BaseService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\BaseService\:\:makeRequest\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/BaseService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\BaseService\:\:makeRequest\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/BaseService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\BaseService\:\:requestDelete\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/BaseService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\BaseService\:\:requestDelete\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/BaseService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\BaseService\:\:requestDelete\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/BaseService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\BaseService\:\:requestGet\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/BaseService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\BaseService\:\:requestGet\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/BaseService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\BaseService\:\:requestPatch\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/BaseService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\BaseService\:\:requestPatch\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/BaseService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\BaseService\:\:requestPatch\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/BaseService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\BaseService\:\:requestPost\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/BaseService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\BaseService\:\:requestPost\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/BaseService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\BaseService\:\:requestPost\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/BaseService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\BaseService\:\:requestPut\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/BaseService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\BaseService\:\:requestPut\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/BaseService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\BaseService\:\:requestPut\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/BaseService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\BillsPaymentService\:\:billers\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/BillsPaymentService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\BillsPaymentService\:\:categories\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/BillsPaymentService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\BillsPaymentService\:\:products\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/BillsPaymentService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\BillsPaymentService\:\:requery\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/BillsPaymentService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\BillsPaymentService\:\:validateCustomer\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/BillsPaymentService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\BillsPaymentService\:\:validateCustomer\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/BillsPaymentService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\BillsPaymentService\:\:vend\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/BillsPaymentService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\BillsPaymentService\:\:vend\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/BillsPaymentService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\CustomerReservedAccountService\:\:addLinkedAccounts\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/CustomerReservedAccountService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\CustomerReservedAccountService\:\:addLinkedAccounts\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/CustomerReservedAccountService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\CustomerReservedAccountService\:\:allowedPaymentSource\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/CustomerReservedAccountService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\CustomerReservedAccountService\:\:allowedPaymentSource\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/CustomerReservedAccountService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\CustomerReservedAccountService\:\:createGeneralAccount\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/CustomerReservedAccountService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\CustomerReservedAccountService\:\:createGeneralAccount\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/CustomerReservedAccountService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\CustomerReservedAccountService\:\:createInvoiceAccount\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/CustomerReservedAccountService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\CustomerReservedAccountService\:\:createInvoiceAccount\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/CustomerReservedAccountService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\CustomerReservedAccountService\:\:deallocateAccount\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/CustomerReservedAccountService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\CustomerReservedAccountService\:\:get\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/CustomerReservedAccountService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\CustomerReservedAccountService\:\:transactions\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/CustomerReservedAccountService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\CustomerReservedAccountService\:\:transactions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/CustomerReservedAccountService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\CustomerReservedAccountService\:\:updateBVN\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/CustomerReservedAccountService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\CustomerReservedAccountService\:\:updateKYCInfo\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/CustomerReservedAccountService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\CustomerReservedAccountService\:\:updateKYCInfo\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/CustomerReservedAccountService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\CustomerReservedAccountService\:\:updateSplitConfig\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/CustomerReservedAccountService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\CustomerReservedAccountService\:\:updateSplitConfig\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/CustomerReservedAccountService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\DirectDebitService\:\:cancel\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/DirectDebitService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\DirectDebitService\:\:create\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/DirectDebitService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\DirectDebitService\:\:create\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/DirectDebitService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\DirectDebitService\:\:debit\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/DirectDebitService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\DirectDebitService\:\:debit\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/DirectDebitService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\DirectDebitService\:\:get\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/DirectDebitService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\DirectDebitService\:\:status\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/DirectDebitService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\DisbursementService\:\:all\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/DisbursementService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\DisbursementService\:\:authoriseBulk\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/DisbursementService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\DisbursementService\:\:authoriseBulk\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/DisbursementService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\DisbursementService\:\:authoriseSingle\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/DisbursementService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\DisbursementService\:\:authoriseSingle\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/DisbursementService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\DisbursementService\:\:bulk\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/DisbursementService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\DisbursementService\:\:bulk\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/DisbursementService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\DisbursementService\:\:bulkBatchSummary\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/DisbursementService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\DisbursementService\:\:bulkResendOTP\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/DisbursementService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\DisbursementService\:\:bulkStatus\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/DisbursementService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\DisbursementService\:\:bulkTransaction\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/DisbursementService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\DisbursementService\:\:resendOTP\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/DisbursementService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\DisbursementService\:\:search\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/DisbursementService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\DisbursementService\:\:single\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/DisbursementService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\DisbursementService\:\:single\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/DisbursementService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\DisbursementService\:\:singleStatus\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/DisbursementService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\DisbursementService\:\:walletBalance\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/DisbursementService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\InvoiceService\:\:all\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/InvoiceService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\InvoiceService\:\:attachReservedAccount\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/InvoiceService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\InvoiceService\:\:attachReservedAccount\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/InvoiceService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\InvoiceService\:\:cancel\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/InvoiceService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\InvoiceService\:\:create\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/InvoiceService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\InvoiceService\:\:create\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/InvoiceService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\InvoiceService\:\:get\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/InvoiceService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\LimitProfileService\:\:all\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/LimitProfileService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\LimitProfileService\:\:create\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/LimitProfileService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\LimitProfileService\:\:create\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/LimitProfileService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\LimitProfileService\:\:reserveAccount\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/LimitProfileService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\LimitProfileService\:\:reserveAccount\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/LimitProfileService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\LimitProfileService\:\:update\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/LimitProfileService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\LimitProfileService\:\:update\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/LimitProfileService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\LimitProfileService\:\:updateReserveAccount\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/LimitProfileService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\OtherService\:\:banks\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/OtherService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\OtherService\:\:banksWithUSSD\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/OtherService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\PayCodeService\:\:create\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/PayCodeService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\PayCodeService\:\:create\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/PayCodeService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\PayCodeService\:\:delete\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/PayCodeService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\PayCodeService\:\:get\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/PayCodeService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\PayCodeService\:\:getUnMasked\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/PayCodeService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\PayCodeService\:\:history\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/PayCodeService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\PayCodeService\:\:history\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/PayCodeService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\RecurringPaymentService\:\:chargeCardToken\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/RecurringPaymentService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\RecurringPaymentService\:\:chargeCardToken\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/RecurringPaymentService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\RefundService\:\:all\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/RefundService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\RefundService\:\:initialise\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/RefundService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\RefundService\:\:initialise\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/RefundService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\RefundService\:\:status\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/RefundService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\SettlementService\:\:getByTransaction\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/SettlementService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\SettlementService\:\:transactions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/SettlementService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\SubAccountService\:\:all\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/SubAccountService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\SubAccountService\:\:create\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/SubAccountService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\SubAccountService\:\:create\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/SubAccountService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\SubAccountService\:\:delete\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/SubAccountService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\SubAccountService\:\:update\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/SubAccountService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\SubAccountService\:\:update\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/SubAccountService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\TransactionService\:\:all\(\) has parameter \$parameters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/TransactionService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\TransactionService\:\:all\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/TransactionService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\TransactionService\:\:authorizeOTP\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/TransactionService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\TransactionService\:\:authorizeOTP\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/TransactionService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\TransactionService\:\:authorizeThreeDSCard\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/TransactionService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\TransactionService\:\:authorizeThreeDSCard\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/TransactionService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\TransactionService\:\:chargeCard\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/TransactionService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\TransactionService\:\:chargeCard\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/TransactionService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\TransactionService\:\:initialise\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/TransactionService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\TransactionService\:\:initialise\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/TransactionService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\TransactionService\:\:payWithBankTransfer\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/TransactionService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\TransactionService\:\:payWithBankTransfer\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/TransactionService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\TransactionService\:\:status\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/TransactionService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\TransactionService\:\:statusByReference\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/TransactionService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\VerificationService\:\:bankAccount\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/VerificationService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\VerificationService\:\:bvnInformation\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/VerificationService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\VerificationService\:\:bvnInformation\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/VerificationService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\VerificationService\:\:matchBVNAndBankAccount\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/VerificationService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\VerificationService\:\:nin\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/VerificationService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\WalletService\:\:balance\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/WalletService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\WalletService\:\:create\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/WalletService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\WalletService\:\:create\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/WalletService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\WalletService\:\:get\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/WalletService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Services\\WalletService\:\:transactions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/WalletService.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\BillsPaymentValidator\:\:validateBillers\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/BillsPaymentValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\BillsPaymentValidator\:\:validateCustomer\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/BillsPaymentValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\BillsPaymentValidator\:\:validatePagination\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/BillsPaymentValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\BillsPaymentValidator\:\:validateProducts\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/BillsPaymentValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\BillsPaymentValidator\:\:validateRequery\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/BillsPaymentValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\BillsPaymentValidator\:\:validateVend\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/BillsPaymentValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\CustomerReservedAccountValidator\:\:validateAddLinkedAccounts\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/CustomerReservedAccountValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\CustomerReservedAccountValidator\:\:validateAllowedPaymentSource\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/CustomerReservedAccountValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\CustomerReservedAccountValidator\:\:validateCreateGeneralAccount\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/CustomerReservedAccountValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\CustomerReservedAccountValidator\:\:validateCreateInvoiceAccount\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/CustomerReservedAccountValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\CustomerReservedAccountValidator\:\:validateGetReservedAccountTransactions\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/CustomerReservedAccountValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\CustomerReservedAccountValidator\:\:validateUpdateKYCInfo\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/CustomerReservedAccountValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\CustomerReservedAccountValidator\:\:validateUpdateSplitConfig\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/CustomerReservedAccountValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\DirectDebitValidator\:\:validateDebit\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/DirectDebitValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\DirectDebitValidator\:\:validateMandate\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/DirectDebitValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\DisbursementValidator\:\:validateAuthorization\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/DisbursementValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\DisbursementValidator\:\:validateBulkTransfer\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/DisbursementValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\DisbursementValidator\:\:validateSingleTransfer\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/DisbursementValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\InvoiceValidator\:\:validateAccount\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/InvoiceValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\LimitProfileValidator\:\:validateLimitProfile\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/LimitProfileValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\LimitProfileValidator\:\:validateReserveAccount\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/LimitProfileValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\PayCodeValidator\:\:validate\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/PayCodeValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\PayCodeValidator\:\:validateHistoryParameters\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/PayCodeValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\RecurringPaymentValidator\:\:validateChargeCardToken\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/RecurringPaymentValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\RefundValidator\:\:validateRefund\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/RefundValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\SubAccountValidator\:\:validateAccount\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/SubAccountValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\TransactionValidator\:\:validateAuthorizeOTP\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/TransactionValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\TransactionValidator\:\:validateAuthorizeThreeDSCard\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/TransactionValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\TransactionValidator\:\:validateChargeCard\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/TransactionValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\TransactionValidator\:\:validateGetAllTransactions\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/TransactionValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\TransactionValidator\:\:validateInitialize\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/TransactionValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\TransactionValidator\:\:validatePayWithBankTransfer\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/TransactionValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\VerificationValidator\:\:validateBVNInformation\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/VerificationValidator.php
+
+		-
+			message: '#^Method Monnify\\MonnifyLaravel\\Validators\\WalletValidator\:\:validateCreate\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Validators/WalletValidator.php

@@ -228,6 +228,84 @@ class DisbursementServiceTest extends TestCase
         );
     }
 
+    #[Test]
+    public function bulk_resend_otp_requires_a_reference(): void
+    {
+        $service = new DisbursementService($this->makeClient([]));
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Reference must be provided');
+
+        $service->bulkResendOTP('');
+    }
+
+    #[Test]
+    public function bulk_resend_otp_posts_the_reference_payload(): void
+    {
+        $history = [];
+        $service = new DisbursementService($this->makeClient([
+            new Response(200, [], json_encode(['ok' => true])),
+        ], $history));
+
+        $service->bulkResendOTP('batch-123');
+
+        $this->assertSame('/api/v2/disbursements/batch/resend-otp', $history[0]['request']->getUri()->getPath());
+        $this->assertSame('POST', $history[0]['request']->getMethod());
+        $this->assertSame(json_encode(['reference' => 'batch-123']), (string) $history[0]['request']->getBody());
+    }
+
+    #[Test]
+    public function bulk_batch_summary_requires_a_batch_reference(): void
+    {
+        $service = new DisbursementService($this->makeClient([]));
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Batch Reference must be provided');
+
+        $service->bulkBatchSummary('');
+    }
+
+    #[Test]
+    public function bulk_batch_summary_uses_the_expected_endpoint(): void
+    {
+        $history = [];
+        $service = new DisbursementService($this->makeClient([
+            new Response(200, [], json_encode(['ok' => true])),
+        ], $history));
+
+        $service->bulkBatchSummary('batch-123');
+
+        $this->assertSame('/api/v2/disbursements/batch/summary', $history[0]['request']->getUri()->getPath());
+        $this->assertSame('GET', $history[0]['request']->getMethod());
+        $this->assertSame('reference=batch-123', $history[0]['request']->getUri()->getQuery());
+    }
+
+    #[Test]
+    public function wallet_balance_requires_an_account_number(): void
+    {
+        $service = new DisbursementService($this->makeClient([]));
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Account Number must be provided.');
+
+        $service->walletBalance('');
+    }
+
+    #[Test]
+    public function wallet_balance_uses_the_expected_endpoint(): void
+    {
+        $history = [];
+        $service = new DisbursementService($this->makeClient([
+            new Response(200, [], json_encode(['ok' => true])),
+        ], $history));
+
+        $service->walletBalance('0123456789');
+
+        $this->assertSame('/api/v2/disbursements/wallet-balance', $history[0]['request']->getUri()->getPath());
+        $this->assertSame('GET', $history[0]['request']->getMethod());
+        $this->assertSame('accountNumber=0123456789', $history[0]['request']->getUri()->getQuery());
+    }
+
     private function validSingleTransferPayload(): array
     {
         return [

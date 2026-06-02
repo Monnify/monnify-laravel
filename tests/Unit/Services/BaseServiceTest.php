@@ -149,4 +149,20 @@ class BaseServiceTest extends TestCase
 
         $this->assertSame('manual-token', Cache::get('monnify_access_token'));
     }
+
+    #[Test]
+    public function it_re_throws_exceptions_that_occur_during_auth_token_fetch(): void
+    {
+        $service = new TestBaseService($this->makeClient([
+            new ConnectException(
+                'Auth server unreachable',
+                new Request('POST', '/api/v1/auth/login')
+            ),
+        ]));
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Auth server unreachable');
+
+        $service->sendGet('/api/v1/banks');
+    }
 }

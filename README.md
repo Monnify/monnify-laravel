@@ -1,5 +1,8 @@
 # Monnify Laravel
 
+[![Tests](https://github.com/Monnify/monnify-laravel/actions/workflows/tests.yml/badge.svg)](https://github.com/Monnify/monnify-laravel/actions/workflows/tests.yml)
+[![codecov](https://codecov.io/gh/Monnify/monnify-laravel/branch/main/graph/badge.svg)](https://codecov.io/gh/Monnify/monnify-laravel)
+
 A Laravel package for integrating the [Monnify](https://monnify.com) payment gateway into your Laravel application. It covers collections, disbursements, virtual accounts, bills payment, verification, and more — all through a clean, consistent API.
 
 ---

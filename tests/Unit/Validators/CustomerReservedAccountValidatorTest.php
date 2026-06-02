@@ -44,9 +44,32 @@ class CustomerReservedAccountValidatorTest extends TestCase
     }
 
     #[Test]
+    public function validate_create_general_account_accepts_nin_without_bvn(): void
+    {
+        $payload = $this->validGeneralAccountPayload();
+        unset($payload['bvn']);
+        $payload['nin'] = '98765432101';
+
+        $this->validator->validateCreateGeneralAccount($payload);
+
+        $this->assertTrue(true);
+    }
+
+    #[Test]
     public function validate_create_invoice_account_accepts_a_valid_payload(): void
     {
         $this->validator->validateCreateInvoiceAccount($this->validInvoiceAccountPayload());
+
+        $this->assertTrue(true);
+    }
+
+    #[Test]
+    public function validate_add_linked_accounts_accepts_a_valid_payload(): void
+    {
+        $this->validator->validateAddLinkedAccounts([
+            'getAllAvailableBanks' => false,
+            'preferredBanks' => ['058', '011'],
+        ]);
 
         $this->assertTrue(true);
     }
@@ -63,6 +86,17 @@ class CustomerReservedAccountValidatorTest extends TestCase
     }
 
     #[Test]
+    public function validate_allowed_payment_source_accepts_a_valid_payload(): void
+    {
+        $this->validator->validateAllowedPaymentSource([
+            'restrictPaymentSource' => true,
+            'allowedPaymentSource' => ['bvns' => ['12345678901']],
+        ]);
+
+        $this->assertTrue(true);
+    }
+
+    #[Test]
     public function validate_allowed_payment_source_rejects_invalid_payloads(): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -73,6 +107,16 @@ class CustomerReservedAccountValidatorTest extends TestCase
                 'bvns' => '12345678901',
             ],
         ]);
+    }
+
+    #[Test]
+    public function validate_update_split_config_accepts_a_valid_payload(): void
+    {
+        $this->validator->validateUpdateSplitConfig([
+            ['subAccountCode' => 'sub-123', 'feeBearer' => true, 'feePercentage' => 0.5, 'splitPercentage' => 20.0],
+        ]);
+
+        $this->assertTrue(true);
     }
 
     #[Test]
@@ -89,6 +133,14 @@ class CustomerReservedAccountValidatorTest extends TestCase
     }
 
     #[Test]
+    public function validate_get_reserved_account_transactions_accepts_a_valid_payload(): void
+    {
+        $this->validator->validateGetReservedAccountTransactions(['page' => 2, 'size' => 25]);
+
+        $this->assertTrue(true);
+    }
+
+    #[Test]
     public function validate_get_reserved_account_transactions_rejects_invalid_payloads(): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -97,6 +149,14 @@ class CustomerReservedAccountValidatorTest extends TestCase
         $this->validator->validateGetReservedAccountTransactions([
             'page' => 'one',
         ]);
+    }
+
+    #[Test]
+    public function validate_update_kyc_info_accepts_a_valid_payload(): void
+    {
+        $this->validator->validateUpdateKYCInfo(['bvn' => '12345678901']);
+
+        $this->assertTrue(true);
     }
 
     #[Test]

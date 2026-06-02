@@ -1,55 +1,65 @@
 {
-    "name": "monnify/monnify-laravel",
-    "description": "A Laravel Monnify Package",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-        "name": "Babatunde Adelabu",
-        "email": "adelabu4fred@gmail.com",
-        "homepage": "https://github.com/fredneutron"
-        }
-    ],
-    "homepage": "https://github.com/fredneutron/monnify-laravel",
-    "keywords": [
-        "Laravel",
-        "Monnify-laravel",
-        "Payment Gateway",
-        "Monnify"
-    ],
-    "require": {
-        "php": "^8.1",
-        "guzzlehttp/guzzle": "^7.0",
-        "illuminate/support": "^8.0|^9.0|^10.0|^11.0|^12.0",
-        "illuminate/validation": "^8.0|^9.0|^10.0|^11.0|^12.0"
+  "name": "monnify/monnify-laravel",
+  "description": "A Laravel Monnify Package",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Babatunde Adelabu",
+      "email": "adelabu4fred@gmail.com",
+      "homepage": "https://github.com/fredneutron"
     },
-    "autoload": {
-        "psr-4": {
-            "Monnify\\MonnifyLaravel\\": "src/"
-        }
+    {
+      "name": "Auwal MS",
+      "email": "auwalforall@gmail.com",
+      "homepage": "https://github.com/auwalms"
     },
-    "autoload-dev": {
-        "psr-4": {
-            "Monnify\\MonnifyLaravel\\Tests\\": "tests/"
-        }
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Monnify\\MonnifyLaravel\\MonnifyServiceProvider"
-            ],
-            "aliases": {
-                "Monnify": "Monnify\\MonnifyLaravel\\Facades\\Monnify"
-            }
-        }
-    },
-    "require-dev": {
-        "orchestra/testbench": "^8.34",
-        "phpstan/phpstan": "^2.0"
-    },
-    "config": {
-        "platform": {
-            "php": "8.2"
-        }
+    {
+      "name": "Moses Adewale",
+      "email": "-",
+      "homepage": "https://github.com/mosesadewale"
     }
+  ],
+  "homepage": "https://github.com/monnify/monnify-laravel",
+  "keywords": [
+    "Laravel",
+    "Monnify-laravel",
+    "Payment Gateway",
+    "Monnify"
+  ],
+  "require": {
+    "php": "^8.1",
+    "guzzlehttp/guzzle": "^7.0",
+    "illuminate/support": "^8.0|^9.0|^10.0|^11.0|^12.0",
+    "illuminate/validation": "^8.0|^9.0|^10.0|^11.0|^12.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Monnify\\MonnifyLaravel\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Monnify\\MonnifyLaravel\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Monnify\\MonnifyLaravel\\MonnifyServiceProvider"
+      ],
+      "aliases": {
+        "Monnify": "Monnify\\MonnifyLaravel\\Facades\\Monnify"
+      }
+    }
+  },
+  "require-dev": {
+    "orchestra/testbench": "^8.34",
+    "phpstan/phpstan": "^2.0"
+  },
+  "config": {
+    "platform": {
+      "php": "8.2"
+    }
+  }
 }

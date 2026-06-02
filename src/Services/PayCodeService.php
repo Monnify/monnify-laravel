@@ -4,27 +4,22 @@ namespace Monnify\MonnifyLaravel\Services;
 
 use GuzzleHttp\Client;
 use InvalidArgumentException;
-use Monnify\MonnifyLaravel\Enums\HttpMethod;
 use Monnify\MonnifyLaravel\Validators\PayCodeValidator;
 
 class PayCodeService extends BaseService
 {
     private PayCodeValidator $validator;
 
-    public function __construct(Client $client)
+    public function __construct(Client $client, ?PayCodeValidator $validator = null)
     {
         parent::__construct($client);
-        $this->validator = new PayCodeValidator();
+        $this->validator = $validator ?? new PayCodeValidator();
     }
 
     public function create(array $data): array
     {
         $this->validator->validate($data);
-        return $this->makeRequest(
-            HttpMethod::POST,
-            '/api/v1/paycode',
-            $data
-        );
+        return $this->requestPost('/api/v1/paycode', $data);
     }
 
     public function get(string $payCodeReference): array
@@ -33,10 +28,7 @@ class PayCodeService extends BaseService
             throw new InvalidArgumentException('PayCode Reference must be provided.');
         }
 
-        return $this->makeRequest(
-            HttpMethod::GET,
-            '/api/v1/paycode/'. $payCodeReference
-        );
+        return $this->requestGet('/api/v1/paycode/'. $payCodeReference);
     }
 
     public function getUnMasked(string $payCodeReference): array
@@ -45,21 +37,13 @@ class PayCodeService extends BaseService
             throw new InvalidArgumentException('PayCode Reference must be provided.');
         }
 
-        return $this->makeRequest(
-            HttpMethod::GET,
-            '/api/v1/paycode/'. $payCodeReference . '/authorize'
-        );
+        return $this->requestGet('/api/v1/paycode/'. $payCodeReference . '/authorize');
     }
 
     public function history(array $parameters): array
     {
         $this->validator->validateHistoryParameters($parameters);
-        return $this->makeRequest(
-            HttpMethod::GET,
-            '/api/v1/paycode',
-            [],
-            $parameters
-        );
+        return $this->requestGet('/api/v1/paycode', $parameters);
     }
 
     public function delete(string $payCodeReference): array
@@ -68,9 +52,6 @@ class PayCodeService extends BaseService
             throw new InvalidArgumentException('PayCode Reference must be provided.');
         }
 
-        return $this->makeRequest(
-            HttpMethod::DELETE,
-            '/api/v1/paycode/'. $payCodeReference
-        );
+        return $this->requestDelete('/api/v1/paycode/'. $payCodeReference);
     }
 }

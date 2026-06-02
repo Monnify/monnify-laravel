@@ -4,6 +4,7 @@ namespace Monnify\MonnifyLaravel\Services;
 
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Cache;
 use Monnify\MonnifyLaravel\Enums\HttpMethod;
@@ -15,7 +16,32 @@ abstract class BaseService
         $this->client = $client;
     }
 
-    protected function makeRequest(
+    protected function requestGet(string $endpoint, array $parameters = []): array
+    {
+        return $this->makeRequest(HttpMethod::GET, $endpoint, [], $parameters);
+    }
+
+    protected function requestPost(string $endpoint, array $data = [], array $parameters = []): array
+    {
+        return $this->makeRequest(HttpMethod::POST, $endpoint, $data, $parameters);
+    }
+
+    protected function requestPut(string $endpoint, array $data = [], array $parameters = []): array
+    {
+        return $this->makeRequest(HttpMethod::PUT, $endpoint, $data, $parameters);
+    }
+
+    protected function requestPatch(string $endpoint, array $data = [], array $parameters = []): array
+    {
+        return $this->makeRequest(HttpMethod::PATCH, $endpoint, $data, $parameters);
+    }
+
+    protected function requestDelete(string $endpoint, array $data = [], array $parameters = []): array
+    {
+        return $this->makeRequest(HttpMethod::DELETE, $endpoint, $data, $parameters);
+    }
+
+    private function makeRequest(
         HttpMethod $method,
         string $endpoint,
         array $data = [],
@@ -46,10 +72,21 @@ abstract class BaseService
                 'body' => json_decode($response->getBody()->getContents(), true),
             ];
         } catch (RequestException $e) {
-            $errorBody = $e->getResponse()?->getBody()->getContents() ?? '';
+            $response = $e->getResponse();
+
             return [
-                'status' => (int) $e->getCode(),
-                'error' => json_decode($errorBody),
+                'status' => $response?->getStatusCode(),
+                'error' => $response !== null
+                    ? json_decode($response->getBody()->getContents())
+                    : (object) ['message' => $e->getMessage()],
+            ];
+        } catch (ConnectException $e) {
+            return [
+                'status' => null,
+                'error' => (object) [
+                    'type'    => 'network_error',
+                    'message' => $e->getMessage(),
+                ],
             ];
         }
     }
@@ -73,7 +110,7 @@ abstract class BaseService
             $content = (object) $response->responseBody;
             $accessToken = $content->accessToken;
             // store token with its TTL so it is persisted across requests
-            $this->setAccessToken($accessToken, (int) $content->expiresIn);
+            $this->setAccessToken($accessToken, max(1, (int) $content->expiresIn - 60));
 
             return $accessToken;
         } catch (Exception $e) {

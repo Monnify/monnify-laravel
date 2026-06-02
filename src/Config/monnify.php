@@ -50,4 +50,14 @@ return [
      * default: 'SANDBOX'
      */
     'environment' => env('MONNIFY_ENVIRONMENT', 'SANDBOX'),
+
+    /**
+     * Base URL for Monnify sandbox API.
+     */
+    'sandbox_url' => env('MONNIFY_SANDBOX_URL', 'https://sandbox.monnify.com'),
+
+    /**
+     * Base URL for Monnify live API.
+     */
+    'live_url' => env('MONNIFY_LIVE_URL', 'https://api.monnify.com'),
 ];

@@ -2,165 +2,137 @@
 
 namespace Monnify\MonnifyLaravel;
 
-use GuzzleHttp\Client;
-use InvalidArgumentException;
-
+use Illuminate\Contracts\Foundation\Application;
 use Monnify\MonnifyLaravel\Services\{
-    TransactionService,
+    BillsPaymentService,
     CustomerReservedAccountService,
-    InvoiceService,
-    RecurringPaymentService,
     DirectDebitService,
-    SubAccountService,
     DisbursementService,
-    WalletService,
+    InvoiceService,
     LimitProfileService,
+    OtherService,
+    PayCodeService,
+    RecurringPaymentService,
     RefundService,
     SettlementService,
+    SubAccountService,
+    TransactionService,
     VerificationService,
-    PayCodeService,
-    OtherService,
-    BillsPaymentService
+    WalletService
 };
 
+/**
+ * @property-read BillsPaymentService $billsPayment
+ * @property-read CustomerReservedAccountService $customerReservedAccount
+ * @property-read DirectDebitService $directDebitMandate
+ * @property-read DisbursementService $transfer;
+ * @property-read InvoiceService $invoice
+ * @property-read LimitProfileService $limitProfile
+ * @property-read OtherService $helper
+ * @property-read PayCodeService $payCodeAPI
+ * @property-read RecurringPaymentService $recurringPayment
+ * @property-read RefundService $refund
+ * @property-read SettlementService $settlements
+ * @property-read SubAccountService $subAccount
+ * @property-read TransactionService $transactions
+ * @property-read VerificationService $verificationAPI
+ * @property-read WalletService $wallet
+ */
 class Monnify
 {
-    protected Client $client;
-    public TransactionService $transactions;
-    public CustomerReservedAccountService $customerReservedAccount;
-    public InvoiceService $invoice;
-    public RecurringPaymentService $recurringPayment;
-    public DirectDebitService $directDebitMandate;
-    public SubAccountService $subAccount;
-    public DisbursementService $transfer;
-    public WalletService $wallet;
-    public LimitProfileService $limitProfile;
-    public RefundService $refund;
-    public SettlementService $settlements;
-    public VerificationService $verificationAPI;
-    public PayCodeService $payCodeAPI;
-    public OtherService $helper;
-    public BillsPaymentService $billsPayment;
+    protected array $resolved = [];
 
-    public function __construct(
-        private string $apiKey,
-        private string $secretKey,
-        private string $environment
-    ) {
-        if ($environment !== 'SANDBOX' && $environment !== 'LIVE') {
-            throw new InvalidArgumentException("Unknown environment passed: $environment, Please specify between SANDBOX or LIVE");
+    public function __construct(private Application $app)
+    {
+    }
+
+    public function __get(string $name): mixed
+    {
+        if (! method_exists($this, $name)) {
+            throw new \RuntimeException("Undefined property [$name]");
         }
 
-        // Create single client instance
-        $this->client = new Client([
-            'base_uri' => $environment === 'SANDBOX' ? 'https://sandbox.monnify.com' : 'https://api.monnify.com',
-            'headers' => [
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json'
-            ]
-        ]);
-
-        // Initialize services with the same client instance
-        $this->initializeServices();
+        return $this->resolved[$name]
+            ??= $this->{$name}();
     }
 
-    protected function initializeServices(): void
+    public function __isset(string $name): bool
     {
-        $this->transactions = new TransactionService($this->client);
-        $this->customerReservedAccount = new CustomerReservedAccountService($this->client);
-        $this->invoice = new InvoiceService($this->client);
-        $this->recurringPayment = new RecurringPaymentService($this->client);
-        $this->directDebitMandate = new DirectDebitService($this->client);
-        $this->subAccount = new SubAccountService($this->client);
-        $this->transfer = new DisbursementService($this->client);
-        $this->wallet = new WalletService($this->client);
-        $this->limitProfile = new LimitProfileService($this->client);
-        $this->refund = new RefundService($this->client);
-        $this->settlements = new SettlementService($this->client);
-        $this->verificationAPI = new VerificationService($this->client);
-        $this->payCodeAPI = new PayCodeService($this->client);
-        $this->helper = new OtherService($this->client);
-        $this->billsPayment = new BillsPaymentService($this->client);
-    }
-
-    // Add getter for testing purposes
-    public function getClient(): Client
-    {
-        return $this->client;
+        return method_exists($this, $name);
     }
 
     public function transactions(): TransactionService
     {
-        return $this->transactions;
+        return $this->app->make(TransactionService::class);
     }
 
     public function customerReservedAccount(): CustomerReservedAccountService
     {
-        return $this->customerReservedAccount;
+        return $this->app->make(CustomerReservedAccountService::class);
     }
 
     public function invoice(): InvoiceService
     {
-        return $this->invoice;
+        return $this->app->make(InvoiceService::class);
     }
 
     public function recurringPayment(): RecurringPaymentService
     {
-        return $this->recurringPayment;
+        return $this->app->make(RecurringPaymentService::class);
     }
 
     public function directDebitMandate(): DirectDebitService
     {
-        return $this->directDebitMandate;
+        return $this->app->make(DirectDebitService::class);
     }
 
     public function subAccount(): SubAccountService
     {
-        return $this->subAccount;
+        return $this->app->make(SubAccountService::class);
     }
 
     public function transfer(): DisbursementService
     {
-        return $this->transfer;
+        return $this->app->make(DisbursementService::class);
     }
 
     public function wallet(): WalletService
     {
-        return $this->wallet;
+        return $this->app->make(WalletService::class);
     }
 
     public function limitProfile(): LimitProfileService
     {
-        return $this->limitProfile;
+        return $this->app->make(LimitProfileService::class);
     }
 
     public function refund(): RefundService
     {
-        return $this->refund;
+        return $this->app->make(RefundService::class);
     }
 
     public function settlements(): SettlementService
     {
-        return $this->settlements;
+        return $this->app->make(SettlementService::class);
     }
 
     public function verificationAPI(): VerificationService
     {
-        return $this->verificationAPI;
+        return $this->app->make(VerificationService::class);
     }
 
     public function payCodeAPI(): PayCodeService
     {
-        return $this->payCodeAPI;
+        return $this->app->make(PayCodeService::class);
     }
 
     public function helper(): OtherService
     {
-        return $this->helper;
+        return $this->app->make(OtherService::class);
     }
 
     public function billsPayment(): BillsPaymentService
     {
-        return $this->billsPayment;
+        return $this->app->make(BillsPaymentService::class);
     }
 }

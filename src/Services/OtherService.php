@@ -3,7 +3,6 @@
 namespace Monnify\MonnifyLaravel\Services;
 
 use GuzzleHttp\Client;
-use Monnify\MonnifyLaravel\Enums\HttpMethod;
 
 class OtherService extends BaseService
 {
@@ -14,17 +13,11 @@ class OtherService extends BaseService
     
     public function banks(): array
     {
-        return $this->makeRequest(
-            HttpMethod::GET,
-            '/api/v1/banks'
-        );
+        return $this->requestGet('/api/v1/banks');
     }
 
     public function banksWithUSSD(): array
     {
-        return $this->makeRequest(
-            HttpMethod::GET,
-            '/api/v1/sdk/transactions/banks'
-        );
+        return $this->requestGet('/api/v1/sdk/transactions/banks');
     }
 }

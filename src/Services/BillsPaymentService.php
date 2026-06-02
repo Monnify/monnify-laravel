@@ -3,17 +3,16 @@
 namespace Monnify\MonnifyLaravel\Services;
 
 use GuzzleHttp\Client;
-use Monnify\MonnifyLaravel\Enums\HttpMethod;
 use Monnify\MonnifyLaravel\Validators\BillsPaymentValidator;
 
 class BillsPaymentService extends BaseService
 {
     private BillsPaymentValidator $validator;
 
-    public function __construct(Client $client)
+    public function __construct(Client $client, ?BillsPaymentValidator $validator = null)
     {
         parent::__construct($client);
-        $this->validator = new BillsPaymentValidator();
+        $this->validator = $validator ?? new BillsPaymentValidator();
     }
 
     /**
@@ -28,12 +27,7 @@ class BillsPaymentService extends BaseService
 
         $this->validator->validatePagination($parameters);
 
-        return $this->makeRequest(
-            HttpMethod::GET,
-            '/api/v1/vas/bills-payment/biller-categories',
-            [],
-            $parameters
-        );
+        return $this->requestGet('/api/v1/vas/bills-payment/biller-categories', $parameters);
     }
 
     /**
@@ -52,12 +46,7 @@ class BillsPaymentService extends BaseService
 
         $this->validator->validateBillers($parameters);
 
-        return $this->makeRequest(
-            HttpMethod::GET,
-            '/api/v1/vas/bills-payment/billers',
-            [],
-            $parameters
-        );
+        return $this->requestGet('/api/v1/vas/bills-payment/billers', $parameters);
     }
 
     /**
@@ -73,26 +62,14 @@ class BillsPaymentService extends BaseService
 
         $this->validator->validateProducts($parameters);
 
-        return $this->makeRequest(
-            HttpMethod::GET,
-            '/api/v1/vas/bills-payment/biller-products',
-            [],
-            $parameters
-        );
+        return $this->requestGet('/api/v1/vas/bills-payment/biller-products', $parameters);
     }
 
-    /**
-     * Validate a customer before processing a bill payment.
-     */
     public function validateCustomer(array $data): array
     {
         $this->validator->validateCustomer($data);
 
-        return $this->makeRequest(
-            HttpMethod::POST,
-            '/api/v1/vas/bills-payment/validate-customer',
-            $data
-        );
+        return $this->requestPost('/api/v1/vas/bills-payment/validate-customer', $data);
     }
 
     /**
@@ -102,11 +79,7 @@ class BillsPaymentService extends BaseService
     {
         $this->validator->validateVend($data);
 
-        return $this->makeRequest(
-            HttpMethod::POST,
-            '/api/v1/vas/bills-payment/vend',
-            $data
-        );
+        return $this->requestPost('/api/v1/vas/bills-payment/vend', $data);
     }
 
     /**
@@ -116,11 +89,6 @@ class BillsPaymentService extends BaseService
     {
         $this->validator->validateRequery(['vendReference' => $vendReference]);
 
-        return $this->makeRequest(
-            HttpMethod::GET,
-            '/api/v1/vas/bills-payment/requery',
-            [],
-            ['vendReference' => $vendReference]
-        );
+        return $this->requestGet('/api/v1/vas/bills-payment/requery', ['vendReference' => $vendReference]);
     }
 }

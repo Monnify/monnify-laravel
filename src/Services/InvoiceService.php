@@ -4,27 +4,22 @@ namespace Monnify\MonnifyLaravel\Services;
 
 use GuzzleHttp\Client;
 use InvalidArgumentException;
-use Monnify\MonnifyLaravel\Enums\HttpMethod;
 use Monnify\MonnifyLaravel\Validators\InvoiceValidator;
 
 class InvoiceService extends BaseService
 {
     private InvoiceValidator $validator;
 
-    public function __construct(Client $client)
+    public function __construct(Client $client, ?InvoiceValidator $validator = null)
     {
         parent::__construct($client);
-        $this->validator = new InvoiceValidator();
+        $this->validator = $validator ?? new InvoiceValidator();
     }
 
     public function create(array $data): array
     {
         $this->validator->validateAccount($data);
-        return $this->makeRequest(
-            HttpMethod::POST,
-            '/api/v1/invoice/create',
-            $data
-        );
+        return $this->requestPost('/api/v1/invoice/create', $data);
     }
 
     public function get(string $invoiceReference): array
@@ -33,18 +28,12 @@ class InvoiceService extends BaseService
             throw new InvalidArgumentException('Invoice Reference must be provided.');
         }
 
-        return $this->makeRequest(
-            HttpMethod::GET,
-            '/api/v1/invoice/'.$invoiceReference.'/details'
-        );
+        return $this->requestGet('/api/v1/invoice/'.$invoiceReference.'/details');
     }
 
     public function all(): array
     {
-        return $this->makeRequest(
-            HttpMethod::GET,
-            '/api/v1/invoice/all'
-        );
+        return $this->requestGet('/api/v1/invoice/all');
     }
 
     public function cancel(string $invoiceReference): array
@@ -53,19 +42,12 @@ class InvoiceService extends BaseService
             throw new InvalidArgumentException('Invoice Reference must be provided.');
         }
 
-        return $this->makeRequest(
-            HttpMethod::DELETE,
-            '/api/v1/invoice/'.$invoiceReference.'/cancel'
-        );
+        return $this->requestDelete('/api/v1/invoice/'.$invoiceReference.'/cancel');
     }
 
     public function attachReservedAccount(array $data): array
     {
         $this->validator->validateAccount($data);
-        return $this->makeRequest(
-            HttpMethod::POST,
-            '/api/v1/invoice/create',
-            $data
-        );
+        return $this->requestPost('/api/v1/invoice/create', $data);
     }
 }

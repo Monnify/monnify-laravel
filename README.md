@@ -1,5 +1,10 @@
 # Monnify Laravel
 
+[![Tests](https://github.com/Monnify/monnify-laravel/actions/workflows/tests.yml/badge.svg)](https://github.com/Monnify/monnify-laravel/actions/workflows/tests.yml)
+[![codecov](https://codecov.io/gh/Monnify/monnify-laravel/branch/main/graph/badge.svg)](https://codecov.io/gh/Monnify/monnify-laravel)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/monnify/monnify-laravel.svg)](https://packagist.org/packages/monnify/monnify-laravel)
+[![Total Downloads](https://img.shields.io/packagist/dt/monnify/monnify-laravel.svg)](https://packagist.org/packages/monnify/monnify-laravel)
+
 A Laravel package for integrating the [Monnify](https://monnify.com) payment gateway into your Laravel application. It covers collections, disbursements, virtual accounts, bills payment, verification, and more — all through a clean, consistent API.
 
 ---
@@ -9,8 +14,10 @@ A Laravel package for integrating the [Monnify](https://monnify.com) payment gat
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Configuration](#configuration)
+- [Quick Start](#quick-start)
 - [How Responses Work](#how-responses-work)
 - [Error Handling](#error-handling)
+- [Webhooks](#webhooks)
 - [Services](#services)
   - [Transactions](#transactions)
   - [Customer Reserved Accounts](#customer-reserved-accounts)
@@ -78,6 +85,49 @@ MONNIFY_ENVIRONMENT=SANDBOX   # Use LIVE when going to production
 
 ---
 
+## Quick Start
+
+The most common flow: collect a payment and verify it when the customer returns.
+
+**Step 1 — Initialize the payment and redirect the customer:**
+
+```php
+use Monnify\MonnifyLaravel\Facades\Monnify;
+
+// In your checkout controller
+$response = Monnify::transactions()->initialise([
+    'amount'           => 5000.00,
+    'customerEmail'    => 'jane@example.com',
+    'paymentReference' => 'ORDER-' . uniqid(),   // must be unique per transaction
+    'currencyCode'     => 'NGN',
+    'contractCode'     => config('monnify.contract_code'),
+    'redirectUrl'      => route('payment.callback'),
+]);
+
+return redirect($response['body']['responseBody']['checkoutUrl']);
+```
+
+**Step 2 — Verify the payment in your callback handler:**
+
+```php
+// In your callback controller
+public function callback(Request $request)
+{
+    $reference = $request->query('paymentReference');
+
+    $result = Monnify::transactions()->statusByReference($reference, 'payment');
+    $status = $result['body']['responseBody']['paymentStatus'] ?? null;
+
+    if ($status === 'PAID') {
+        // Payment confirmed server-side — safe to fulfil the order
+    }
+}
+```
+
+> **Important:** Never rely solely on the redirect URL parameters to confirm a payment. Always call `statusByReference()` (or `status()`) from your callback handler to verify the payment directly with Monnify before fulfilling orders. For an additional layer of reliability — especially for payments that complete after a timeout or network drop — subscribe to [Monnify webhook notifications](#webhooks) and treat them as a second source of truth.
+
+---
+
 ## How Responses Work
 
 Every method in this package returns an array with two keys:
@@ -88,6 +138,8 @@ Every method in this package returns an array with two keys:
     'body'   => [ ... ],   // The parsed response data from Monnify
 ]
 ```
+
+> **Why `$response['body']['responseBody']`?** Monnify's API always wraps the actual data inside a `responseBody` key within `body`. This is a Monnify API convention — the package returns it as-is so nothing is hidden from you. When you see `$response['body']['responseBody']['checkoutUrl']`, the two levels are: `body` (this package's wrapper) → `responseBody` (Monnify's wrapper) → the actual data.
 
 On a failed request (e.g. a network error or a 4xx/5xx response), the array will look like:
 
@@ -132,6 +184,148 @@ try {
     return response()->json(['message' => 'Payment service unavailable'], 503);
 }
 ```
+
+---
+
+## Webhooks
+
+Monnify sends an HTTP `POST` to your server whenever a significant event occurs (payment received, transfer completed, refund processed, etc.). Webhooks are the most reliable way to keep your system in sync — they fire even if your customer closes the browser mid-flow or a network timeout prevents the redirect from completing.
+
+Full details: [Webhook Overview](https://developers.monnify.com/docs/webhooks) · [Event Types](https://developers.monnify.com/docs/webhooks/event-types)
+
+---
+
+### Setting Up
+
+1. Log in to your [Monnify dashboard](https://app.monnify.com)
+2. Go to **Developers → Webhook URLs**
+3. Enter your endpoint URL for each notification type (Transaction Completion, Disbursement, Refund, Settlement)
+
+---
+
+### Event Types
+
+| Event                     | When it fires                                        | Related service                 |
+| ------------------------- | ---------------------------------------------------- | ------------------------------- |
+| `SUCCESSFUL_TRANSACTION`  | Payment confirmed on a reserved account or offline   | Transactions, Reserved Accounts |
+| `SUCCESSFUL_DISBURSEMENT` | A transfer completes successfully                    | Disbursements                   |
+| `FAILED_DISBURSEMENT`     | A transfer fails                                     | Disbursements                   |
+| `REVERSED_DISBURSEMENT`   | A transfer is reversed                               | Disbursements                   |
+| `SUCCESSFUL_REFUND`       | A refund is processed                                | Refunds                         |
+| `FAILED_REFUND`           | A refund attempt fails                               | Refunds                         |
+| `SETTLEMENT`              | Funds settled to your bank account or wallet         | Settlements                     |
+| `ACCOUNT_ACTIVITY`        | Credit or debit on a wallet                          | Wallets                         |
+| `REJECTED_PAYMENT`        | Payment rejected (e.g. under-payment)                | Transactions                    |
+| `MANDATE_UPDATE`          | Direct debit mandate status changes                  | Direct Debit                    |
+| `LOW_BALANCE_ALERT`       | Wallet balance drops below your configured threshold | Wallets                         |
+| `OFFLINE_PAYMENT_AGENT`   | An offline agent payment completes                   | Transactions                    |
+
+Every webhook payload follows this structure:
+
+```json
+{
+  "eventType": "SUCCESSFUL_TRANSACTION",
+  "eventData": {
+    "transactionReference": "MNFY|...",
+    "paymentStatus": "PAID",
+    ...
+  }
+}
+```
+
+---
+
+### Verifying the Signature
+
+Monnify signs every webhook request with a `monnify-signature` header — an HMAC-SHA512 hash of the raw request body, keyed with your **secret key**.
+
+**Always verify this before processing any webhook.** Skipping this check means anyone who knows your endpoint URL could send fake events.
+
+```php
+$signature = $request->header('monnify-signature');
+$expected  = hash_hmac('sha512', $request->getContent(), config('monnify.secret_key'));
+
+if (! hash_equals($expected, $signature)) {
+    return response()->json(['message' => 'Invalid signature'], 401);
+}
+```
+
+> **Note:** Use `hash_equals()` instead of `===` to prevent timing attacks.
+
+---
+
+### Handling Webhooks in Laravel
+
+**1. Create the controller:**
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class MonnifyWebhookController extends Controller
+{
+    public function handle(Request $request)
+    {
+        // Verify the signature
+        $signature = $request->header('monnify-signature');
+        $expected  = hash_hmac('sha512', $request->getContent(), config('monnify.secret_key'));
+
+        if (! hash_equals($expected, $signature)) {
+            return response()->json(['message' => 'Invalid signature'], 401);
+        }
+
+        $eventType = $request->input('eventType');
+        $eventData = $request->input('eventData');
+
+        // Return 200 immediately, then process — prevents Monnify from resending
+        // due to a timeout caused by slow downstream logic.
+        match ($eventType) {
+            'SUCCESSFUL_TRANSACTION'  => ProcessPayment::dispatch($eventData),
+            'SUCCESSFUL_DISBURSEMENT' => ProcessDisbursement::dispatch($eventData),
+            'FAILED_DISBURSEMENT'     => HandleFailedDisbursement::dispatch($eventData),
+            'SUCCESSFUL_REFUND'       => ProcessRefund::dispatch($eventData),
+            'SETTLEMENT'              => ProcessSettlement::dispatch($eventData),
+            default                   => null,
+        };
+
+        return response()->json(['message' => 'Webhook received'], 200);
+    }
+}
+```
+
+**2. Register the route** (webhooks must be excluded from CSRF verification):
+
+```php
+// routes/web.php
+Route::post('/webhooks/monnify', [MonnifyWebhookController::class, 'handle'])
+    ->name('monnify.webhook');
+```
+
+```php
+// Laravel 11+ — bootstrap/app.php
+->withMiddleware(function (Middleware $middleware) {
+    $middleware->validateCsrfTokens(except: [
+        'webhooks/monnify',
+    ]);
+})
+
+// Laravel 10 and below — app/Http/Middleware/VerifyCsrfToken.php
+protected $except = [
+    'webhooks/monnify',
+];
+```
+
+---
+
+### Best Practices
+
+- **Verify the signature** on every request before touching `eventData`
+- **Return HTTP 200 immediately** — do heavy processing in a queued job. Monnify will retry delivery if it does not receive a 200 within a reasonable timeout
+- **Deduplicate events** — store processed event references (e.g. `transactionReference`) and skip duplicates; Monnify may send the same event more than once
+- **Whitelist Monnify's IP** (`35.242.133.146`) at your firewall or in middleware as an extra layer of protection
 
 ---
 
@@ -186,6 +380,8 @@ return redirect($response['body']['responseBody']['checkoutUrl']);
 **Required fields:** `amount`, `customerEmail`, `paymentReference`, `currencyCode`, `contractCode`, `redirectUrl`
 **Optional fields:** `customerName`, `paymentDescription`, `paymentMethods`, `incomeSplitConfig`
 
+> **Production checklist:** When a customer completes payment and is redirected to your `redirectUrl`, always call `statusByReference()` to verify the payment server-side before fulfilling the order. Additionally, subscribe to the `SUCCESSFUL_TRANSACTION` webhook event on your [Monnify dashboard](https://app.monnify.com) so your system is notified even if the customer closes the browser before the redirect completes. See the [Webhooks](#webhooks) section for setup details.
+
 ---
 
 #### Pay with Bank Transfer
@@ -208,14 +404,23 @@ $response = Monnify::transactions()->chargeCard([
     'transactionReference' => 'MONNIFY_TXN_REF',
     'collectionChannel'    => 'API_NOTIFICATION',
     'card' => [
-        'number'      => '5399831071613049',
-        'pin'         => '3310',
+        'number'      => '4111111111111111',
+        'pin'         => '1234',
         'expiryMonth' => '10',
-        'expiryYear'  => '30',
-        'cvv'         => '564',
+        'expiryYear'  => '2029',
+        'cvv'         => '123',
     ],
 ]);
 ```
+
+> **Sandbox test cards** — use these card numbers in your `SANDBOX` environment. All share PIN `1234` and CVV `123`.
+
+| Scenario                 | Card Number        | Expiry  |
+| ------------------------ | ------------------ | ------- |
+| No OTP (direct approval) | `4111111111111111` | 10/2029 |
+| Requires OTP             | `5060995994247093` | 12/2029 |
+| Requires 3DS             | `4000000000000002` | 12/2029 |
+| Declined / Failed        | `4111111111111110` | 10/2029 |
 
 ---
 
@@ -1329,8 +1534,8 @@ $status = $vend['body']['responseBody']['vendStatus'];
 
 // 3. Handle IN_PROGRESS status
 if ($status === 'IN_PROGRESS') {
-    // Wait a moment, then requery
-    sleep(3);
+    // The vend is still processing. In production, dispatch a queued job
+    // that calls requery() after a short delay instead of blocking here.
     $vend   = Monnify::billsPayment()->requery($vend['body']['responseBody']['vendReference']);
     $status = $vend['body']['responseBody']['vendStatus'];
 }

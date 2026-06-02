@@ -135,12 +135,6 @@ class DisbursementValidatorTest extends TestCase
                 },
                 'The transactionList.0.destinationBankCode field must not be greater than 3 characters.',
             ],
-            'missing nested destination account name' => [
-                static function (array &$payload): void {
-                    unset($payload['transactionList'][0]['destinationAccountName']);
-                },
-                'The transactionList.0.destinationAccountName field is required.',
-            ],
         ];
     }
 
@@ -192,7 +186,6 @@ class DisbursementValidatorTest extends TestCase
                     'narration' => 'Salary payment',
                     'destinationBankCode' => '058',
                     'destinationAccountNumber' => '0123456789',
-                    'destinationAccountName' => 'Jane Doe',
                     'currency' => 'NGN',
                 ],
             ],

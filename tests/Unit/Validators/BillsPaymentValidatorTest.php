@@ -78,6 +78,15 @@ class BillsPaymentValidatorTest extends TestCase
     }
 
     #[Test]
+    public function validate_billers_rejects_invalid_pagination_parameters(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The size field must be at least 1.');
+
+        $this->validator->validateBillers(['size' => 0]);
+    }
+
+    #[Test]
     public function validate_products_accepts_a_valid_payload(): void
     {
         $this->validator->validateProducts(['biller_code' => 'BILLER-001', 'size' => 10, 'page' => 0]);

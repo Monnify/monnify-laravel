@@ -130,6 +130,26 @@ class MonnifyTest extends TestCase
     }
 
     #[Test]
+    public function it_throws_a_runtime_exception_when_accessing_an_undefined_property(): void
+    {
+        $monnify = $this->app->make(MonnifyServiceProvider::BINDING);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Undefined property [nonExistent]');
+
+        $_ = $monnify->nonExistent;
+    }
+
+    #[Test]
+    public function it_reports_isset_correctly_for_valid_and_invalid_properties(): void
+    {
+        $monnify = $this->app->make(MonnifyServiceProvider::BINDING);
+
+        $this->assertTrue(isset($monnify->transactions));
+        $this->assertFalse(isset($monnify->nonExistent));
+    }
+
+    #[Test]
     public function it_resolves_service_accessors_from_container_singletons(): void
     {
         $monnify = $this->app->make(MonnifyServiceProvider::BINDING);

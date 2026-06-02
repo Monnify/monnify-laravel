@@ -157,6 +157,126 @@ class CustomerReservedAccountServiceTest extends TestCase
         $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
     }
 
+    #[Test]
+    public function add_linked_accounts_requires_an_account_reference(): void
+    {
+        $service = new CustomerReservedAccountService($this->makeClient([]));
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Account Reference must be provided');
+
+        $service->addLinkedAccounts('', []);
+    }
+
+    #[Test]
+    public function update_bvn_requires_an_account_reference(): void
+    {
+        $service = new CustomerReservedAccountService($this->makeClient([]));
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Account Reference must be provided');
+
+        $service->updateBVN('', '12345678901');
+    }
+
+    #[Test]
+    public function deallocate_account_requires_an_account_reference(): void
+    {
+        $service = new CustomerReservedAccountService($this->makeClient([]));
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Account Reference must be provided');
+
+        $service->deallocateAccount('');
+    }
+
+    #[Test]
+    public function transactions_requires_an_account_reference(): void
+    {
+        $service = new CustomerReservedAccountService($this->makeClient([]));
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Account Reference must be provided');
+
+        $service->transactions('');
+    }
+
+    #[Test]
+    public function update_kyc_info_requires_an_account_reference(): void
+    {
+        $service = new CustomerReservedAccountService($this->makeClient([]));
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Account Reference must be provided');
+
+        $service->updateKYCInfo('', []);
+    }
+
+    #[Test]
+    public function allowed_payment_source_requires_an_account_reference(): void
+    {
+        $service = new CustomerReservedAccountService($this->makeClient([]));
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Account Reference must be provided');
+
+        $service->allowedPaymentSource('', []);
+    }
+
+    #[Test]
+    public function allowed_payment_source_uses_the_expected_endpoint_and_payload(): void
+    {
+        $payload = [
+            'restrictPaymentSource' => true,
+            'allowedPaymentSource' => ['bvns' => ['12345678901']],
+        ];
+        $history = [];
+        $service = new CustomerReservedAccountService($this->makeClient([
+            new Response(200, [], json_encode(['ok' => true])),
+        ], $history));
+
+        $service->allowedPaymentSource('acct-ref', $payload);
+
+        $this->assertSame(
+            '/api/v1/bank-transfer/reserved-accounts/update-payment-source-filter/acct-ref',
+            $history[0]['request']->getUri()->getPath()
+        );
+        $this->assertSame('PUT', $history[0]['request']->getMethod());
+        $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
+    }
+
+    #[Test]
+    public function update_split_config_requires_an_account_reference(): void
+    {
+        $service = new CustomerReservedAccountService($this->makeClient([]));
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Account Reference must be provided');
+
+        $service->updateSplitConfig('', []);
+    }
+
+    #[Test]
+    public function update_split_config_uses_the_expected_endpoint_and_payload(): void
+    {
+        $payload = [
+            ['subAccountCode' => 'sub-123', 'feeBearer' => true, 'feePercentage' => 0.5, 'splitPercentage' => 20.0],
+        ];
+        $history = [];
+        $service = new CustomerReservedAccountService($this->makeClient([
+            new Response(200, [], json_encode(['ok' => true])),
+        ], $history));
+
+        $service->updateSplitConfig('acct-ref', $payload);
+
+        $this->assertSame(
+            '/api/v1/bank-transfer/reserved-accounts/update-income-split-config/acct-ref',
+            $history[0]['request']->getUri()->getPath()
+        );
+        $this->assertSame('PUT', $history[0]['request']->getMethod());
+        $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
+    }
+
     private function validGeneralAccountPayload(): array
     {
         return [

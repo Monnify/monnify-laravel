@@ -5,6 +5,7 @@ namespace Monnify\MonnifyLaravel;
 use Error;
 use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
+use Monnify\MonnifyLaravel\Webhooks\WebhookSignatureVerifier;
 use Monnify\MonnifyLaravel\Services\{
     BillsPaymentService,
     CustomerReservedAccountService,
@@ -96,6 +97,7 @@ class MonnifyServiceProvider extends ServiceProvider
         });
 
         $this->registerValidatorSingletons();
+        $this->app->singleton(WebhookSignatureVerifier::class);
         $this->registerServiceContextualBindings();
         $this->registerServiceSingletons();
 
@@ -109,6 +111,10 @@ class MonnifyServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/Config/monnify.php' => config_path('monnify.php'),
         ], 'config');
+
+        if (config('monnify.webhooks.route_enabled', false)) {
+            $this->loadRoutesFrom(__DIR__.'/../routes/webhooks.php');
+        }
     }
 
     protected function registerServiceContextualBindings(): void

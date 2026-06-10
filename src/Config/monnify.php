@@ -60,4 +60,13 @@ return [
      * Base URL for Monnify live API.
      */
     'live_url' => env('MONNIFY_LIVE_URL', 'https://api.monnify.com'),
+
+    /**
+     * Webhook handling is opt-in so existing applications do not receive
+     * package routes or processing behavior unexpectedly.
+     */
+    'webhooks' => [
+        'route_enabled' => env('MONNIFY_WEBHOOK_ROUTE_ENABLED', false),
+        'route_path' => env('MONNIFY_WEBHOOK_ROUTE_PATH', 'monnify/webhook'),
+    ],
 ];

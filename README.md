@@ -1579,7 +1579,7 @@ Please ensure your code follows the existing style and that all tests pass befor
 - [Babatunde Adelabu](https://github.com/fredneutron)
 - [Aransiola Ayodele](https://github.com/CodeLeom)
 - [Auwal MS](https://github.com/auwalms)
-- [Moses Adewale](https://github.com/mosesadwale)
+- [Moses Adewale](https://github.com/mosesadewale)
 
 ---
 

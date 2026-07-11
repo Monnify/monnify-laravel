@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "53fc32c15a14c499fc39a98b6b297a3a",
+    "content-hash": "2c011d85ed225679e1e1b0b11157acb6",
     "packages": [
         {
             "name": "brick/math",

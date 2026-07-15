@@ -88,7 +88,7 @@ class DisbursementService extends BaseService
         return $this->requestGet('/api/v2/disbursements/bulk/'.$batchReference.'/transactions', $parameters);
     }
     /**
-     * @param 'single'|'bulk' $type
+     * @param string $type Accepted values: single, bulk.
      *
      * Note: bulk listing requires the disbursement feature to be enabled on your Monnify merchant account.
      * Calling with $type = 'bulk' on an account without this feature returns 404.

@@ -11,7 +11,22 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ["8.2", "8.3"]
+        include:
+          - php-version: "8.1"
+            laravel-version: "^10.0"
+            testbench-version: "^8.34"
+            coverage: false
+            bypass-advisory-block: true
+          - php-version: "8.2"
+            laravel-version: "^12.0"
+            testbench-version: "^10.0"
+            coverage: false
+            bypass-advisory-block: false
+          - php-version: "8.3"
+            laravel-version: "^13.0"
+            testbench-version: "^11.0"
+            coverage: true
+            bypass-advisory-block: false
 
     steps:
       - name: Checkout repository
@@ -21,27 +36,33 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
-          coverage: ${{ matrix.php-version == '8.3' && 'xdebug' || 'none' }}
+          coverage: ${{ matrix.coverage && 'xdebug' || 'none' }}
           tools: composer:v2
 
       - name: Cache Composer dependencies
         uses: actions/cache@v5
         with:
           path: ~/.composer/cache/files
-          key: ${{ runner.os }}-php-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-php-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: |
             ${{ runner.os }}-php-${{ matrix.php-version }}-composer-
 
       - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-interaction --no-progress
+        run: |
+          if [ "${{ matrix.bypass-advisory-block }}" = "true" ]; then
+            composer config policy.advisories.block false
+          fi
+          composer require "illuminate/support:${{ matrix.laravel-version }}" "illuminate/validation:${{ matrix.laravel-version }}" --no-update --no-interaction
+          composer require "orchestra/testbench:${{ matrix.testbench-version }}" --dev --no-update --no-interaction
+          composer update --with-all-dependencies --prefer-dist --no-interaction --no-progress
 
       - name: Run test suite
-        run: vendor/bin/phpunit --testdox ${{ matrix.php-version == '8.3' && '--coverage-clover coverage.xml' || '' }}
+        run: vendor/bin/phpunit --testdox ${{ matrix.coverage && '--coverage-clover coverage.xml' || '' }}
         env:
-          XDEBUG_MODE: ${{ matrix.php-version == '8.3' && 'coverage' || 'off' }}
+          XDEBUG_MODE: ${{ matrix.coverage && 'coverage' || 'off' }}
 
       - name: Upload coverage to Codecov
-        if: matrix.php-version == '8.3'
+        if: matrix.coverage
         uses: codecov/codecov-action@v6
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -58,7 +79,7 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: '8.3'
           coverage: none
           tools: composer:v2
 
@@ -66,12 +87,12 @@ jobs:
         uses: actions/cache@v5
         with:
           path: ~/.composer/cache/files
-          key: ${{ runner.os }}-php-8.2-phpstan-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-php-8.3-phpstan-${{ hashFiles('**/composer.json') }}
           restore-keys: |
-            ${{ runner.os }}-php-8.2-phpstan-
+            ${{ runner.os }}-php-8.3-phpstan-
 
       - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-interaction --no-progress
+        run: composer update --prefer-dist --no-interaction --no-progress
 
       - name: Run static analysis (PHP 8.1 API compatibility)
         run: vendor/bin/phpstan analyse --no-progress

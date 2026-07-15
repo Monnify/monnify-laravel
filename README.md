@@ -203,6 +203,119 @@ Full details: [Webhook Overview](https://developers.monnify.com/docs/webhooks) �
 
 ---
 
+### Package Webhook Route
+
+The package can register a webhook endpoint for you, but it is disabled by default so existing applications do not receive a new public route unexpectedly.
+
+Enable it in your `.env` file:
+
+```env
+MONNIFY_WEBHOOK_ROUTE_ENABLED=true
+MONNIFY_WEBHOOK_ROUTE_PATH=monnify/webhook
+```
+
+Then set your Monnify dashboard webhook URL to:
+
+```text
+https://your-app.com/monnify/webhook
+```
+
+When enabled, the flow is:
+
+```text
+Monnify → HTTP POST → verify signature → validate JSON → hydrate WebhookPayload
+        → dispatch MonnifyWebhookReceived → listener → queued job
+```
+
+The package will:
+
+- Verify the `monnify-signature` header before decoding the payload
+- Validate the payload has `eventType` and `eventData`
+- Dispatch `Monnify\MonnifyLaravel\Events\MonnifyWebhookReceived`
+- Return `200` for accepted webhooks, `401` for signature failures, and `400` for malformed payloads
+
+The package receives and verifies the webhook. It will not make business decisions for your application.
+
+---
+
+### Handling Events
+
+For production applications, use a dedicated listener that dispatches your own queued jobs. This keeps the webhook response fast and keeps business logic outside the package route.
+
+Use the payload helpers this way:
+
+- Use `$payload->is(WebhookEventType::SomeEvent)` for a single event check.
+- Use `match ($payload->knownEventType())` when one listener centrally handles several known Monnify events.
+- Use `$payload->eventType` when you need the raw string, especially for unknown future Monnify events.
+
+```php
+<?php
+
+namespace App\Listeners;
+
+use Monnify\MonnifyLaravel\Enums\WebhookEventType;
+use Monnify\MonnifyLaravel\Events\MonnifyWebhookReceived;
+
+class HandleMonnifyWebhook
+{
+    public function handle(MonnifyWebhookReceived $event): void
+    {
+        $payload = $event->payload;
+
+        match ($payload->knownEventType()) {
+            WebhookEventType::SuccessfulTransaction => ProcessSuccessfulMonnifyPayment::dispatch($payload->eventData),
+            WebhookEventType::FailedDisbursement => HandleFailedMonnifyDisbursement::dispatch($payload->eventData),
+            WebhookEventType::OfflinePaymentAgent => ProcessOfflineAgentPayment::dispatch($payload->eventData),
+            default => null,
+        };
+    }
+}
+```
+
+Unknown future Monnify event types are still delivered. Use `$event->payload->eventType` for the raw string and `$event->payload->knownEventType()` when you want the package enum for known events.
+
+---
+
+### Registering Event Listeners
+
+Laravel supports several event registration styles. Use them in this order of preference:
+
+1. **Event Discovery (recommended)**: place your listener in `app/Listeners` and enable Laravel's event discovery for your application.
+
+2. **EventServiceProvider (explicit mapping)**: use this when you want an explicit event-to-listener map.
+
+```php
+use App\Listeners\HandleMonnifyWebhook;
+use Monnify\MonnifyLaravel\Events\MonnifyWebhookReceived;
+
+protected $listen = [
+    MonnifyWebhookReceived::class => [
+        HandleMonnifyWebhook::class,
+    ],
+];
+```
+
+3. **Manual registration with `Event::listen()`**: use this for quick examples, dynamic bindings, or small applications.
+
+---
+
+### Idempotency
+
+> **Important:** Monnify may deliver the same webhook more than once. Your webhook handling must be idempotent.
+
+Before fulfilling an order, marking a transfer as complete, or updating any irreversible state, check whether the event has already been processed.
+
+Common strategies:
+
+- Store `transactionReference`, `paymentReference`, transfer reference, or refund reference in a table with a unique index.
+- Use a `processed_webhooks` table keyed by the most stable reference in `eventData`.
+- Use a cache lock or cache key for short-lived deduplication when a database record is not appropriate.
+- Make queued jobs safe to run more than once.
+
+Do not rely on “one webhook equals one delivery.”
+
+---
+
 ### Event Types
 
 | Event                     | When it fires                                        | Related service                 |
@@ -233,28 +346,9 @@ Every webhook payload follows this structure:
 }
 ```
 
----
+### Custom Webhook Route
 
-### Verifying the Signature
-
-Monnify signs every webhook request with a `monnify-signature` header — an HMAC-SHA512 hash of the raw request body, keyed with your **secret key**.
-
-**Always verify this before processing any webhook.** Skipping this check means anyone who knows your endpoint URL could send fake events.
-
-```php
-$signature = $request->header('monnify-signature');
-$expected  = hash_hmac('sha512', $request->getContent(), config('monnify.secret_key'));
-
-if (! hash_equals($expected, $signature)) {
-    return response()->json(['message' => 'Invalid signature'], 401);
-}
-```
-
-> **Note:** Use `hash_equals()` instead of `===` to prevent timing attacks.
-
----
-
-### Handling Webhooks in Laravel
+If you prefer to own the route and controller yourself instead of enabling the package route, you can still use the package verifier and payload wrapper.
 
 **1. Create the controller:**
 
@@ -263,38 +357,52 @@ if (! hash_equals($expected, $signature)) {
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use InvalidArgumentException;
+use JsonException;
+use Monnify\MonnifyLaravel\Enums\WebhookEventType;
+use Monnify\MonnifyLaravel\Exceptions\InvalidWebhookSignatureException;
+use Monnify\MonnifyLaravel\Webhooks\WebhookPayload;
+use Monnify\MonnifyLaravel\Webhooks\WebhookSignatureVerifier;
 
 class MonnifyWebhookController extends Controller
 {
-    public function handle(Request $request)
+    public function handle(Request $request, WebhookSignatureVerifier $verifier): JsonResponse
     {
-        // Verify the signature
-        $signature = $request->header('monnify-signature');
-        $expected  = hash_hmac('sha512', $request->getContent(), config('monnify.secret_key'));
-
-        if (! hash_equals($expected, $signature)) {
-            return response()->json(['message' => 'Invalid signature'], 401);
+        try {
+            $verifier->verify($request);
+        } catch (InvalidWebhookSignatureException $e) {
+            return response()->json(['message' => $e->getMessage()], 401);
         }
 
-        $eventType = $request->input('eventType');
-        $eventData = $request->input('eventData');
+        try {
+            $decodedPayload = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
-        // Return 200 immediately, then process — prevents Monnify from resending
-        // due to a timeout caused by slow downstream logic.
-        match ($eventType) {
-            'SUCCESSFUL_TRANSACTION'  => ProcessPayment::dispatch($eventData),
-            'SUCCESSFUL_DISBURSEMENT' => ProcessDisbursement::dispatch($eventData),
-            'FAILED_DISBURSEMENT'     => HandleFailedDisbursement::dispatch($eventData),
-            'SUCCESSFUL_REFUND'       => ProcessRefund::dispatch($eventData),
-            'SETTLEMENT'              => ProcessSettlement::dispatch($eventData),
-            default                   => null,
+            if (! is_array($decodedPayload)) {
+                throw new InvalidArgumentException('The webhook payload must be a valid JSON object.');
+            }
+
+            $payload = WebhookPayload::fromArray($decodedPayload);
+        } catch (InvalidArgumentException|JsonException $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
+
+        match ($payload->knownEventType()) {
+            WebhookEventType::SuccessfulTransaction => ProcessPayment::dispatch($payload->eventData),
+            WebhookEventType::SuccessfulDisbursement => ProcessDisbursement::dispatch($payload->eventData),
+            WebhookEventType::FailedDisbursement => HandleFailedDisbursement::dispatch($payload->eventData),
+            WebhookEventType::SuccessfulRefund => ProcessRefund::dispatch($payload->eventData),
+            WebhookEventType::Settlement => ProcessSettlement::dispatch($payload->eventData),
+            default => null,
         };
 
         return response()->json(['message' => 'Webhook received'], 200);
     }
 }
 ```
+
+The verifier checks the `monnify-signature` header against the raw request body using your Monnify client secret. Skipping verification means anyone who knows your endpoint URL could send fake events.
 
 **2. Register the route** (webhooks must be excluded from CSRF verification):
 
@@ -324,7 +432,7 @@ protected $except = [
 
 - **Verify the signature** on every request before touching `eventData`
 - **Return HTTP 200 immediately** — do heavy processing in a queued job. Monnify will retry delivery if it does not receive a 200 within a reasonable timeout
-- **Deduplicate events** — store processed event references (e.g. `transactionReference`) and skip duplicates; Monnify may send the same event more than once
+- **Make processing idempotent** — use database constraints, processed-event records, cache keys, or locks so retries do not fulfil the same transaction twice
 - **Whitelist Monnify's IP** (`35.242.133.146`) at your firewall or in middleware as an extra layer of protection
 
 ---

@@ -486,7 +486,43 @@ return redirect($response['body']['responseBody']['checkoutUrl']);
 ```
 
 **Required fields:** `amount`, `customerEmail`, `paymentReference`, `currencyCode`, `contractCode`, `redirectUrl`
-**Optional fields:** `customerName`, `paymentDescription`, `paymentMethods`, `incomeSplitConfig`
+**Optional fields:** `customerName`, `paymentDescription`, `paymentMethods`, `incomeSplitConfig`, `metaData`
+
+##### Metadata & Plugin Tracking
+
+The package automatically adds `referrer: "plugin-laravel"` to your transaction metadata, allowing you to track transactions initiated through this package.
+
+You can pass additional metadata alongside the automatic referrer:
+
+```php
+$response = Monnify::transactions()->initialise([
+    'amount'             => 5000.00,
+    'customerEmail'      => 'jane@example.com',
+    'paymentReference'   => 'ORDER-123',
+    'currencyCode'       => 'NGN',
+    'contractCode'       => config('monnify.contract_code'),
+    'redirectUrl'        => 'https://yoursite.com/payment/callback',
+    'metaData' => [
+        'userId'       => 'user-456',
+        'orderType'    => 'subscription',
+        'department'   => 'sales',
+        // referrer: 'plugin-laravel' is automatically added
+    ],
+]);
+```
+
+In webhook events and transaction queries, you'll see:
+
+```json
+{
+  "metaData": {
+    "referrer": "plugin-laravel",
+    "userId": "user-456",
+    "orderType": "subscription",
+    "department": "sales"
+  }
+}
+```
 
 > **Production checklist:** When a customer completes payment and is redirected to your `redirectUrl`, always call `statusByReference()` to verify the payment server-side before fulfilling the order. Additionally, subscribe to the `SUCCESSFUL_TRANSACTION` webhook event on your [Monnify dashboard](https://app.monnify.com) so your system is notified even if the customer closes the browser before the redirect completes. See the [Webhooks](#webhooks) section for setup details.
 

@@ -19,6 +19,12 @@ class TransactionService extends BaseService
     public function initialise(array $data): array
     {
         $this->validator->validateInitialize($data);
+
+        $data['metaData'] = array_merge(
+            $data['metaData'] ?? [],
+            ['referrer' => 'plugin-laravel']
+        );
+
         return $this->requestPost('/api/v1/merchant/transactions/init-transaction', $data);
     }
 

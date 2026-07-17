@@ -42,7 +42,43 @@ class TransactionServiceTest extends TestCase
         $this->assertSame(200, $result['status']);
         $this->assertSame('/api/v1/merchant/transactions/init-transaction', $history[0]['request']->getUri()->getPath());
         $this->assertSame('POST', $history[0]['request']->getMethod());
-        $this->assertSame(json_encode($payload), (string) $history[0]['request']->getBody());
+
+        $sentPayload = json_decode((string) $history[0]['request']->getBody(), true);
+        $this->assertSame('plugin-laravel', $sentPayload['metaData']['referrer']);
+    }
+
+    #[Test]
+    public function initialise_automatically_injects_plugin_referrer(): void
+    {
+        $payload = $this->validInitializePayload();
+        $history = [];
+        $service = new TransactionService($this->makeClient([
+            new Response(200, [], json_encode(['ok' => true])),
+        ], $history));
+
+        $service->initialise($payload);
+
+        $sentPayload = json_decode((string) $history[0]['request']->getBody(), true);
+        $this->assertArrayHasKey('metaData', $sentPayload);
+        $this->assertSame('plugin-laravel', $sentPayload['metaData']['referrer']);
+    }
+
+    #[Test]
+    public function initialise_merges_user_metadata_with_referrer(): void
+    {
+        $payload = $this->validInitializePayload();
+        $payload['metaData'] = ['userId' => 'user-123', 'source' => 'mobile-app'];
+        $history = [];
+        $service = new TransactionService($this->makeClient([
+            new Response(200, [], json_encode(['ok' => true])),
+        ], $history));
+
+        $service->initialise($payload);
+
+        $sentPayload = json_decode((string) $history[0]['request']->getBody(), true);
+        $this->assertSame('plugin-laravel', $sentPayload['metaData']['referrer']);
+        $this->assertSame('user-123', $sentPayload['metaData']['userId']);
+        $this->assertSame('mobile-app', $sentPayload['metaData']['source']);
     }
 
     #[Test]

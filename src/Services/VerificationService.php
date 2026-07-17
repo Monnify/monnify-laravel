@@ -23,7 +23,7 @@ class VerificationService extends BaseService
             'bankCode' => $bankCode
         ];
 
-        return $this->requestGet('/api/v1/disbursements/account/validate', $parameters);
+        return $this->requestGet('/api/v2/disbursements/account/validate', $parameters);
     }
 
     public function bvnInformation(array $data): array

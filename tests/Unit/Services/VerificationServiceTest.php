@@ -38,7 +38,7 @@ class VerificationServiceTest extends TestCase
 
         $service->bankAccount('0123456789', '058');
 
-        $this->assertSame('/api/v1/disbursements/account/validate', $history[0]['request']->getUri()->getPath());
+        $this->assertSame('/api/v2/disbursements/account/validate', $history[0]['request']->getUri()->getPath());
         $this->assertSame('accountNumber=0123456789&bankCode=058', $history[0]['request']->getUri()->getQuery());
     }
 

@@ -76,11 +76,7 @@ class BaseServiceTest extends TestCase
         Cache::put('monnify_access_token', 'cached-token', 300);
 
         $service = new TestBaseService($this->makeClient([
-            new RequestException(
-                'Validation failed',
-                new Request('POST', '/api/v1/test'),
-                new Response(422, [], json_encode(['message' => 'Invalid payload']))
-            ),
+            new Response(422, [], json_encode(['message' => 'Invalid payload'])),
         ]));
 
         $result = $service->sendPost('/api/v1/test', ['amount' => 0]);

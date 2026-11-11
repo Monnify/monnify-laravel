@@ -5,9 +5,9 @@ namespace Monnify\MonnifyLaravel\Services;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
-use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Cache;
 use Monnify\MonnifyLaravel\Enums\HttpMethod;
+use Psr\Http\Client\RequestExceptionInterface;
 
 abstract class BaseService
 {
@@ -71,8 +71,9 @@ abstract class BaseService
                 'status' => $response->getStatusCode(),
                 'body' => json_decode($response->getBody()->getContents(), true),
             ];
-        } catch (RequestException $e) {
-            $response = $e->getResponse();
+        } catch (RequestExceptionInterface $e) {
+            // Guzzle 8 only exposes a response on response-specific exceptions.
+            $response = method_exists($e, 'getResponse') ? $e->getResponse() : null;
 
             return [
                 'status' => $response?->getStatusCode(),

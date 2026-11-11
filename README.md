@@ -44,6 +44,7 @@ A Laravel package for integrating the [Monnify](https://monnify.com) payment gat
 
 - PHP **8.1** or higher; Laravel 13 requires PHP **8.3** or higher
 - Laravel **8.x – 13.x**
+- Guzzle **7.x or 8.x** (installed automatically by Composer)
 - A Monnify merchant account ([sign up here](https://app.monnify.com))
 
 ---
